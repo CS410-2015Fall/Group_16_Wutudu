@@ -10,6 +10,8 @@ class WidgetsController < ApplicationController
   # GET /widgets/1
   # GET /widgets/1.json
   def show
+    widget = Widget.find(params[:id])
+    render json: widget
   end
 
   # GET /widgets/new
@@ -26,14 +28,10 @@ class WidgetsController < ApplicationController
   def create
     @widget = Widget.new(widget_params)
 
-    respond_to do |format|
-      if @widget.save
-        format.html { redirect_to @widget, notice: 'Widget was successfully created.' }
-        format.json { render :show, status: :created, location: @widget }
-      else
-        format.html { render :new }
-        format.json { render json: @widget.errors, status: :unprocessable_entity }
-      end
+    if @widget.save
+      render json: {message: "Widget created"}, status: 200
+    else
+      render json: {message: "Widget not created"}, status: 400
     end
   end
 

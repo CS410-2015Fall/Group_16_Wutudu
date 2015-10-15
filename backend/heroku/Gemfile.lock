@@ -74,6 +74,7 @@ GEM
     pg (0.18.3-x64-mingw32)
     puma (2.14.0)
     rack (1.6.4)
+    rack-cors (0.4.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.3)
@@ -147,6 +148,7 @@ DEPENDENCIES
   jquery-rails
   pg
   puma
+  rack-cors
   rails (= 4.2.3)
   rails_12factor
   sass-rails (~> 5.0.3)

@@ -53,4 +53,49 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
+})
+
+.controller('SearchCtrl', function($scope, $ionicPopup, $http) {
+  $scope.getTest = function () {
+      $http({
+        method: 'GET',
+        url: 'http://localhost:5000/widgets/1'
+      }).then(function successCallback (response) {
+          // this callback will be called asynchronously
+          // when the response is available
+          console.log(response.data.name);
+          var alertPopup = $ionicPopup.alert({
+              title: response.data.name,
+              template: 'CLICK ME. I KNOW YOU WANT TO!'
+          });
+          alertPopup.then(function (response) {
+              console.log('Button wuz clicked');
+          });
+      }, function errorCallback(response) {
+          // called asynchronously if an error occurs
+          // or server returns response with an error status.
+      });
+  };
+
+  $scope.postTest = function (widget) {
+        var formData = angular.copy(widget);
+        formData = {'widget' : formData };
+        $http({
+          method: 'POST',
+          headers: {
+           'Content-Type': 'application/json'
+          },
+          data: formData,
+          url: 'http://localhost:5000/widgets'
+        }).then(function successCallback (response) {
+            // this callback will be called asynchronously
+            // when the response is available
+            console.log('Post success');
+        }, function errorCallback(response) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            console.log('Post error');
+        });
+    };
 });
+
