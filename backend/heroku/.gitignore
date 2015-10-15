@@ -17,3 +17,9 @@
 
 # Ignore ruby-version
 /.ruby-version
+
+# Ignore local config files
+/config/database.yml
+/config/secrets.yml
+/config/puma.rb
+
