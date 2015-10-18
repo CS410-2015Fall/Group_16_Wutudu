@@ -33,8 +33,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   };
 
   $rootScope.TOKEN = "";
-  $rootScope.SERVER_URL = "http://localhost:5000";
-  // $rootScope.SERVER_URL = "https://stormy-hollows-9187.herokuapp.com";
+  // $rootScope.SERVER_URL = "http://localhost:5000";
+  $rootScope.SERVER_URL = "https://stormy-hollows-9187.herokuapp.com";
 })
 
 .config(function ($stateProvider, $urlRouterProvider) {
