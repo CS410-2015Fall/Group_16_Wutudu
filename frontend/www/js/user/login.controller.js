@@ -33,8 +33,9 @@ angular.module('starter.controllers')
       url: this.$root.SERVER_URL + '/login'
     }).then(function successCallback (response) {
       console.log('Login success: auth token=' + response.data.token);
+      $scope.loginData = {}; // Clear form data
       $scope.$root.TOKEN = response.data.token;
-      $state.go('app.search');
+      $state.go('app.main');
     }, function errorCallback (response) {
       var templateString = '<p><b>Errors Message:</b> ' + response.data.errors + '</p>'
         + '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'

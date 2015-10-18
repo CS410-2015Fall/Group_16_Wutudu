@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope) {
+.controller('AppCtrl', function ($scope, $ionicPopup, $http, $state) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -8,23 +8,36 @@ angular.module('starter.controllers', [])
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
+
+  $scope.logout = function () {
+    console.log('logout token = ' + this.$root.TOKEN);
+    $http({
+      method: 'DELETE',
+      headers: {
+       'Content-Type': 'application/json',
+       'Authorization' : 'Token token=' + this.$root.TOKEN
+      },
+      url: this.$root.SERVER_URL + '/logout',
+    }).then(function successCallback (response) {
+      $state.go('login');
+      var alertPopup = $ionicPopup.alert({
+        title: 'Successfully logged out'
+      });
+    }, function errorCallback (response) {
+      var templateString = '<p><b>Errors Message:</b> ' + response.data.errors + '</p>'
+        + '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'
+        + '<p><b>Request:</b> ' + response.config.method + ' ' + response.config.url + '</p>'
+        + '<p><b>Headers:</b> ' + JSON.stringify(response.config.headers) + '</p>'
+        + '<p><b>Data:</b> ' + JSON.stringify(response.config.data) + '</p>';
+      $ionicPopup.alert({
+        title: 'Error when logging out',
+        template: templateString
+      });
+    });
+  }
 })
 
-.controller('PlaylistsCtrl', function ($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function ($scope, $stateParams) {
-})
-
-.controller('SearchCtrl', function ($scope, $ionicPopup, $http) {
+.controller('MainCtrl', function ($scope, $ionicPopup, $http) {
   $scope.getTest = function () {
     $http({
       method: 'GET',
