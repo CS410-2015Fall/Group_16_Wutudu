@@ -61,11 +61,15 @@ class FriendshipsController < ApiController
     friend = User.find_by_email(friend_params[:email])
     if friend
       friendship = Friendship.where(approved: true).where(user_id: [@user.id, friend.id]).where(friend_id: [@user.id, friend.id]).first
+      friendship_to_decline = Friendship.where(approved: false).where(user_id: friend.id).where(friend_id: @user.id).first
       if friendship
         friendship.destroy
         render json: {message: "Unfriended"}, status: 200
+      elsif friendship_to_decline
+        friendship_to_decline.destroy
+        render json: {message: "Request Declined"}, status: 200
       else
-        render json: {errors: "Not A Friend"}, status: 404
+        render json: {errors: "Not A Friend"}, status: 400
       end
     else
       render json: {errors: "Friend Not Found"}, status: 404
@@ -75,6 +79,6 @@ class FriendshipsController < ApiController
   private
 
   def friend_params
-    params.require(:friendships).permit(:email)
+    params.require(:friendship).permit(:email)
   end
 end

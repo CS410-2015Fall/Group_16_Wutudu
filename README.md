@@ -4,6 +4,7 @@
 
 ##/login
 
+```
 1. POST:
   * AUTHENTICATION: NONE
   * BODY: {"login" : {"email" : email, "password" : password}}
@@ -12,9 +13,11 @@
                                     "Incorrect Password" 400,
                                     "User With Email Not Found" 404,
                                    ]
+```
 
 ##/logout
 
+```
 1. DELETE:
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
@@ -22,8 +25,11 @@
                                     "Logout Successful" 200,
                                     "Logout Unsuccessful" 400,
                                    ]
+```
 
 ##/users
+
+```
 1. GET:
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
@@ -35,12 +41,14 @@
   * RETURN: {"token" : token}
 
 ##/friends
+
+```
 1. GET:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
   * RETURN: {
-             "friendships" : {
+             "friendship" : {
                                 "friends" : [{"name" : name, "email" : email}...],
                                 "sent_requests" : [{"name" : name, "email" : email}...],
                                 "received_requests" : [[{"name" : name, "email" : email}...]
@@ -50,7 +58,7 @@
 2. POST:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
-  * BODY: {"friendships" : {"email" : email}}
+  * BODY: {"friendship" : {"email" : email}}
   * RETURN: Request status. One of [
                                     "Friend Request Sent" 200,
                                     "Alrady A Friend" 400,
@@ -64,12 +72,12 @@
 3. PUT:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
-  * BODY: {"friendships" : {"email" : email}}
+  * BODY: {"friendship" : {"email" : email}}
   * RETURN: Request status. One of [
                                     "Friend Accepted" 200,
                                     "Alrady A Friend" 400,
                                     "Unable To Accept Friend" 400,
-                                    "Friend Request Not Found" 400,
+                                    "Friend Request Not Found" 404,
                                     "Friend Not Found" 404
                                    ]
   * NOTE: Used to accept confirm friend request from user
@@ -77,10 +85,12 @@
 4. DELETE:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
-  * BODY: {"friendships" : {"email" : email}}
+  * BODY: {"friendship" : {"email" : email}}
   * RETURN: Request status. One of [
                                     "Unfriended" 200,
+                                    "Request Declined" 200,
                                     "Not A Friend" 400,
                                     "Friend Not Found" 404
                                    ]
   * NOTE: Used to delete friend
+```
