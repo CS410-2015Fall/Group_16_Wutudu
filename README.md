@@ -39,6 +39,7 @@
   * AUTHENTICATION: NONE
   * BODY: {"user" : {"email" : email, "name" : name, "password" : password}}
   * RETURN: {"token" : token}
+```
 
 ##/friends
 
