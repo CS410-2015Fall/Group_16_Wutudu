@@ -3,6 +3,14 @@ class User < ActiveRecord::Base
   include BCrypt
   before_create :generate_new_api_key, :hash_password
 
+  has_many :friendships
+  has_many :passive_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
+
+  has_many :active_friends, -> { where(friendships: { approved: true}) }, :through => :friendships, :source => :friend
+  has_many :passive_friends, -> { where(friendships: { approved: true}) }, :through => :passive_friendships, :source => :user
+  has_many :pending_friends, -> { where(friendships: { approved: false}) }, :through => :friendships, :source => :friend
+  has_many :requested_friendships, -> { where(friendships: { approved: false}) }, :through => :passive_friendships, :source => :user
+
   def bcrypt_password
     BCrypt::Password.new(self.password)
   end
@@ -16,6 +24,35 @@ class User < ActiveRecord::Base
     self.save
   end
 
+  def friends
+    active_friends | passive_friends
+  end
+
+  def friends_short
+    compact_friends_info(friends)
+  end
+
+  def pending_short
+    compact_friends_info(pending_friends)
+  end
+
+  def requested_short
+    compact_friends_info(requested_friendships)
+  end
+
+  def friendship_status(email)
+    case
+    when friends.bsearch {|f| f[:email] == email}
+      1
+    when pending_friends.bsearch {|f| f[:email] == email}
+      2
+    when requested_friendships.bsearch {|f| f[:email] == email}
+      3
+    else
+      0
+    end
+  end
+
   private
 
   # generate api key upon creation
@@ -24,6 +61,10 @@ class User < ActiveRecord::Base
       token = SecureRandom.base64.tr('+/=', 'Qrt')
     end until !User.exists?(api_key: token)
     self.api_key = token
+  end
+
+  def compact_friends_info(friends)
+    friends.collect {|f| f.slice(:name, :email)}
   end
 
   def hash_password
