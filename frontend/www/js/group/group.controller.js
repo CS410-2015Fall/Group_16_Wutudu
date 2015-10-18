@@ -2,7 +2,6 @@ angular.module('starter.controllers')
 
 .controller('GroupCtrl', function($scope, $stateParams,
          $ionicPopup, $ionicModal, Friend, Group, Wutudu) {
-
   var groupId = $stateParams.groupId;
   $scope.group = Group.getGroup(groupId);
   $scope.friends = Friend.getFriends();
