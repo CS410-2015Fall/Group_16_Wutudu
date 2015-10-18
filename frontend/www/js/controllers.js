@@ -33,16 +33,20 @@ angular.module('starter.controllers', [])
       },
       url: this.$root.SERVER_URL + '/widgets/1',
     }).then(function successCallback (response) {
-        console.log(response.data.name);
         var alertPopup = $ionicPopup.alert({
-          title: response.data.name,
-          template: 'CLICK ME. I KNOW YOU WANT TO!'
-        });
-        alertPopup.then(function (response) {
-          console.log('Button wuz clicked');
+          title: 'GET test success',
+          template: response.data.name
         });
     }, function errorCallback (response) {
-        console.log('Get error');
+      var templateString = '<p><b>Errors Message:</b> ' + response.data.errors + '</p>'
+        + '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'
+        + '<p><b>Request:</b> ' + response.config.method + ' ' + response.config.url + '</p>'
+        + '<p><b>Headers:</b> ' + JSON.stringify(response.config.headers) + '</p>'
+        + '<p><b>Data:</b> ' + JSON.stringify(response.config.data) + '</p>';
+      $ionicPopup.alert({
+        title: 'GET test error',
+        template: templateString
+      });
     });
   };
 
@@ -57,9 +61,24 @@ angular.module('starter.controllers', [])
       data: formData,
       url: this.$root.SERVER_URL + '/widgets'
     }).then(function successCallback (response) {
-        console.log('Post success');
+      var templateString = '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'
+        + '<p><b>Request:</b> ' + response.config.method + ' ' + response.config.url + '</p>'
+        + '<p><b>Headers:</b> ' + JSON.stringify(response.config.headers) + '</p>'
+        + '<p><b>Data:</b> ' + JSON.stringify(response.config.data) + '</p>';
+      $ionicPopup.alert({
+        title: 'POST test success',
+        template: templateString
+      });
     }, function errorCallback (response) {
-        console.log('Post error');
+      var templateString = '<p><b>Errors Message:</b> ' + response.data.errors + '</p>'
+        + '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'
+        + '<p><b>Request:</b> ' + response.config.method + ' ' + response.config.url + '</p>'
+        + '<p><b>Headers:</b> ' + JSON.stringify(response.config.headers) + '</p>'
+        + '<p><b>Data:</b> ' + JSON.stringify(response.config.data) + '</p>';
+      $ionicPopup.alert({
+        title: 'POST test error',
+        template: templateString
+      });
     });
   };
 });
