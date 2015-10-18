@@ -4,11 +4,17 @@
 
 ##/login
 
-Methods:
 1. POST:
   * AUTHENTICATION: NONE
   * BODY: {"login" : {"email" : email, "password" : password}}
   * RETURN: auth-token if email and password match
+
+##/logout
+
+1. DELETE:
+  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
+  * BODY: NONE
+  * RETURN: Logout status (Successful or Unsuccessful)
 
 ##/users
 1. GET:
