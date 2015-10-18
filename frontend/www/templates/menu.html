@@ -8,6 +8,9 @@
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
+
+      <ion-nav-buttons side="right">
+      </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
@@ -20,6 +23,12 @@
       <ion-list>
         <ion-item menu-close ng-click="login()">
           Login
+        </ion-item>
+        <ion-item menu-close href="#/app/friend">
+          Friend
+        </ion-item>
+        <ion-item menu-close href="#/app/group">
+          Group
         </ion-item>
         <ion-item menu-close href="#/app/search">
           Search
