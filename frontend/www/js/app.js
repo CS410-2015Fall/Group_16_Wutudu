@@ -21,7 +21,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   });
 
-  String.prototype.hashString = function() { 
+  String.prototype.hashString = function() {
     var hash = 0, i, chr, len;
     if (this.length == 0) return hash;
     for (i = 0, len = this.length; i < len; i++) {
@@ -57,6 +57,46 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/signup',
     templateUrl: 'templates/signup.html',
     controller: 'SignupCtrl'
+  })
+
+  .state('app.friendList', {
+    url: '/friend',
+     views: {
+      'menuContent': {
+        templateUrl: 'templates/friend/list.html',
+        controller: 'FriendListCtrl'
+      }
+    }
+  })
+
+  .state('app.friend', {
+    url: '/friend/:friendId',
+     views: {
+      'menuContent': {
+        templateUrl: 'templates/friend/friend.html',
+        controller: 'FriendCtrl'
+      }
+    }
+  })
+
+  .state('app.groupList', {
+    url: '/group' ,
+     views: {
+      'menuContent': {
+        templateUrl: 'templates/group/list.html',
+        controller: 'GroupListCtrl'
+      }
+    }
+  })
+
+  .state('app.group', {
+    url: '/group/:groupId',
+     views: {
+      'menuContent': {
+        templateUrl: 'templates/group/group.html',
+        controller: 'GroupCtrl'
+      }
+    }
   })
 
   .state('app.search', {

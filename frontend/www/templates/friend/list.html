@@ -1,0 +1,23 @@
+<ion-view view-title="Friends">
+  <ion-content>
+
+    <div class="list">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="text" placeholder="Name" ng-model="data.friendToAdd">
+        </label>
+        <button class="button button-small" ng-click="addFriend()">
+          Add Friend
+        </button>
+      </div>
+    </div>
+
+    <ion-list show-delete="data.showDelete">
+      <ion-item ng-repeat="friend in friends" href="#/app/friend/{{friend.id}}">
+        <span class="circle-border">{{$index + 1}}</span> {{friend.name}}
+        <ion-delete-button class="ion-minus-circled" ng-click="removeFriend()">
+        </ion-delete-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

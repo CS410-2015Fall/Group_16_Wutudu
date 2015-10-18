@@ -1,0 +1,17 @@
+<ion-view view-title="Groups">
+
+  <ion-nav-buttons side="right">
+    <button class="button button-icon button-clear ion-person-stalker" ng-click="createGroup()">
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="group in groups" href="#/app/group/{{group.id}}">
+        <span class="circle-border">{{$index + 1}}</span> {{group.name}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+
+</ion-view>
+

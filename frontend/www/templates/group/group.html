@@ -1,0 +1,38 @@
+<ion-view view-title="Group">
+
+  <ion-nav-buttons side="right">
+    <button class="button button-icon button-clear ion-person" ng-click="addFriendToGroup()">
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <h1 ng-bind="group.name"></h1>
+
+    <button class="button button-outline button-balanced icon-right ion-checkmark-round" ng-click="showCreateWutudu()">Create Wutudu</button>
+
+    <div class="list">
+
+      <div class="item item-divider">
+        In progress
+      </div>
+
+     <ion-list>
+       <ion-item class="item" ng-repeat="wutudu in inProgressWutudus" ng-click="showWutuduQuestion(wutudu)">
+         {{wutudu.name}}
+       </ion-item>
+     </ion-list>
+
+      <div class="item item-divider">
+        Upcoming
+      </div>
+
+      <ion-list>
+        <ion-item class="item" ng-repeat="wutudu in upcomingWutudus" ng-click="showWutuduDetail(wutudu)">
+          {{wutudu.name}}
+        </ion-item>
+      </ion-list>
+
+    </div>
+  </ion-content>
+
+</ion-view>

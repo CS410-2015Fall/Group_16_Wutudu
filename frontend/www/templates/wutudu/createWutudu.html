@@ -1,0 +1,33 @@
+<ion-modal-view >
+  <ion-header-bar>
+    <h1 class="title">Create Pre-Wutudu</h1>
+  </ion-header-bar>
+
+  <ion-content>
+    <h2>Group <span ng-bind="group.name"></span></h2>
+    <form>
+      <div class="item item-input-inset">
+        <span>Event Name</span>
+        <label class="item-input-wrapper">
+          <input type="text" placeholder="Event Name" ng-model="wutudu.name">
+        </label>
+      </div>
+      <div class="item item-input-inset">
+        <span>Date: </span>
+        <label class="item-input-wrapper">
+          <input type="text" placeholder="Date" ng-model="wutudu.date">
+        </label>
+      </div>
+      <div class="item item-input-inset">
+        <span>Location</span>
+        <label class="item-input-wrapper">
+          <input type="text" placeholder="Location" ng-model="wutudu.location">
+        </label>
+      </div>
+      <button type="submit" class="button button-balanced" ng-click="createWutudu(wutudu)">Create</button>
+      <button class="button button-assertive" ng-click="hideCreateWutudu()">Cancel</button>
+    </form>
+
+  </ion-content>
+</ion-modal-view>
+
