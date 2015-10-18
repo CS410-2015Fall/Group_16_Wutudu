@@ -1,6 +1,6 @@
 angular.module('starter.controllers')
 
-.controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal,
+.controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal, $state,
       Friend, Group) {
 
   $scope.groups = Group.getAllGroups();
@@ -19,6 +19,12 @@ angular.module('starter.controllers')
   $scope.cancelGroup = function() {
     $scope.modal.hide();
   };
+
+  $scope.goToFriend = function(friendId) {
+    $state.go('app.friend', {friendId: friendId});
+    $scope.cancelGroup();
+  }
+
   //Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
     $scope.modal.remove();

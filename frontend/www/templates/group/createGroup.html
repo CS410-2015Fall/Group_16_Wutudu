@@ -14,7 +14,7 @@
     <button class="button icon-right ion-plus-circled" ng-click="addFriendToGroup()">Friends</button>
 
     <ion-list>
-      <ion-item ng-repeat="friend in friends" href="#/app/friend/{{friend.id}}">
+      <ion-item ng-repeat="friend in friends" ng-click="goToFriend(friend.id)">
         <span class="circle-border">{{$index + 1}}</span> {{friend.name}}
       </ion-item>
     </ion-list>
