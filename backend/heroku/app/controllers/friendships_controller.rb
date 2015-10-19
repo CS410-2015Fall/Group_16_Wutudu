@@ -1,84 +1,64 @@
 class FriendshipsController < ApiController
   before_action :authenticate
+  before_action :friend_exists, except: [:show]
 
   def show
-    render json: {friendships:
-                   {friends: @user.friends_short,
-                    sent_requests: @user.pending_short,
-                    received_requests: @user.requested_short
-                   }
+    all_fships = {
+                   friendships:
+                     {
+                       friends: @user.friends_short,
+                       sent_requests: @user.pending_short,
+                       received_requests: @user.requested_short
+                     }
                  }
+    return send_success(all_fships)
   end
 
   def create
-    friend = User.find_by_email(friend_params[:email])
-    if friend
-      case @user.friendship_status(friend_params[:email])
-      when 1
-        render json: {errors: "Already A Friend"}, status: 400
-      when 2
-        render json: {errors: "Friend Request Already Sent"}, status: 400
-      when 3
-        render json: {errors: "Existing Friend Request From User"}, status: 400
-      else
-        friendship = @user.friendships.build(:friend_id => friend.id, :approved => false)
-        if friendship.save
-          render json: {message: "Friend Request Sent"}, status: 200
-        else
-          render json: {errors: "Unable To Send Friend Request"}, status: 400
-        end
-      end
+    case @user.friendship_status(@friend.id)
+    when 1
+      return send_errors("Already A Friend", 400)
+    when 2
+      return send_errors("Friend Request Already Sent", 400)
+    when 3
+      return send_errors("Existing Friend Request From User", 400)
     else
-      render json: {errors: "User With Email Not Found"}, status: 404
+      friendship = @user.friendships.build(:friend_id => friend.id, :approved => false)
+      return send_errors("Unable To Send Friend Request", 400) unless friendship.save
+      return send_success({message: "Friend Request Sent"})
     end
   end
 
 
   def update
-    friend = User.find_by_email(friend_params[:email])
-    if friend
-      friendship = Friendship.where(user_id: friend.id, friend_id: @user.id).first
-      if friendship
-        if !friendship.approved
-          friendship.update(approved: true)
-          if friendship.save
-            render json: {message: "Friend Accepted"}, status: 200
-          else
-            render json: {errors: "Unable To Accept Friend"}, status: 400
-          end
-        else
-          render json: {errors: "Already A Friend"}, status: 400
-        end
-      else
-        render json: {errors: "Friend Request Not Found"}, status: 404
-      end
-    else
-      render json: {errors: "Friend Not Found"}, status: 404
-    end  
+    friendship = Friendship.where(user_id: @friend.id, friend_id: @user.id).first
+    return send_errors("Friend Request Not Found", 404) unless friendship
+    return send_errors("Already A Friend", 400) if friendship.approved
+
+    friendship.update(approved: true)
+    return send_errors("Unable To Accept Friend", 400) unless friendship.save
+    return send_success({message: "Friend Accepted"})
   end
 
   def destroy
-    friend = User.find_by_email(friend_params[:email])
-    if friend
-      friendship = Friendship.where(approved: true).where(user_id: [@user.id, friend.id]).where(friend_id: [@user.id, friend.id]).first
-      friendship_to_decline = Friendship.where(approved: false).where(user_id: friend.id).where(friend_id: @user.id).first
-      if friendship
-        friendship.destroy
-        render json: {message: "Unfriended"}, status: 200
-      elsif friendship_to_decline
-        friendship_to_decline.destroy
-        render json: {message: "Request Declined"}, status: 200
-      else
-        render json: {errors: "Not A Friend"}, status: 400
-      end
-    else
-      render json: {errors: "Friend Not Found"}, status: 404
-    end
+    friendship = Friendship.where(user_id: [@user.id, @friend.id]).where(friend_id: [@user.id, @friend.id]).first
+    return send_errors("Not A Friend", 404) unless friendship
+
+
+    approved = friendship.approved
+    friendship.destroy
+    return (approved ? send_success({message: "Unfriended"}) : \
+                       send_success({message: "Request Declined/Cancelled"}))
   end
 
   private
 
   def friend_params
     params.require(:friendship).permit(:email)
+  end
+
+  def friend_exists
+    @friend = User.find_by_email(friend_params[:email])
+    return send_errors("User With Email Not Found", 404) unless @friend
   end
 end

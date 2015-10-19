@@ -1,0 +1,28 @@
+class SessionsController < ApiController
+  before_action :authenticate, only: [:destroy]
+
+  def create
+    return send_errors('User With Email Not Found', 404) \
+      unless User.exists?(email: login_params[:email])
+
+    @user = User.find_by_email(login_params[:email])
+
+    return send_errors('Incorrect Password', 400) \
+      unless @user.bcrypt_password == login_params[:password]
+
+    @user.renew_api_key
+    return send_success({token: @user.api_key})
+  end
+
+  def destroy
+    @user.api_key = nil
+    return send_errors("Logout Unsuccessful", 400) unless @user.save
+    return send_success({message: "Logout Failed"})
+  end
+
+  private
+
+  def login_params
+    params.require(:login).permit(:email, :password)
+  end
+end

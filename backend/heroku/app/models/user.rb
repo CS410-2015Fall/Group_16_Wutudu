@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   include BCrypt
   before_create :generate_new_api_key, :hash_password
 
+  # Friendships
   has_many :friendships
   has_many :passive_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
 
@@ -10,6 +11,13 @@ class User < ActiveRecord::Base
   has_many :passive_friends, -> { where(friendships: { approved: true}) }, :through => :passive_friendships, :source => :user
   has_many :pending_friends, -> { where(friendships: { approved: false}) }, :through => :friendships, :source => :friend
   has_many :requested_friendships, -> { where(friendships: { approved: false}) }, :through => :passive_friendships, :source => :user
+
+  # Groups
+  has_many :group_users
+  has_many :groups, through: :group_users
+
+  has_many :active_groups, -> { where(group_users: { approved: true}) }, :through => :group_users, :source => :group
+  has_many :pending_groups, -> { where(group_users: { approved: false}) }, :through => :group_users, :source => :group
 
   def bcrypt_password
     BCrypt::Password.new(self.password)
@@ -40,13 +48,13 @@ class User < ActiveRecord::Base
     compact_friends_info(requested_friendships)
   end
 
-  def friendship_status(email)
+  def friendship_status(id)
     case
-    when friends.bsearch {|f| f[:email] == email}
+    when friends.bsearch {|f| id - f.id}
       1
-    when pending_friends.bsearch {|f| f[:email] == email}
+    when pending_friends.bsearch {|f| id - f.id}
       2
-    when requested_friendships.bsearch {|f| f[:email] == email}
+    when requested_friendships.bsearch {|f| id - f.id}
       3
     else
       0
@@ -64,7 +72,7 @@ class User < ActiveRecord::Base
   end
 
   def compact_friends_info(friends)
-    friends.collect {|f| f.slice(:name, :email)}
+    friends.collect {|f| f.slice(:id, :name, :email)}
   end
 
   def hash_password

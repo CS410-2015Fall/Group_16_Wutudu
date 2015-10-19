@@ -1,25 +1,16 @@
 class UsersController < ApiController
   before_action :authenticate, only: [:show, :update]
 
-  def index
-    render json: {errors: 'Resource not found'}
-  end
-
   def create
+    return send_errors("Email Already Registered", 400) if user_email_exist?(user_params[:email])
+
     @user = User.new(user_params)
-    if !user_email_exist?(user_params[:email])
-      if @user.save
-        render json: {token: @user.api_key}, status: 200
-      else
-        render json: {errors: 'Failed to create user'}, status: 400
-      end
-    else
-      render json: {errors: "Email already registered"}, status: 400
-    end
+    return send_errors('Failed To Create User', 400) unless @user.save
+    return send_success({token: @user.api_key})
   end
 
   def show
-    render json: {user: @user.basic_info}
+    return send_success({user: @user.basic_info})
   end
 
   private
