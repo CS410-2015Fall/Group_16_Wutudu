@@ -61,7 +61,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   .state('app.friendList', {
     url: '/friend',
-     views: {
+    cache: false,
+    views: {
       'menuContent': {
         templateUrl: 'templates/friend/list.html',
         controller: 'FriendListCtrl'
@@ -71,7 +72,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   .state('app.friend', {
     url: '/friend/:friendId',
-     views: {
+    views: {
       'menuContent': {
         templateUrl: 'templates/friend/friend.html',
         controller: 'FriendCtrl'
@@ -81,7 +82,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   .state('app.groupList', {
     url: '/group' ,
-     views: {
+    views: {
       'menuContent': {
         templateUrl: 'templates/group/list.html',
         controller: 'GroupListCtrl'
@@ -91,7 +92,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   .state('app.group', {
     url: '/group/:groupId',
-     views: {
+    views: {
       'menuContent': {
         templateUrl: 'templates/group/group.html',
         controller: 'GroupCtrl'

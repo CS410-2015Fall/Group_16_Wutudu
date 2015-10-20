@@ -37,14 +37,14 @@ angular.module('starter.controllers')
       $scope.$root.TOKEN = response.data.token;
       $state.go('app.main');
     }, function errorCallback (response) {
-      var templateString = '<p><b>Errors Message:</b> ' + response.data.errors + '</p>'
-        + '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'
-        + '<p><b>Request:</b> ' + response.config.method + ' ' + response.config.url + '</p>'
-        + '<p><b>Headers:</b> ' + JSON.stringify(response.config.headers) + '</p>'
-        + '<p><b>Data:</b> ' + JSON.stringify(response.config.data) + '</p>';
-      $ionicPopup.alert({
-        title: 'Signup Error',
-        template: templateString
+      response.config.headers = JSON.stringify(response.config.headers);
+      response.config.data = JSON.stringify(response.config.data);
+      $scope.response = response;
+      $ionicPopup.show({
+        title: 'Sign up error',
+        templateUrl: 'templates/errorPopup.html',
+        scope: $scope,
+        buttons: [{ text: 'OK' }]
       });
     });
   };

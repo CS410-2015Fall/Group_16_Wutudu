@@ -1,1 +1,9 @@
-/* Empty. Add your own CSS if you like */
+/*  Add your own CSS if you like */
+.button.button-inline {
+    float: right;
+    padding: 2px 4px 1px;
+    min-width: 28px;
+    min-height: 21px;
+    font-size: 12px;
+    line-height: 21px;
+}

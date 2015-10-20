@@ -1,6 +1,6 @@
 angular.module('starter.controllers')
 
-.controller('FriendCtrl', function($scope, $stateParams, $ionicPopup, Friend, Wutudu) {
+.controller('FriendCtrl', function ($scope, $stateParams, $ionicPopup, Friend, Wutudu) {
    var id = $stateParams.friendId;
    // query Friend services with id to find friend object
 
@@ -9,7 +9,7 @@ angular.module('starter.controllers')
 
 
    // TODO refactor show details/question in friend and group
-   $scope.showWutuduDetail = function(wutudu) {
+   $scope.showWutuduDetail = function (wutudu) {
      // use wutudu object to show the details
      $ionicPopup.show({
        templateUrl: 'templates/wutudu/detailPage.html',
@@ -20,7 +20,7 @@ angular.module('starter.controllers')
      });
    }
 
-   $scope.showWutuduQuestion = function(question) {
+   $scope.showWutuduQuestion = function (question) {
     $scope.questions = Wutudu.getQuestions(question);
     $ionicPopup.show({
        templateUrl: 'templates/wutudu/questionPage.html',

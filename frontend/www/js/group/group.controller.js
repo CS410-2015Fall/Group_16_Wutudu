@@ -4,7 +4,9 @@ angular.module('starter.controllers')
          $ionicPopup, $ionicModal, Friend, Group, Wutudu) {
   var groupId = $stateParams.groupId;
   $scope.group = Group.getGroup(groupId);
-  $scope.friends = Friend.getFriends();
+  // TODO
+  // $scope.friends = Friend.getFriends();
+  $scope.friends = [{ name: 'Dan', email: 'dan@gmail.com' }];
   $scope.inProgressWutudus = Wutudu.getInProgressWutudus({groupId: groupId});
   $scope.upcomingWutudus = Wutudu.getInProgressWutudus({groupId: groupId});
 

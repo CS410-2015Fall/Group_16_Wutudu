@@ -12,12 +12,47 @@
       </div>
     </div>
 
-    <ion-list show-delete="data.showDelete">
-      <ion-item ng-repeat="friend in friends" href="#/app/friend/{{friend.id}}">
-        <span class="circle-border">{{$index + 1}}</span> {{friend.name}}
-        <ion-delete-button class="ion-minus-circled" ng-click="removeFriend()">
-        </ion-delete-button>
+    <div class="item item-divider">
+      Pending Received Friend Invitations
+    </div>
+
+    <ion-list>
+      <ion-item ng-repeat="receivedRequest in receivedRequests">
+        <span class="circle-border">{{$index + 1}}</span>
+        <span class="padding-left padding-right">{{receivedRequest.email}}</span>
+        <button class="button button-inline button-assertive" ng-click="removeFriend(receivedRequest)">
+          Decline
+        </button>
+        <button class="button button-inline button-balanced" ng-click="acceptFriend(receivedRequest)">
+          Accept
+        </button>
       </ion-item>
     </ion-list>
+
+    <div class="item item-divider">
+      Mutual Friends
+    </div>
+
+    <ion-list>
+      <ion-item ng-repeat="friend in friends">
+        <span class="circle-border">{{$index + 1}}</span>
+        <span class="padding-left padding-right">{{friend.email}}</span>
+        <button class="button button-inline button-assertive" ng-click="removeFriend(friend)">
+          Remove Friend
+        </button>
+      </ion-item>
+    </ion-list>
+
+    <div class="item item-divider">
+      Pending Sent Friend Invitations
+    </div>
+
+    <ion-list>
+      <ion-item ng-repeat="sentRequest in sentRequests">
+        <span class="circle-border">{{$index + 1}}</span>
+        <span class="padding-left padding-right">{{sentRequest.email}}</span>
+      </ion-item>
+    </ion-list>
+
   </ion-content>
 </ion-view>

@@ -4,7 +4,9 @@ angular.module('starter.controllers')
       Friend, Group) {
 
   $scope.groups = Group.getAllGroups();
-  $scope.friends = Friend.getFriends();
+  // TODO
+  // $scope.friends = Friend.getFriends();
+  $scope.friends = [{ name: 'Dan', email: 'dan@gmail.com' }];
 
   $ionicModal.fromTemplateUrl('templates/group/createGroup.html', {
       scope: $scope,

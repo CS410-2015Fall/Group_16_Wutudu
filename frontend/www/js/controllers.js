@@ -24,14 +24,14 @@ angular.module('starter.controllers', [])
         title: 'Successfully logged out'
       });
     }, function errorCallback (response) {
-      var templateString = '<p><b>Errors Message:</b> ' + response.data.errors + '</p>'
-        + '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'
-        + '<p><b>Request:</b> ' + response.config.method + ' ' + response.config.url + '</p>'
-        + '<p><b>Headers:</b> ' + JSON.stringify(response.config.headers) + '</p>'
-        + '<p><b>Data:</b> ' + JSON.stringify(response.config.data) + '</p>';
-      $ionicPopup.alert({
-        title: 'Error when logging out',
-        template: templateString
+      response.config.headers = JSON.stringify(response.config.headers);
+      response.config.data = JSON.stringify(response.config.data);
+      $scope.response = response;
+      $ionicPopup.show({
+        title: 'Logout Error',
+        templateUrl: 'templates/errorPopup.html',
+        scope: $scope,
+        buttons: [{ text: 'OK' }]
       });
     });
   }
@@ -51,14 +51,14 @@ angular.module('starter.controllers', [])
           template: response.data.name
         });
     }, function errorCallback (response) {
-      var templateString = '<p><b>Errors Message:</b> ' + response.data.errors + '</p>'
-        + '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'
-        + '<p><b>Request:</b> ' + response.config.method + ' ' + response.config.url + '</p>'
-        + '<p><b>Headers:</b> ' + JSON.stringify(response.config.headers) + '</p>'
-        + '<p><b>Data:</b> ' + JSON.stringify(response.config.data) + '</p>';
-      $ionicPopup.alert({
-        title: 'GET test error',
-        template: templateString
+      response.config.headers = JSON.stringify(response.config.headers);
+      response.config.data = JSON.stringify(response.config.data);
+      $scope.response = response;
+      $ionicPopup.show({
+        title: 'Get Test Error',
+        templateUrl: 'templates/errorPopup.html',
+        scope: $scope,
+        buttons: [{ text: 'OK' }]
       });
     });
   };
@@ -83,14 +83,14 @@ angular.module('starter.controllers', [])
         template: templateString
       });
     }, function errorCallback (response) {
-      var templateString = '<p><b>Errors Message:</b> ' + response.data.errors + '</p>'
-        + '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'
-        + '<p><b>Request:</b> ' + response.config.method + ' ' + response.config.url + '</p>'
-        + '<p><b>Headers:</b> ' + JSON.stringify(response.config.headers) + '</p>'
-        + '<p><b>Data:</b> ' + JSON.stringify(response.config.data) + '</p>';
-      $ionicPopup.alert({
-        title: 'POST test error',
-        template: templateString
+      response.config.headers = JSON.stringify(response.config.headers);
+      response.config.data = JSON.stringify(response.config.data);
+      $scope.response = response;
+      $ionicPopup.show({
+        title: 'Post Test Error',
+        templateUrl: 'templates/errorPopup.html',
+        scope: $scope,
+        buttons: [{ text: 'OK' }]
       });
     });
   };
