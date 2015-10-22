@@ -11,7 +11,7 @@ class SessionsController < ApiController
       unless @user.bcrypt_password == login_params[:password]
 
     @user.renew_api_key
-    return send_success({token: @user.api_key})
+    return send_success({token: @user.api_key, user: @user.basic_info})
   end
 
   def destroy
@@ -23,6 +23,8 @@ class SessionsController < ApiController
   private
 
   def login_params
-    params.require(:login).permit(:email, :password)
+    l = params.require(:login).permit(:email, :password)
+    [:email, :password].each {|p| l.require(p)}
+    l
   end
 end

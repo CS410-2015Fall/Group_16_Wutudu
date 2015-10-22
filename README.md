@@ -9,7 +9,11 @@
 
   * AUTHENTICATION: NONE
   * BODY: {"login" : {"email" : email, "password" : password}}
-  * RETURN: {"token" : token} 200 or
+  * RETURN: {
+              "token" : token,
+              "user" : {"id" : id, "email" : email, "name" : name}
+            }
+            200 or
             Request status. One of [
                                     "Incorrect Password" 400,
                                     "User With Email Not Found" 404,
@@ -37,7 +41,8 @@
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
   * RETURN: {"user" : {"id" : id, "email" : email, "name" : name}}
-
+```
+```
 2. POST:
 
   * AUTHENTICATION: NONE
@@ -49,7 +54,8 @@
 
 ```
 NOTE: If requested email does not exist, then always returns ["User With Email Not found", 404] for any actions except GET
-
+```
+```
 1. GET:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
@@ -61,20 +67,22 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
                                 "received_requests" : [{"id" : id, "name" : name, "email" : email}...]
                              }
             }
-
+```
+```
 2. POST:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: {"friendship" : {"email" : email}}
   * RETURN: Request status. One of [
                                     "Friend Request Sent" 200,
-                                    "Alrady A Friend" 400,
+                                    "Already A Friend" 400,
                                     "Friend Request Already Sent" 400,
                                     "Exisitng Friend Request From User" 400,
                                     "Unable To Send Friend Request" 400
                                    ]
   * NOTE: Used to send request to user
-
+```
+```
 3. PUT:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
@@ -82,11 +90,12 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
   * RETURN: Request status. One of [
                                     "Friend Accepted" 200,
                                     "Friend Request Not Found" 404,
-                                    "Alrady A Friend" 400,
+                                    "Already A Friend" 400,
                                     "Unable To Accept Friend" 400
                                    ]
   * NOTE: Used to accept confirm friend request from user
-
+```
+```
 4. DELETE:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
@@ -112,7 +121,8 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
                                 "pending_groups" : [{"id" : id, "name" : name}...]
                              }
             }
-
+```
+```
 2. POST:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
@@ -127,7 +137,8 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
                                     "Failed To Create Group and Add User" 400
                                    ]
   * NOTE: Used to initiate a group with client and/or selected users in it
-
+```
+```
 3. PUT (Unvailable and WIP):
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
@@ -144,7 +155,8 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
 
 ```
 NOTE: If requester not in group with :id, then always returns ["Not In Group", 404] for any actions
-
+```
+```
 1. GET:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
@@ -157,7 +169,8 @@ NOTE: If requester not in group with :id, then always returns ["Not In Group", 4
             }
             or
             Request status ["Not Accepted To Group" 400] when the user has yet to accept group invitation
-
+```
+```
 2. POST:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
@@ -169,7 +182,8 @@ NOTE: If requester not in group with :id, then always returns ["Not In Group", 4
                                     "Failed To Invite At Least One User" 400
                                    ]
   * NOTE: Used to invite users to the group (assuming these users are friends)
-
+```
+```
 3. PUT:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
@@ -180,7 +194,8 @@ NOTE: If requester not in group with :id, then always returns ["Not In Group", 4
                                     "Failed To Join Group" 400
                                    ]
   * NOTE: Used to accept confirm group invitation
-
+```
+```
 4. DELETE:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"

@@ -19,4 +19,5 @@ Rails.application.routes.draw do
   match '/groups/:id/users' => 'group_users#update', via: :put
   match '/groups/:id/users' => 'group_users#destroy', via: :delete
 
+  root  'application#show'
 end

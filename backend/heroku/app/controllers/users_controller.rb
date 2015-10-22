@@ -20,6 +20,8 @@ class UsersController < ApiController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :password)
+    u = params.require(:user).permit(:name, :email, :password)
+    [:name, :email, :password].each {|p| u.require(p)}
+    u
   end
 end

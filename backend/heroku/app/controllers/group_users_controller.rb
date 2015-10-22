@@ -2,9 +2,7 @@ class GroupUsersController < GroupsController
   before_action :authenticate, :client_in_group
 
   def show
-    return send_errors("Not Accepted To Group", 400) \
-      unless @group.group_users.where(user_id: @user.id).first.approved
-
+    # get rid
     all_users = {
                   group_users:
                     {
@@ -37,7 +35,9 @@ class GroupUsersController < GroupsController
 
   private
   def group_user_params
-    params.require(:group_user).permit(:emails => [])
+    g_u = params.require(:group_user).permit(emails: [])
+    g_u.require(:emails)
+    g_u
   end
 
   # Check if requester is in group

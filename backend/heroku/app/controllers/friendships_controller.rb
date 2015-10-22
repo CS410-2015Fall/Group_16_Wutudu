@@ -1,6 +1,6 @@
 class FriendshipsController < ApiController
   before_action :authenticate
-  before_action :friend_exists, except: [:show]
+  before_action :friend_exists, :check_not_yourself, except: [:show]
 
   def show
     all_fships = {
@@ -23,7 +23,7 @@ class FriendshipsController < ApiController
     when 3
       return send_errors("Existing Friend Request From User", 400)
     else
-      friendship = @user.friendships.build(:friend_id => @friend.id, :approved => false)
+      friendship = @user.friendships.build(friend_id: @friend.id, approved: false)
       return send_errors("Unable To Send Friend Request", 400) unless friendship.save
       return send_success({message: "Friend Request Sent"})
     end
@@ -53,12 +53,17 @@ class FriendshipsController < ApiController
 
   private
 
-  def friend_params
-    params.require(:friendship).permit(:email)
+  def friend_email
+    params.require(:friendship).require(:email)
   end
 
   def friend_exists
-    @friend = User.find_by_email(friend_params[:email])
+    @friend = User.find_by_email(friend_email)
     return send_errors("User With Email Not Found", 404) unless @friend
+  end
+
+  def check_not_yourself
+    return send_errors("Cannot Send Friend Request To Yourself", 400) \
+      if @user.id == @friend.id
   end
 end

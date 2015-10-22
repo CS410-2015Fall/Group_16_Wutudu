@@ -2,10 +2,13 @@ class GroupsController < ApiController
   before_action :authenticate
 
   def show
-    render json: {
-                   groups: {active_groups: @user.active_groups.collect{|g| g.basic_info},
-                           pending_groups: @user.pending_groups.collect{|g| g.basic_info}}
-                  }, status: 200
+    message =  {
+                 groups: {
+                           active_groups: @user.active_groups.collect{|g| g.basic_info},
+                           pending_groups: @user.pending_groups.collect{|g| g.basic_info}
+                         }
+               }
+    return send_success(message)
   end
 
   def create
@@ -24,8 +27,14 @@ class GroupsController < ApiController
   end
 
   private
+
+  def params_for_create
+  end
+
   def group_params
-    params.require(:group).permit(:name, :id, :emails => [])
+    gp = params.require(:group).permit(:emails => [])
+    gp.require(:name)
+    return gp
   end
 
   def add_users_to_group(gid, emails)
