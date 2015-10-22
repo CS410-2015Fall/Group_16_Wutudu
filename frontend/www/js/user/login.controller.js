@@ -1,6 +1,10 @@
 angular.module('starter.controllers')
 
-.controller('LoginCtrl', function ($scope, $state, $http, $ionicPopup) {
+.controller('LoginCtrl', function ($scope, $state, $http, $ionicPopup, User) {
+  if(User.getSession()) {
+    $state.go('app.main');
+  }
+
   $scope.loginData = {};
 
   $scope.validateLogin = function () {
@@ -35,6 +39,7 @@ angular.module('starter.controllers')
       console.log('Login success: auth token=' + response.data.token);
       $scope.loginData = {}; // Clear form data
       $scope.$root.TOKEN = response.data.token;
+      User.setSession($scope.$root.TOKEN);
       $state.go('app.main');
     }, function errorCallback (response) {
       response.config.headers = JSON.stringify(response.config.headers);
