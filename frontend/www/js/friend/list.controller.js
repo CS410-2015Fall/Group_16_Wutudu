@@ -27,8 +27,21 @@ angular.module('starter.controllers')
     });
   });
 
+  $scope.validateNewFriend = function () {
+    if ($scope.data.friendToAdd === '') {
+      $ionicPopup.alert({
+        title: 'Failed to send friend request',
+        template: 'The email cannot be blank.'
+      });
+      return false;
+    }
+    return true;
+  };
+
   $scope.addFriend = function () {
-    console.log('addFriend', data.friendToAdd);
+    if (!this.validateNewFriend()) {
+      return;
+    }
     Friend.sendFriendRequest({
       'token': $scope.$root.TOKEN,
       'urlRoot': $scope.$root.SERVER_URL,
@@ -65,7 +78,7 @@ angular.module('starter.controllers')
         return f.email !== friend.email;
       });
       $ionicPopup.alert({
-        title: 'You are now mutual friends with ' + friend.email + '!'
+        title: 'You are now friends with ' + friend.email + '!'
       });
     }, function errorCallback (response) {
       response.config.headers = JSON.stringify(response.config.headers);
@@ -80,33 +93,54 @@ angular.module('starter.controllers')
     });
   };
 
-  $scope.removeFriend = function (friend) {
+  $scope.removeFriend = function (friend, type) {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Remove Friend',
       template: 'Are you sure you want to remove this friend?'
     });
     confirmPopup.then(function (response) {
       if (response) {
-        $scope.doRemoveFriend(friend);
+        $scope.doRemoveFriend(friend, 'remove');
       }
     });
   };
 
-  $scope.doRemoveFriend = function (friend) {
+  $scope.cancelInvite = function (friend) {
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Cancel Friend Invite',
+      template: 'Are you sure you want to remove this friend invite?'
+    });
+    confirmPopup.then(function (response) {
+      if (response) {
+        $scope.doRemoveFriend(friend, 'invite');
+      }
+    });
+  };
+
+  $scope.doRemoveFriend = function (friend, type) {
     console.log('removeFriend');
     Friend.removeFriend({
       'token': $scope.$root.TOKEN,
       'urlRoot': $scope.$root.SERVER_URL,
       'data': { 'friendship' : { 'email' : friend.email }}
     }).then(function successCallback (response) {
-      $scope.friends = $scope.friends.filter(function (f) {
-        return f.email !== friend.email;
-      });
-      $scope.receivedRequests = $scope.receivedRequests.filter(function (f) {
-        return f.email !== friend.email;
-      });
+      var popupMsg;
+      if (type === 'remove') {
+        $scope.friends = $scope.friends.filter(function (f) {
+          return f.email !== friend.email;
+        });
+        $scope.receivedRequests = $scope.receivedRequests.filter(function (f) {
+          return f.email !== friend.email;
+        });
+        popupMsg = 'You are no longer friends with ' + friend.email + '!';
+      } else if (type == 'invite') {
+        $scope.sentRequests = $scope.sentRequests.filter(function (f) {
+          return f.email !== friend.email;
+        });
+        popupMsg = 'Your friend invite to ' + friend.email + ' has been cancelled!';
+      }
       $ionicPopup.alert({
-        title: 'You are no longer friends with ' + friend.email + '!'
+        title: popupMsg
       });
     }, function errorCallback (response) {
       response.config.headers = JSON.stringify(response.config.headers);

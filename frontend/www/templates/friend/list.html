@@ -30,7 +30,7 @@
     </ion-list>
 
     <div class="item item-divider">
-      Mutual Friends
+      Friends
     </div>
 
     <ion-list>
@@ -51,6 +51,9 @@
       <ion-item ng-repeat="sentRequest in sentRequests">
         <span class="circle-border">{{$index + 1}}</span>
         <span class="padding-left padding-right">{{sentRequest.email}}</span>
+        <button class="button button-inline button-assertive" ng-click="cancelInvite(sentRequest)">
+          Cancel Invite
+        </button>
       </ion-item>
     </ion-list>
 

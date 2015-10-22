@@ -23,7 +23,7 @@ class FriendshipsController < ApiController
     when 3
       return send_errors("Existing Friend Request From User", 400)
     else
-      friendship = @user.friendships.build(:friend_id => friend.id, :approved => false)
+      friendship = @user.friendships.build(:friend_id => @friend.id, :approved => false)
       return send_errors("Unable To Send Friend Request", 400) unless friendship.save
       return send_success({message: "Friend Request Sent"})
     end
