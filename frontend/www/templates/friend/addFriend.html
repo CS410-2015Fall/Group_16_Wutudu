@@ -1,7 +1,7 @@
 <ul class="list">
-  <li ng-repeat="friend in friends" class="item item-checkbox">
+  <li ng-repeat="friend in data.friends" class="item item-checkbox">
      <label class="checkbox">
-       <input ng-model="friend.add" type="checkbox">
+       <input ng-model="friend.invited" type="checkbox">
      </label>
      {{ friend.name }}
   </li>

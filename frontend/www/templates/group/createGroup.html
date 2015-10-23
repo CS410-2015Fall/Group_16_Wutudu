@@ -1,23 +1,25 @@
 <ion-modal-view >
   <ion-header-bar>
     <h1 class="title">Create Group</h1>
-    <button class="button ion-close" ng-click="cancelGroup()"></button>
+    <button class="button ion-close" ng-click="cancelCreateGroup()"></button>
   </ion-header-bar>
 
   <ion-content>
     <div class="item item-input-inset">
       <span>Name: </span>
           <label class="item-input-wrapper">
-            <input type="text" placeholder="Group Name" ng-model="group.name">
+            <input type="text" placeholder="Group Name" ng-model="data.createGroup.name">
           </label>
     </div>
     <button class="button icon-right ion-plus-circled" ng-click="addFriendToGroup()">Friends</button>
 
     <ion-list>
-      <ion-item ng-repeat="friend in friends" ng-click="goToFriend(friend.id)">
+      <ion-item ng-repeat="friend in data.friendsInvited" ng-click="goToFriend(friend.id)">
         <span class="circle-border">{{$index + 1}}</span> {{friend.name}}
       </ion-item>
     </ion-list>
+
+    <button class="button button-outline button-balanced icon-right ion-checkmark-round" ng-click="createGroup()">Create Group</button>
   </ion-content>
 </ion-modal-view>
 

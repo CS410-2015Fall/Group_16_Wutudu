@@ -21,5 +21,5 @@ angular.module('starter.services', [])
     getObject: function(key) {
       return JSON.parse($window.localStorage[key] || '{}');
     }
-  }
+  };
 });
