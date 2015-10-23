@@ -17,7 +17,7 @@ class GroupsController < ApiController
 
     gu = group.group_users.build(user_id: @user.id, approved: true)
     if gu.save
-      return send_success({group: group, message: "Group Created"}) if group_params[:emails].nil?
+      return send_success({group: group.basic_info, message: "Group Created"}) if group_params[:emails].nil?
       message, code = add_users_to_group(group.id, group_params[:emails])
       return (code == 200 ? send_success(message) : send_errors(message, code))
     else
@@ -67,7 +67,7 @@ class GroupsController < ApiController
     elsif size_counter < emails.length
       return "Failed To Invite At Least One User", 400
     else
-      return {group: group, message: "All Users Invited"}, 200
+      return {group: group.basic_info, message: "All Users Invited"}, 200
     end
   end
 end

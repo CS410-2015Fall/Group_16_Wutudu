@@ -85,6 +85,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   .state('app.groupList', {
     url: '/group' ,
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/group/list.html',
