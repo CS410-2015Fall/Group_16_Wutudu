@@ -29,8 +29,8 @@ class GroupUsersController < GroupsController
   def destroy
     approved = @g_user.approved
     @g_user.destroy
-    return send_success({mssage: "Request Declined"}) unless approved
-    return send_success({mssage: "Left Group"})
+    return send_success({message: "Request Declined"}) unless approved
+    return send_success({message: "Left Group"})
   end
 
   private
@@ -43,10 +43,8 @@ class GroupUsersController < GroupsController
   # Check if requester is in group
   def client_in_group
     @group = @user.groups.find_by_id(params[:id])
-    unless @group
-      return send_errors("Not In Group", 404)
-    else
-      @g_user = GroupUser.where(group_id: @group.id, user_id: @user.id).first
+    return send_errors("Not In Group", 404) unless @group
+    @g_user = GroupUser.where(group_id: @group.id, user_id: @user.id).first
     end
   end
 

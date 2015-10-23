@@ -19,6 +19,9 @@ class User < ActiveRecord::Base
   has_many :active_groups, -> { where(group_users: { approved: true}) }, :through => :group_users, :source => :group
   has_many :pending_groups, -> { where(group_users: { approved: false}) }, :through => :group_users, :source => :group
 
+  # PreWutudu
+  has_many :pre_wutudus, through: :group
+
   def bcrypt_password
     BCrypt::Password.new(self.password)
   end

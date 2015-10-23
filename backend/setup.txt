@@ -1,0 +1,12 @@
+download ruby 2.2.3 from ruby site
+
+follow instructions on https://github.com/oneclick/rubyinstaller/wiki/Development-Kit
+
+then follow instructions on https://devcenter.heroku.com/articles/getting-started-with-ruby#introduction
+
+then follow instructions on https://github.com/heroku/heroku-builds
+
+If you run into an H10 error when pushing to the server, run this: 
+    git config --global core.autocrlf false
+    dos2unix bin/*
+    (The problem was that the bin/* files had CRLF..)

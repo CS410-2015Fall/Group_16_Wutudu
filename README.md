@@ -206,3 +206,100 @@ NOTE: If requester not in group with :id, then always returns ["Not In Group", 4
                                    ]
   * NOTE: Used to decline group invitation or leave group
 ```
+
+
+##/groups/:group_id/prewutudu
+
+```
+NOTE: If requester not in group with :gid, then always returns ["Not In Group", 404] for any actions
+```
+```
+1. POST:
+
+  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
+  * BODY: {"pre_wutudu" : {"event_date" : "DD-MMM-YYYY", "latitude" : latitude, "longitude" : longitude}}
+  * RETURN: {
+              "pre_wutudu" : {
+                                "pre_wutudu_id": pre_wutudu_id,
+                                "event_date": "YYYY-MM-DDT00:00:00.000Z",
+                                "latitude": latitude,
+                                "longitude": longitude,
+                                "questions": {
+                                    "0": {
+                                        "id": question_id,
+                                        "question_text": question,
+                                        "a0_text": answer_0,
+                                        "a1_text": answer_1,
+                                        "a2_text": answer_2,
+                                        "a3_text": answer_3
+                                      }
+                                      (...)
+                                    "9": {
+                                        "id": question_id,
+                                        "question_text": question,
+                                        "a0_text": answer_0,
+                                        "a1_text": answer_1,
+                                        "a2_text": answer_2,
+                                        "a3_text": answer_3
+                                      }
+                                  }
+                             },
+              "message" : "PreWutudu Created"
+            } 200
+            or
+            Request Status ["Failed To Create PreWutudu" 400] if the creation failed
+            or
+            Request status ["User Not In Group" 400] when the user is not in the group
+```
+
+##/groups/:group_id/prewutudu/:id
+
+```
+NOTE: If requester not in group with :group_id, then always returns ["User Not In Group", 404] for any actions
+```
+```
+1. GET:
+
+  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
+  * BODY: NONE
+  * RETURN: Request status. One of [
+                                    {"pre_wutudu" : {
+                                        "pre_wutudu_id": pre_wutudu_id,
+                                        "event_date": "YYYY-MM-DDT00:00:00.000Z",
+                                        "latitude": latitude,
+                                        "longitude": longitude,
+                                        "questions": {
+                                            "0": {
+                                                "id": question_id,
+                                                "question_text": question,
+                                                "a0_text": answer_0,
+                                                "a1_text": answer_1,
+                                                "a2_text": answer_2,
+                                                "a3_text": answer_3
+                                              }
+                                              (...)
+                                            "9": {
+                                                "id": question_id,
+                                                "question_text": question,
+                                                "a0_text": answer_0,
+                                                "a1_text": answer_1,
+                                                "a2_text": answer_2,
+                                                "a3_text": answer_3
+                                              }
+                                          }
+                                      }} 200,
+                                    "PreWutudu Not Found In Group" 404,
+                                   ]
+  * NOTE: Used to get the information of a pre_wutudu
+```
+```
+3. DELETE:
+
+  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
+  * BODY: NONE
+  * RETURN: Request status. One of [
+                                    "PreWutudu Deleted" 200,
+                                    "Failed To Delete PreWutudu" 400,
+                                   ]
+  * NOTE: Used to delete a pre wutudu
+```

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  qnum: 1
+  question_id: 
+  prewutudu_id: 
+
+two:
+  qnum: 1
+  question_id: 
+  prewutudu_id: 
