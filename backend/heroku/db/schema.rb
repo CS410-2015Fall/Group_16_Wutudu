@@ -11,14 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019202140) do
+ActiveRecord::Schema.define(version: 20151023100217) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "categories", force: :cascade do |t|
-    t.string "category_name"
+    t.string  "category_name"
+    t.string  "yelp_id"
+    t.integer "cat_id"
   end
+
+  add_index "categories", ["cat_id"], name: "index_categories_on_cat_id", using: :btree
+  add_index "categories", ["yelp_id"], name: "index_categories_on_yelp_id", using: :btree
 
   create_table "friendships", force: :cascade do |t|
     t.integer  "user_id"
@@ -50,6 +55,18 @@ ActiveRecord::Schema.define(version: 20151019202140) do
     t.integer "group_id", null: false
   end
 
+  create_table "pre_wutudu_questions", force: :cascade do |t|
+    t.integer  "qnum"
+    t.integer  "question_id"
+    t.integer  "pre_wutudu_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "pre_wutudu_questions", ["pre_wutudu_id"], name: "index_pre_wutudu_questions_on_pre_wutudu_id", using: :btree
+  add_index "pre_wutudu_questions", ["qnum"], name: "index_pre_wutudu_questions_on_qnum", using: :btree
+  add_index "pre_wutudu_questions", ["question_id"], name: "index_pre_wutudu_questions_on_question_id", using: :btree
+
   create_table "pre_wutudus", force: :cascade do |t|
     t.datetime "event_date"
     t.decimal  "latitude"
@@ -62,8 +79,11 @@ ActiveRecord::Schema.define(version: 20151019202140) do
   add_index "pre_wutudus", ["group_id"], name: "index_pre_wutudus_on_group_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
-    t.integer "qnum"
-    t.text    "question"
+    t.text "question_text"
+    t.text "a0_text"
+    t.text "a1_text"
+    t.text "a2_text"
+    t.text "a3_text"
   end
 
   create_table "user_answers", force: :cascade do |t|
@@ -105,6 +125,8 @@ ActiveRecord::Schema.define(version: 20151019202140) do
 
   add_foreign_key "group_users", "groups"
   add_foreign_key "group_users", "users"
+  add_foreign_key "pre_wutudu_questions", "pre_wutudus"
+  add_foreign_key "pre_wutudu_questions", "questions"
   add_foreign_key "pre_wutudus", "groups"
   add_foreign_key "user_answers", "pre_wutudus"
   add_foreign_key "user_answers", "users"

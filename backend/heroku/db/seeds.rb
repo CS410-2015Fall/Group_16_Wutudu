@@ -5,3 +5,53 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+# Might want the categories in the seed file too?
+
+main_categories = [
+      {cat_id: 1, category_name: 'Active Life', yelp_id: 'active'},
+      {cat_id: 2, category_name: 'Arts & Entertainment', yelp_id: 'arts'},
+      {cat_id: 3, category_name: 'Beauty & Spas', yelp_id: 'beautysvc'},
+      {cat_id: 4, category_name: 'Education', yelp_id: 'education'},
+      {cat_id: 5, category_name: 'Food', yelp_id: 'food'},
+      {cat_id: 6, category_name: 'Active Life', yelp_id: 'hotelstravel'},
+      {cat_id: 7, category_name: 'Local Flavour', yelp_id: 'localflavour'},
+      {cat_id: 8, category_name: 'Nightlife', yelp_id: 'nightlife'},
+      {cat_id: 9, category_name: 'Pets', yelp_id: 'pets'},
+      {cat_id: 10, category_name: 'Restaurants', yelp_id: 'restaurants'},
+      {cat_id: 11, category_name: 'Shopping', yelp_id: 'shopping'},
+    ]
+    
+main_categories.each do |mc|
+  category = Category.where(cat_id: mc[:cat_id]).first_or_initialize
+    category.update_attributes!(mc) 
+  category.save
+end
+
+
+questions = [
+  {id: 1, question_text: "If you were an animal, what animal would you be?", 
+            a0_text: "Dog", a1_text: "Cat",
+            a2_text: "Giraffe", a3_text: "Honey Badger"},
+  {id: 2, question_text: "If you were a fruit, what fruit would you be?",
+            a0_text: "Apple", a1_text: "Strawberry",
+            a2_text: "Mango", a3_text: "Banana"},
+  {id: 3, question_text: "Will you be hungry later?"},
+  {id: 4, question_text: "Do you like playing sports?"},
+  {id: 5, question_text: "Do you like playing video games?"},
+  {id: 6, question_text: "What message should show up if you Dad calls you when you are playing a message from your answering machine"},
+  {id: 7, question_text: "Hello there. How are you?"},
+  {id: 8, question_text: "Do you like dancing?"},
+  {id: 9, question_text: "Do you like solving puzzles?"},
+  {id: 10, question_text: "Do you like buying clothes?"},
+  {id: 11, question_text: "What do you want to do?"},
+  {id: 12, question_text: "What type of food would you prefer?"},
+  {id: 13, question_text: "What do you mean?"},
+  {id: 14, question_text: "What is the meaning of life?"},
+]
+
+questions.each do |q|
+  question = Question.where(id: q[:id]).first_or_initialize
+  question.update_attributes!(q)
+  question.save
+end
