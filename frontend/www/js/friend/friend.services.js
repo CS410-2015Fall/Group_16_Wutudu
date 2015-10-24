@@ -1,51 +1,39 @@
 angular.module('starter.services')
 
-.factory('Friend', function ($http) {
+.factory('Friend', function ($httpService) {
   console.log('friend service');
 
   return {
     getFriends: function (config) {
-      return $http({
+      var payload = {
         method: 'GET',
-        headers: {
-         'Content-Type': 'application/json',
-         'Authorization' : 'Token token=' + config.token
-        },
-        url: config.urlRoot + '/friends',
-      });
+        url: '/friends'
+      };
+      return $httpService.makeRequest(payload);
     },
     sendFriendRequest: function (config) {
-      return $http({
+      var payload = {
         method: 'POST',
         data: config.data,
-        headers: {
-         'Content-Type': 'application/json',
-         'Authorization' : 'Token token=' + config.token
-        },
-        url: config.urlRoot + '/friends',
-      });
+        url: '/friends'
+      };
+      return $httpService.makeRequest(payload);
     },
     acceptFriendRequest: function (config) {
-      return $http({
+      var payload = {
         method: 'PUT',
         data: config.data,
-        headers: {
-         'Content-Type': 'application/json',
-         'Authorization' : 'Token token=' + config.token
-        },
-        url: config.urlRoot + '/friends',
-      });
+        url: '/friends'
+      };
+      return $httpService.makeRequest(payload);
     },
     removeFriend: function (config) {
-      return $http({
+      var payload = {
         method: 'DELETE',
         data: config.data,
-        headers: {
-         'Content-Type': 'application/json',
-         'Authorization' : 'Token token=' + config.token
-        },
-        url: config.urlRoot + '/friends',
-      });
+        url: '/friends'
+      }
+      return $httpService.makeRequest(payload);
     }
   }
 });

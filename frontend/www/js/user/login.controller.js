@@ -1,6 +1,6 @@
 angular.module('starter.controllers')
 
-.controller('LoginCtrl', function ($scope, $state, $http, $ionicPopup, User) {
+.controller('LoginCtrl', function ($scope, $state, $httpService, $ionicPopup, User) {
   if(User.getSession()) {
     $state.go('app.main');
   }
@@ -28,18 +28,16 @@ angular.module('starter.controllers')
   };
 
   $scope.doLogin = function (requestData) {
-    $http({
+    var payload = {
       method: 'POST',
-      headers: {
-       'Content-Type': 'application/json'
-      },
       data: requestData,
-      url: this.$root.SERVER_URL + '/login'
-    }).then(function successCallback (response) {
+      url: '/login'
+    };
+    $httpService.makeRequest(payload).then(function successCallback (response) {
       console.log('Login success: auth token=' + response.data.token);
       $scope.loginData = {}; // Clear form data
       $scope.$root.TOKEN = response.data.token;
-      User.setSession($scope.$root.TOKEN);
+      User.setSession(response.data.token, response.data.user);
       $state.go('app.main');
     }, function errorCallback (response) {
       response.config.headers = JSON.stringify(response.config.headers);

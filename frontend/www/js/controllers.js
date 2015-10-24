@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function ($scope, $ionicPopup, $http, $state, User) {
+.controller('AppCtrl', function ($scope, $ionicPopup, $httpService, $state, User) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -9,16 +9,15 @@ angular.module('starter.controllers', [])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
+  $scope.user = User.getUserInfo();
+
   $scope.logout = function () {
     console.log('logout token = ' + this.$root.TOKEN);
-    $http({
+    var payload = {
       method: 'DELETE',
-      headers: {
-       'Content-Type': 'application/json',
-       'Authorization' : 'Token token=' + this.$root.TOKEN
-      },
-      url: this.$root.SERVER_URL + '/logout',
-    }).then(function successCallback (response) {
+      url: '/logout'
+    };
+    $httpService.makeRequest(payload).then(function successCallback (response) {
       User.removeSession();
       $state.go('login');
       var alertPopup = $ionicPopup.alert({

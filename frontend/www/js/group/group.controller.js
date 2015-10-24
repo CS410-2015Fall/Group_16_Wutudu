@@ -2,11 +2,36 @@ angular.module('starter.controllers')
 
 .controller('GroupCtrl', function($scope, $stateParams,
          $ionicPopup, $ionicModal, Friend, Group, Wutudu) {
-  var groupId = $stateParams.groupId;
-  $scope.group = Group.getGroup(groupId);
-  // TODO
-  // $scope.friends = Friend.getFriends();
-  $scope.friends = [{ name: 'Dan', email: 'dan@gmail.com' }];
+  var groupId = $stateParams.groupId,
+      config = {
+              token: $scope.$root.TOKEN,
+              urlRoot: $scope.$root.SERVER_URL
+            };
+
+  // $scope.group = Group.getGroup(groupId);
+  Friend.getFriends(config).then(setupFriends, handleError);
+
+  //TODO
+  $scope.data = {};
+
+  function setupFriends(response) {
+    var friends = response.data.friendships.friends;
+    $scope.data.friends = friends; // use it for add friend
+  }
+
+  function handleError(response) {
+    response.config.headers = JSON.stringify(response.config.headers);
+    response.config.data = JSON.stringify(response.config.data);
+    $scope.response = response;
+    var data = {
+      title: 'Get Group error',
+      templateUrl: 'templates/errorPopup.html',
+      scope: $scope,
+      buttons: [{ text: 'OK' }]
+    };
+    $ionicPopup.show(data);
+  }
+
   $scope.inProgressWutudus = Wutudu.getInProgressWutudus({groupId: groupId});
   $scope.upcomingWutudus = Wutudu.getInProgressWutudus({groupId: groupId});
 

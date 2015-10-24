@@ -23,14 +23,14 @@ class GroupUsersController < GroupsController
 
     @g_user.approved = true
     return send_errors("Failed To Join Group", 400) unless @g_user.save
-    return send_success({message: "Group Joined"}) 
+    return send_success({group: @group.basic_info, message: "Group Joined"})
   end
 
   def destroy
     approved = @g_user.approved
     @g_user.destroy
-    return send_success({message: "Request Declined"}) unless approved
-    return send_success({message: "Left Group"})
+    return send_success({group: @group.basic_info, message: "Request Declined"}) unless approved
+    return send_success({group: @group.basic_info, message: "Left Group"})
   end
 
   private

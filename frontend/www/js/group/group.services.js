@@ -1,37 +1,42 @@
 angular.module('starter.services')
 
-.factory('Group', function($http) {
-
-  var makeRequest = function(config) {
-    return $http({
-      method: config.method,
-      data: config.data,
-      headers: {
-       'Content-Type': 'application/json',
-       'Authorization' : 'Token token=' + config.token
-      },
-      url: config.url,
-    });
-  }
+.factory('Group', function($httpService) {
 
   return {
-    getGroup: function(groupId) {
-      // validate and get group from server
-    },
-    getAllGroups: function(config) {
-      var url = config.urlRoot + '/groups',
-          token = config.token,
-          payload = {
+    getGroup: function(config) {
+      if(!config.groupId) throw "Group id needed to get group"
+      var payload = {
             method: 'GET',
-            token: token,
-            url: url
+            url: '/groups/' + config.groupId + '/users'
           };
-          return makeRequest(payload);
+      return $httpService.makeRequest(payload);
+    },
+    addGroup: function(config) {
+      if(!config.groupId) throw "Need to specify groupId to add";
+       var payload = {
+        method: 'PUT',
+        url: '/groups/' + config.groupId + '/users'
+      };
+      return $httpService.makeRequest(payload);
+    },
+    removeGroup: function(config) {
+      if(!config.groupId) throw "Need to specify groupId to remove";
+      var payload = {
+        method: 'DELETE',
+        url: '/groups/' + config.groupId + '/users'
+      };
+      return $httpService.makeRequest(payload);
+    },
+    getAllGroups: function() {
+      var payload = {
+            method: 'GET',
+            url: '/groups'
+          };
+      return $httpService.makeRequest(payload);
     },
     createGroup: function(config) {
-      var url = config.urlRoot + '/groups',
-          token = config.token,
-          groupName = config.name,
+      if(!config.name) throw "Please specify group name";
+      var groupName = config.name,
           memberEmails = config.emails,
           data = {
             group: {
@@ -41,11 +46,10 @@ angular.module('starter.services')
           },
           payload = {
             method: 'POST',
-            token: token,
             data: data,
-            url: url
+            url: '/groups'
           };
-          return makeRequest(payload);
+      return $httpService.makeRequest(payload);
     }
   }
 });

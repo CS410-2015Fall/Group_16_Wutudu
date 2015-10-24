@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
-.run(function ($ionicPlatform, $rootScope, User) {
+.run(function ($ionicPlatform) {
   $ionicPlatform.ready(function () {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -32,20 +32,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     return hash.toString();
   };
 
-  $rootScope.TOKEN = "";
-  // $rootScope.SERVER_URL = "http://localhost:5000";
-  $rootScope.SERVER_URL = "https://stormy-hollows-9187.herokuapp.com";
-  $rootScope.$on('$stateChangeStart', function(event, next, current) {
-    $rootScope.TOKEN = User.getSession();
-  });
 })
-
 .config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider
 
   .state('app', {
     url: '/app',
     abstract: true,
+    cache: false,
     templateUrl: 'templates/menu.html',
     controller: 'AppCtrl'
   })

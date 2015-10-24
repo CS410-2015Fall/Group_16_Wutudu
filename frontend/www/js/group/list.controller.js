@@ -3,21 +3,18 @@ angular.module('starter.controllers')
 .controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal, $state,
       Friend, Friend, Group) {
 
-    var config = {
-        token: $scope.$root.TOKEN,
-        urlRoot: $scope.$root.SERVER_URL
-      },
-      createGroupTpl = 'templates/group/createGroup.html',
+    var createGroupTplUrl = 'templates/group/createGroup.html',
       createGroupTplConfig = {
           scope: $scope,
           animation: 'slide-in-up'
       };
 
-  Group.getAllGroups(config)
+  Group.getAllGroups()
                 .then(setupGroups, handleError);
 
-  $ionicModal.fromTemplateUrl(createGroupTpl, createGroupTplConfig)
-  .then(setupModal);
+  $ionicModal
+    .fromTemplateUrl(createGroupTplUrl, createGroupTplConfig)
+    .then(setupModal);
 
   function setupFriends(response) {
     var friends = response.data.friendships.friends;
@@ -47,6 +44,52 @@ angular.module('starter.controllers')
     $ionicPopup.show(data);
   }
 
+  $scope.acceptInvitation = function(groupId) {
+    var config = {
+      groupId: groupId
+    };
+    Group.addGroup(config)
+      .then(addGroupFromView, handleError);
+  }
+
+  function addGroupFromView(response) {
+    var data = response.data;
+    showMsg({
+      title: 'Join group',
+      template: '<span>' + JSON.stringify(data) + '</span>'
+    });
+    var selectedGroup = function(group) {
+      return group.id !== data.group.id;
+    };
+    $scope.activeGroups.push(data.group);
+    $scope.pendingGroups = $scope.pendingGroups.filter(selectedGroup);
+  }
+
+  $scope.leaveGroup = function(groupId) {
+    var config = {
+      groupId: groupId
+    };
+    Group.removeGroup(config)
+      .then(removeGroupFromView, handleError);
+  }
+
+  function removeGroupFromView(response) {
+    var data = response.data;
+    showMsg({
+      title: 'Left/Decline group',
+      template: '<span>' + JSON.stringify(data) + '</span>'
+    });
+    var groupLeft = function(group) {
+      return group.id !== data.group.id;
+    };
+    $scope.activeGroups = $scope.activeGroups.filter(groupLeft);
+    $scope.pendingGroups = $scope.pendingGroups.filter(groupLeft);
+  }
+
+  $scope.declineInvitation = function(groupId) {
+    $scope.leaveGroup(groupId);
+  }
+
   $scope.showCreateGroup = function() {
     $scope.data = {
       createGroup: {
@@ -55,8 +98,8 @@ angular.module('starter.controllers')
       friends : [],
       friendsInvited: []
     };
-    Friend.getFriends(config)
-                  .then(setupFriends, handleError);
+    Friend.getFriends()
+      .then(setupFriends, handleError);
     $scope.modal.show();
   };
 
@@ -73,12 +116,13 @@ angular.module('starter.controllers')
 
     if(!validateCreateGroup(name)) return;
 
-    Object.assign(config, {
+   var config = {
       name: name,
       emails: emails
-    })
+    };
 
-    Group.createGroup(config).then(groupCreated, handleError);
+    Group.createGroup(config)
+      .then(groupCreated, handleError);
   }
 
   function validateCreateGroup(name) {
