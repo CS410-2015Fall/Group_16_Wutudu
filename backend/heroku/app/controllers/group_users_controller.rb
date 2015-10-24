@@ -45,7 +45,6 @@ class GroupUsersController < GroupsController
     @group = @user.groups.find_by_id(params[:id])
     return send_errors("Not In Group", 404) unless @group
     @g_user = GroupUser.where(group_id: @group.id, user_id: @user.id).first
-    end
   end
 
   def check_pending(id)

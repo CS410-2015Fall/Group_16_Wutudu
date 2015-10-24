@@ -46,7 +46,7 @@ class PreWutuduController < ApiController
 
   # Check if client in the group that the wutudu refers to
   def wutudu_in_group
-    @pre_wutudu = @  group.pre_wutudus.find_by_id(params[:id])
+    @pre_wutudu = @group.pre_wutudus.find_by_id(params[:id])
     return send_errors("PreWutudu Not Found In Group", 404) unless @pre_wutudu
   end
 end
