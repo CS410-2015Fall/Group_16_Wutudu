@@ -32,7 +32,6 @@ angular.module('starter.services', [])
     makeRequest: function(config) {
       if(!config) throw "No config for http";
       if(!config.method || !config.url) throw "One or more config missing";
-      // use the token and make the constants
       var token = User.getSession(),
           httpConfig = {
             method: config.method,
@@ -45,5 +44,20 @@ angular.module('starter.services', [])
           };
       return $http(httpConfig);
     }
-  }
+  };
+})
+
+.factory('$msgBox', function($ionicPopup) {
+  return {
+    show: function($scope, msg) {
+      var data = {
+         template: msg.template,
+         templateUrl: msg.templateUrl,
+         title: msg.title,
+         scope: $scope,
+         buttons: [{ text: 'Ok', type: 'button-positive'}]
+      };
+      $ionicPopup.show(data);
+    }
+  };
 });

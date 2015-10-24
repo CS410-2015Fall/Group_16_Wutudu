@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal, $state,
-      Friend, Friend, Group) {
+      $msgBox, Friend, Group) {
 
     var createGroupTplUrl = 'templates/group/createGroup.html',
       createGroupTplConfig = {
@@ -49,15 +49,16 @@ angular.module('starter.controllers')
       groupId: groupId
     };
     Group.addGroup(config)
-      .then(addGroupFromView, handleError);
-  }
+      .then(addGroupToView, handleError);
+  };
 
-  function addGroupFromView(response) {
-    var data = response.data;
-    showMsg({
-      title: 'Join group',
-      template: '<span>' + JSON.stringify(data) + '</span>'
-    });
+  function addGroupToView(response) {
+    var data = response.data,
+        msg = {
+          title: 'Join group',
+          template: '<span>' + JSON.stringify(data) + '</span>'
+        };
+    $msgBox.show($scope, msg);
     var selectedGroup = function(group) {
       return group.id !== data.group.id;
     };
@@ -71,14 +72,15 @@ angular.module('starter.controllers')
     };
     Group.removeGroup(config)
       .then(removeGroupFromView, handleError);
-  }
+  };
 
   function removeGroupFromView(response) {
-    var data = response.data;
-    showMsg({
-      title: 'Left/Decline group',
-      template: '<span>' + JSON.stringify(data) + '</span>'
-    });
+    var data = response.data,
+        msg = {
+          title: 'Left/Decline group',
+          template: '<span>' + JSON.stringify(data) + '</span>'
+        };
+    $msgBox.show($scope, msg);
     var groupLeft = function(group) {
       return group.id !== data.group.id;
     };
@@ -88,7 +90,7 @@ angular.module('starter.controllers')
 
   $scope.declineInvitation = function(groupId) {
     $scope.leaveGroup(groupId);
-  }
+  };
 
   $scope.showCreateGroup = function() {
     $scope.data = {
@@ -112,35 +114,38 @@ angular.module('starter.controllers')
         friendEmails = function(friend) {
           return friend.email;
         },
-        emails = $scope.data.friendsInvited.map(friendEmails);
+        emails = $scope.data.friendsInvited.map(friendEmails),
+        config;
 
     if(!validateCreateGroup(name)) return;
 
-   var config = {
+    config = {
       name: name,
       emails: emails
     };
 
     Group.createGroup(config)
       .then(groupCreated, handleError);
-  }
+  };
 
   function validateCreateGroup(name) {
     if(!name) {
-      showMsg({
+      var msg = {
         title: 'No group name',
         template: '<span>Please specify a group name</span>'
-      });
+      };
+      $msgBox.show($scope, msg);
       return false;
     }
     return true;
   }
 
   function groupCreated(response) {
-    showMsg({
+    var msg = {
       title: 'Group successfully created',
       template: '<span>' + JSON.stringify(response.data) + '</span>'
-    });
+    };
+    $msgBox.show($scope, msg);
     // opportunisitc update
     $scope.activeGroups.push(response.data.group);
     $scope.modal.hide();
@@ -149,7 +154,7 @@ angular.module('starter.controllers')
   $scope.goToFriend = function(friendId) {
     $state.go('app.friend', {friendId: friendId});
     $scope.cancelCreateGroup();
-  }
+  };
 
   //Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
@@ -174,32 +179,8 @@ angular.module('starter.controllers')
           $scope.data.friendsInvited = $scope.data.friends.filter(isFriendInvited);
           console.debug('Adding friend to group');
         },
-        addButton = {
-          text: 'Add',
-          type: 'button-balanced',
-          onTap: handleAddFriend
-        },
-        cancelButton = { text: 'Cancel', type: 'button-assertive'},
-        buttons = [addButton, cancelButton]
-        data = {
-          templateUrl: 'templates/friend/addFriend.html',
-          title: 'Add Friend to Group',
-          subTitle: 'Please choose your friend to add',
-          scope: $scope,
-          buttons: buttons
-        };
-    $ionicPopup.show(data);
-  }
-
-  function showMsg(msg) {
-    var data = {
-       template: msg.template,
-       templateUrl: msg.templateUrl,
-       title: msg.title,
-       scope: $scope,
-       buttons: [{ text: 'Ok', type: 'button-positive'}]
-    };
-    $ionicPopup.show(data);
-  }
+        addFriendTplConfig = Friend.addFriendTplConfig($scope, handleAddFriend);
+    $ionicPopup.show(addFriendTplConfig);
+  };
 
 });

@@ -4,6 +4,21 @@ angular.module('starter.services')
   console.log('friend service');
 
   return {
+    addFriendTplConfig: function($scope, handleAddFriendFn) {
+      return {
+        templateUrl: 'templates/friend/addFriend.html',
+        title: 'Add Friend to Group',
+        subTitle: 'Please choose your friend to add',
+        scope: $scope,
+        buttons: [
+           { text: 'Add',
+             type: 'button-balanced',
+             onTap: handleAddFriendFn
+           },
+         { text: 'Cancel', type: 'button-assertive'}
+        ]
+      }
+    },
     getFriends: function (config) {
       var payload = {
         method: 'GET',

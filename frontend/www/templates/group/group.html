@@ -12,8 +12,22 @@
 
     <div class="list">
 
+      <div class="item item-divider">
+        Active Group Members
+      </div>
+
       <ion-list>
-        <ion-item ng-repeat="member in data.groupMembers" href="#/app/member/{{member.id}}">
+        <ion-item ng-repeat="member in activeMembers">
+          <span class="circle-border">{{$index + 1}}</span> {{member.name}}
+        </ion-item>
+      </ion-list>
+
+      <div class="item item-divider">
+        Pending Group Members
+      </div>
+
+      <ion-list>
+        <ion-item ng-repeat="member in pendingMembers">
           <span class="circle-border">{{$index + 1}}</span> {{member.name}}
         </ion-item>
       </ion-list>

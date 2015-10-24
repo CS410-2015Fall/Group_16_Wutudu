@@ -1,22 +1,42 @@
 angular.module('starter.controllers')
 
 .controller('GroupCtrl', function($scope, $stateParams,
-         $ionicPopup, $ionicModal, Friend, Group, Wutudu) {
+         $ionicPopup, $ionicModal, $msgBox, Friend, Group, Wutudu) {
   var groupId = $stateParams.groupId,
       config = {
-              token: $scope.$root.TOKEN,
-              urlRoot: $scope.$root.SERVER_URL
-            };
+        groupId: groupId
+      };
 
-  // $scope.group = Group.getGroup(groupId);
-  Friend.getFriends(config).then(setupFriends, handleError);
-
-  //TODO
   $scope.data = {};
 
+  $scope.inProgressWutudus = Wutudu.getInProgressWutudus(config);
+  $scope.upcomingWutudus = Wutudu.getInProgressWutudus(config);
+
+  $scope.group = Group.getGroup(config)
+    .then(setupGroup, handleError);
+
+  function setupGroup(response) {
+    var data = response.data,
+        members = response.data.group_users,
+        activeMembers = members.active_users,
+        pendingMembers = members.pending_users;
+    $scope.activeMembers = activeMembers;
+    $scope.pendingMembers = pendingMembers;
+  }
+
   function setupFriends(response) {
-    var friends = response.data.friendships.friends;
-    $scope.data.friends = friends; // use it for add friend
+    var mapIdFn = function(member) {
+          return member.id;
+        },
+        friends = response.data.friendships.friends,
+        activeIds = $scope.activeMembers.map(mapIdFn),
+        pendingIds = $scope.pendingMembers.map(mapIdFn),
+        memberIds = activeIds.concat(pendingIds),
+        isGroupMembers = function(friend) {
+          return memberIds.indexOf(friend.id) === -1;
+        };
+
+    $scope.data.friends = friends.filter(isGroupMembers);
   }
 
   function handleError(response) {
@@ -32,26 +52,47 @@ angular.module('starter.controllers')
     $ionicPopup.show(data);
   }
 
-  $scope.inProgressWutudus = Wutudu.getInProgressWutudus({groupId: groupId});
-  $scope.upcomingWutudus = Wutudu.getInProgressWutudus({groupId: groupId});
-
   $scope.addFriendToGroup = function() {
-    $ionicPopup.show({
-       templateUrl: 'templates/friend/addFriend.html',
-       title: 'Add Friend to Group',
-       subTitle: 'Please choose your friend to add',
-       scope: $scope,
-       buttons: [
-          { text: 'Add',
-            type: 'button-balanced',
-            onTap: function(e) {
-              console.debug('Adding friend to group');
-            }
-          },
-        { text: 'Cancel', type: 'button-assertive'}
-       ]
-    });
-  }
+    Friend.getFriends(config)
+      .then(setupFriends, handleError);
+    var isFriendInvited = function(friend) {
+          return friend.invited;
+        },
+        mapFriendEmails = function(friend) {
+          return friend.email;
+        },
+        updatePendingList = function(friend) {
+          if(friend.invited) {
+            $scope.pendingMembers.push(friend);
+          }
+        },
+        inviteSucess = function(response) {
+            var data = response.data,
+                msg = {
+                  title: 'Invite to group',
+                  template: '<span>' + JSON.stringify(data) + '</span>'
+                };
+            $msgBox.show($scope, msg);
+        },
+        handleAddFriend = function(e) {
+          var friendsToInvite = $scope.data.friends;
+
+          friendsToInvite = friendsToInvite.filter(isFriendInvited);
+          friendsToInvite.forEach(updatePendingList);
+          friendsToInvite = friendsToInvite.map(mapFriendEmails);
+          data = {
+            "emails" : friendsToInvite
+          };
+
+          Object.assign(config, data);
+          Group.inviteFriends(config)
+            .then(inviteSucess, handleError);
+          console.debug('Adding friend to group');
+        },
+        addFriendTplConfig = Friend.addFriendTplConfig($scope, handleAddFriend);
+
+    $ionicPopup.show(addFriendTplConfig);
+  };
 
   $scope.showWutuduQuestion = function(question) {
     $scope.question = Wutudu.getQuestions(question);
@@ -63,7 +104,7 @@ angular.module('starter.controllers')
         { text: 'Ok', type: 'button-positive'}
       ]
     });
-  }
+  };
 
   $scope.showWutuduDetail = function(wutudu) {
     // use wutudu object to show the details
@@ -74,7 +115,7 @@ angular.module('starter.controllers')
         { text: 'Ok', type: 'button-positive'}
       ]
     });
-  }
+  };
 
   $ionicModal.fromTemplateUrl('templates/wutudu/createWutudu.html', {
       scope: $scope,
@@ -111,6 +152,6 @@ angular.module('starter.controllers')
     console.log('Create Wutudu');
     Wutudu.createWutudu(angular.copy(wutuduFormData));
     $scope.hideCreateWutudu();
-  }
+  };
 
 });
