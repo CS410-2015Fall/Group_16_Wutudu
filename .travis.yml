@@ -6,3 +6,5 @@ rvm:
 gemfile: backend/heroku/Gemfile
 
 
+script: 
+   - cd backend/heroku && bundle exec rake db:create db:migrate db:seed
