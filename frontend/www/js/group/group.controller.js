@@ -1,6 +1,6 @@
 angular.module('starter.controllers')
 
-.controller('GroupCtrl', function($scope, $stateParams,
+.controller('GroupCtrl', function($scope, $stateParams, $state,
          $ionicPopup, $ionicModal, $msgBox, Friend, Group, Wutudu) {
   var groupId = $stateParams.groupId,
       config = {
@@ -117,41 +117,8 @@ angular.module('starter.controllers')
     });
   };
 
-  $ionicModal.fromTemplateUrl('templates/wutudu/createWutudu.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-  }).then(function(modal) {
-      $scope.modal = modal;
-  });
-
   $scope.showCreateWutudu = function() {
-    $scope.modal.show();
-  };
-  $scope.hideCreateWutudu = function() {
-    $scope.modal.hide();
-  };
-  //Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.modal.remove();
-    $scope.wutudu = {};
-  });
-  // Execute action on hide modal
-  $scope.$on('modal.hidden', function() {
-    // Execute action
-    console.log('modal hidden');
-    // $scope.wutudu = {};
-  });
-  // Execute action on remove modal
-  $scope.$on('modal.removed', function() {
-    // Execute action
-    console.log('modal removed');
-    // $scope.wutudu = {};
-  });
-
-  $scope.createWutudu = function(wutuduFormData) {
-    console.log('Create Wutudu');
-    Wutudu.createWutudu(angular.copy(wutuduFormData));
-    $scope.hideCreateWutudu();
+    $state.go('app.createWutudu', config);
   };
 
 });

@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-datepicker'])
 
 .run(function ($ionicPlatform) {
   $ionicPlatform.ready(function () {
@@ -95,6 +95,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       'menuContent': {
         templateUrl: 'templates/group/group.html',
         controller: 'GroupCtrl'
+      }
+    }
+  })
+
+  .state('app.createWutudu', {
+    url: '/group/:groupId/createWutudu',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/wutudu/createWutudu.html',
+        controller: 'WutuduCreateCtrl'
       }
     }
   })

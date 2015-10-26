@@ -1,9 +1,9 @@
 angular.module('starter.controllers')
 
 .controller('LoginCtrl', function ($scope, $state, $httpService, $ionicPopup, User) {
-  if(User.getSession()) {
-    $state.go('app.main');
-  }
+  // if (User.getSession()) {
+  //   $state.go('app.main');
+  // }
 
   $scope.loginData = {};
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' * ws://localhost:35729 data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *;script-src 'self' localhost:35729 'unsafe-eval' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' * ws://localhost:35729 data: gap: https://ssl.gstatic.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; media-src *;script-src 'self' localhost:35729 https://maps.googleapis.com  https://mts0.googleapis.com https://mts1.googleapis.com 'unsafe-eval' 'unsafe-inline';">
     <title></title>
 
     <!-- <link href="lib/ionic/css/ionic.css" rel="stylesheet"> -->
@@ -29,11 +29,15 @@
     <script src="js/group/list.controller.js"></script>
     <script src="js/group/group.controller.js"></script>
     <script src="js/group/group.services.js"></script>
+    <script src="js/wutudu/create.controller.js"></script>
     <script src="js/wutudu/wutudu.services.js"></script>
     <script src="js/user/login.controller.js"></script>
     <script src="js/user/signup.controller.js"></script>
     <script src="js/user/user.services.js"></script>
-  </head>
+    <script 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMvccQ-A7goDauVkGz-sEG9GxcSGWu9nQ">
+    </script>
+    <script src="lib/ionic-datepicker/dist/ionic-datepicker.bundle.min.js"></script>
   </head>
 
   <body ng-app="starter">

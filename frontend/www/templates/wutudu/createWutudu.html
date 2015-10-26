@@ -1,4 +1,4 @@
-<ion-modal-view >
+<ion-view view-title="Create Wutudu">
   <ion-header-bar>
     <h1 class="title">Create Pre-Wutudu</h1>
   </ion-header-bar>
@@ -6,28 +6,35 @@
   <ion-content>
     <h2>Group <span ng-bind="group.name"></span></h2>
     <form>
-      <div class="item item-input-inset">
+<!--       <div class="item item-input-inset">
         <span>Event Name</span>
         <label class="item-input-wrapper">
           <input type="text" placeholder="Event Name" ng-model="wutudu.name">
         </label>
-      </div>
+      </div> -->
       <div class="item item-input-inset">
         <span>Date: </span>
+        <ionic-datepicker input-obj="datepickerObject">
+          <button class="button button-block button-positive"> {{datepickerObject.inputDate | date:'dd - MMMM - yyyy'}}</button>
+        </ionic-datepicker>
+      </div>
+      <div class="item item-input-inset">
+        <span>Latitude</span>
         <label class="item-input-wrapper">
-          <input type="text" placeholder="Date" ng-model="wutudu.date">
+          <input type="text" placeholder="Location" ng-model="wutudu.latitude" ng-change="locationChange(wutudu)">
         </label>
       </div>
       <div class="item item-input-inset">
-        <span>Location</span>
+        <span>Longitude</span>
         <label class="item-input-wrapper">
-          <input type="text" placeholder="Location" ng-model="wutudu.location">
+          <input type="text" placeholder="Location" ng-model="wutudu.longitude" ng-change="locationChange(wutudu)">
         </label>
       </div>
+      <div id="createWutuduMap" style="height: 300px; width: 100%;"></div> 
       <button type="submit" class="button button-balanced" ng-click="createWutudu(wutudu)">Create</button>
-      <button class="button button-assertive" ng-click="hideCreateWutudu()">Cancel</button>
+      <button class="button button-assertive" ng-click="cancelClick()">Cancel</button>
     </form>
 
   </ion-content>
-</ion-modal-view>
+</ion-view>
 

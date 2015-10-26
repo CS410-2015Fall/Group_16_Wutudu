@@ -1,6 +1,6 @@
 angular.module('starter.services')
 
-.factory('Wutudu', function() {
+.factory('Wutudu', function($httpService) {
 
   return {
     getInProgressWutudus: function(options) {
@@ -17,8 +17,13 @@ angular.module('starter.services')
         // return upcoming wutudus for all the group that contains friendId
       }
     },
-    createWutudu: function(wutudu) {
-      // validate and post this to server
+    createWutudu: function(config) {
+      var payload = {
+            method: 'POST',
+            data: config.data,
+            url: '/groups/' + config.groupId + '/prewutudu'
+          };
+      return $httpService.makeRequest(payload);
     },
     getQuestions: function(wutudu) {
       // use wutudu id to retrieve the questions from server

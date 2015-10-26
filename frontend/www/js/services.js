@@ -25,8 +25,8 @@ angular.module('starter.services', [])
 })
 
 .factory('$httpService', function($http, User) {
-  var urlRoot = "http://localhost:5000";
-      // urlRoot = "https://stormy-hollows-9187.herokuapp.com";
+  // var urlRoot = "http://localhost:5000";
+  var urlRoot = "https://stormy-hollows-9187.herokuapp.com";
 
   return {
     makeRequest: function(config) {

@@ -68,4 +68,5 @@
     <splash src="resources/ios/splash/Default~iphone.png" height="480" width="320"/>
   </platform>
   <allow-navigation href="https://stormy-hollows-9187.herokuapp.com/*" />
+  <allow-navigation href="https://maps.googleapis.com/maps/api/*" />
 </widget>
