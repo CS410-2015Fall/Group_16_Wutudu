@@ -1,4 +1,4 @@
-class CreatePreWutudus < ActiveRecord::Migration
+class CreatePreWutudu < ActiveRecord::Migration
   def change
     create_table :pre_wutudus do |t|
       t.datetime :event_date
