@@ -29,5 +29,8 @@ class Group < ActiveRecord::Base
   		group_users: self.group_users_info,
   		pre_wutudus: self.pre_wutudus_info
   	}
+
+  def active_users_device_tokens
+    self.active_users.collect {|u| u.device_token}
   end
 end

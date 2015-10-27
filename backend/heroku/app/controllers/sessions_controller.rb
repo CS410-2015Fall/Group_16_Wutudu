@@ -10,7 +10,12 @@ class SessionsController < ApiController
     return send_errors('Incorrect Password', 400) \
       unless @user.bcrypt_password == login_params[:password]
 
+    return send_errors('No Device Token', 400) \
+      unless request.headers["Device-Token"]
+
     @user.renew_api_key
+    @user.device_token = request.headers["Device-Token"]
+    return send_errors("Failed To Log In", 400) unless @user.save
     return send_success({token: @user.api_key, user: @user.basic_info})
   end
 

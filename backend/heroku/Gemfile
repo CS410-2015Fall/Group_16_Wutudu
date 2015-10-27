@@ -33,13 +33,14 @@ gem 'spring',        group: :development
 gem 'puma'
 
 gem 'tzinfo-data'
-gem 'rack-cors', :require => 'rack/cors'
+gem 'rack-cors', require: 'rack/cors'
 
 # gem 'rails-api'
 
 gem 'bcrypt', '~> 3.1.7'
 
 gem 'responders', '~> 2.0'
+gem 'ionic_push', github: 'nwwatson/ionic_push', branch: 'master'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

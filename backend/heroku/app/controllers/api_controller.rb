@@ -16,4 +16,16 @@ class ApiController < ApplicationController
   def send_internal_error
     render json: {errors: "Internal Server Error"}, status: 500
   end
+
+  def send_notification(tokens, title, message, payload=nil)
+    service = IonicPush::PushService.new(device_tokens: tokens)
+    note = {
+             alert: message,
+             android: {
+               title: title
+             }
+           }
+    note[:android][:payload] = payload unless payload.nil?
+    service.notify do note end
+  end
 end

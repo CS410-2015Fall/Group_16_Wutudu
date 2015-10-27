@@ -8,6 +8,7 @@
 1. POST:
 
   * AUTHENTICATION: NONE
+  * DEVICE-TOKEN: "Device-Token token"
   * BODY: {"login" : {"email" : email, "password" : password}}
   * RETURN: {
               "token" : token,
@@ -17,7 +18,10 @@
             Request status. One of [
                                     "Incorrect Password" 400,
                                     "User With Email Not Found" 404,
+                                    "No Device Token" 400,
+                                    "Failed To Log In" 400
                                    ]
+  * NOTE: Send login request with device token to register for push notification
 ```
 
 ##/logout
