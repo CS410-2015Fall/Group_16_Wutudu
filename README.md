@@ -121,6 +121,7 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
                                 "pending_groups" : [{"id" : id, "name" : name}...]
                              }
             }
+  * Note: Used to get the active and pending groups for a user (not to be confused with /groups/:gid)
 ```
 ```
 2. POST:
@@ -151,10 +152,54 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
   * NOTE: Used to change name of the group
 ```
 
-##/groups/:id/users
+##/groups/:gid
 
 ```
-NOTE: If requester not in group with :id, then always returns ["Not In Group", 404] for any actions
+1. GET:
+
+  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
+  * BODY: NONE
+  * RETURN: {
+             "group_users" : {
+                                "active_users" : [{"id" : id, "name" : name, "email" : email}...],
+                                "pending_users" : [{"id" : id, "name" : name, "email" : email}...]
+                             },
+              "pre_wutudus" : [{
+                                "pre_wutudu_id": pre_wutudu_id,
+                                "event_date": "YYYY-MM-DDT00:00:00.000Z",
+                                "latitude": latitude,
+                                "longitude": longitude,
+                                "questions": {
+                                    "0": {
+                                        "id": question_id,
+                                        "question_text": question,
+                                        "a0_text": answer_0,
+                                        "a1_text": answer_1,
+                                        "a2_text": answer_2,
+                                        "a3_text": answer_3
+                                      }
+                                      (...)
+                                    "9": {
+                                        "id": question_id,
+                                        "question_text": question,
+                                        "a0_text": answer_0,
+                                        "a1_text": answer_1,
+                                        "a2_text": answer_2,
+                                        "a3_text": answer_3
+                                      }
+                                  }
+                             } ... ]
+            }, 200
+            or
+            Request status ["User Not In Group" 400] when the user is not in the group
+
+  * Note: Used to get all the basic information for a group
+```
+
+##/groups/:gid/users
+
+```
+NOTE: If requester not in group with :gid, then always returns ["Not In Group", 404] for any actions
 ```
 ```
 1. GET:
@@ -208,7 +253,7 @@ NOTE: If requester not in group with :id, then always returns ["Not In Group", 4
 ```
 
 
-##/groups/:group_id/prewutudu
+##/groups/:gid/prewutudu
 
 ```
 NOTE: If requester not in group with :gid, then always returns ["Not In Group", 404] for any actions
@@ -252,7 +297,7 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
             Request status ["User Not In Group" 400] when the user is not in the group
 ```
 
-##/groups/:group_id/prewutudu/:id
+##/groups/:gid/prewutudu/:id
 
 ```
 NOTE: If requester not in group with :group_id, then always returns ["User Not In Group", 404] for any actions

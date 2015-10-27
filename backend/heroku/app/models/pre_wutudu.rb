@@ -4,13 +4,13 @@ class PreWutudu < ActiveRecord::Base
 	has_many :questions, through: :pre_wutudu_questions
 	# TODO: add validation of location
 
-  def show_info
+  def basic_info
     {
       pre_wutudu_id: self.id,
       event_date: self.event_date,
       latitude: self.latitude,
       longitude: self.longitude,
-      questions: self.qnum_and_questions,
+      questions: self.qnum_and_questions
     }
   end
 

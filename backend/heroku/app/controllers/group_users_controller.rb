@@ -4,11 +4,7 @@ class GroupUsersController < GroupsController
   def show
     # get rid
     all_users = {
-                  group_users:
-                    {
-                      active_users: @group.active_users.collect {|u| u.basic_info},
-                      pending_users: @group.pending_users.collect {|u| u.basic_info}
-                    }
+                  group_users: @group.group_users_info
                 }
     return send_success(all_users)
   end
@@ -42,7 +38,7 @@ class GroupUsersController < GroupsController
 
   # Check if requester is in group
   def client_in_group
-    @group = @user.groups.find_by_id(params[:id])
+    @group = @user.groups.find_by_id(params[:gid])
     return send_errors("Not In Group", 404) unless @group
     @g_user = GroupUser.where(group_id: @group.id, user_id: @user.id).first
   end
