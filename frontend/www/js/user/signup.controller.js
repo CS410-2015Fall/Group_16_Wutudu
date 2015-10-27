@@ -1,6 +1,7 @@
 angular.module('starter.controllers')
 
-.controller('SignupCtrl', function ($scope, $state, $http, $ionicPopup) {
+.controller('SignupCtrl', function ($scope, $state,
+  $httpService, $ionicPopup, User, $wutuduNotification) {
   $scope.signupData = {};
 
   $scope.validateSignup = function () {
@@ -19,22 +20,33 @@ angular.module('starter.controllers')
       });
     } else {
       requestData.user.password = requestData.user.password.hashString();
-      this.doSignup(requestData)
+      this.doSignup(requestData);
     }
   };
 
-  $scope.doSignup = function (requestData) {
-    $http({
+  function prepareLogin(requestData) {
+    $wutuduNotification.register().then(function(deviceToken) {
+      var config = {
+        data: requestData,
+        deviceToken: deviceToken
+      };
+      $scope.doLogin(config);
+    });
+  }
+
+  $scope.doSignup = function (config) {
+    var payload = {
       method: 'POST',
+      data: config.data,
+      url: '/users',
       headers: {
-       'Content-Type': 'application/json'
-      },
-      data: requestData,
-      url: this.$root.SERVER_URL + '/users'
-    }).then(function successCallback (response) {
+        "Device-Token": config.deviceToken
+      }
+    };
+    $httpService.makeRequest(payload).then(function successCallback (response) {
       console.log('Create user success: auth token=' + response.data.token);
       $scope.signupData = {}; // Clear form data
-      $scope.$root.TOKEN = response.data.token;
+      User.setSession(response.data.token, response.data.user);
       $state.go('app.main');
     }, function errorCallback (response) {
       response.config.headers = JSON.stringify(response.config.headers);

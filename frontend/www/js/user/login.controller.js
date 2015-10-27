@@ -1,6 +1,7 @@
 angular.module('starter.controllers')
 
-.controller('LoginCtrl', function ($scope, $state, $httpService, $ionicPopup, User) {
+.controller('LoginCtrl', function ($scope, $state, $httpService, $ionicPopup,
+  User, $wutuduNotification) {
   // if (User.getSession()) {
   //   $state.go('app.main');
   // }
@@ -23,20 +24,32 @@ angular.module('starter.controllers')
       });
     } else {
       requestData.login.password = requestData.login.password.hashString();
-      this.doLogin(requestData)
+      prepareLogin(requestData);
     }
   };
 
-  $scope.doLogin = function (requestData) {
+  function prepareLogin(requestData) {
+    $wutuduNotification.register().then(function(deviceToken) {
+      var config = {
+        data: requestData,
+        deviceToken: deviceToken
+      };
+      $scope.doLogin(config);
+    });
+  }
+
+  $scope.doLogin = function (config) {
     var payload = {
       method: 'POST',
-      data: requestData,
-      url: '/login'
+      data: config.data,
+      url: '/login',
+      headers: {
+        "Device-Token": config.deviceToken
+      }
     };
     $httpService.makeRequest(payload).then(function successCallback (response) {
       console.log('Login success: auth token=' + response.data.token);
       $scope.loginData = {}; // Clear form data
-      $scope.$root.TOKEN = response.data.token;
       User.setSession(response.data.token, response.data.user);
       $state.go('app.main');
     }, function errorCallback (response) {

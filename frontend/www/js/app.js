@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-datepicker'])
+angular.module('starter', ['ionic','ionic.service.core', 'ionic.service.push', 'starter.controllers', 'starter.services', 'ionic-datepicker'])
 
 .run(function ($ionicPlatform) {
   $ionicPlatform.ready(function () {
@@ -23,7 +23,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   String.prototype.hashString = function() {
     var hash = 0, i, chr, len;
-    if (this.length == 0) return hash;
+    if (this.length === 0) return hash;
     for (i = 0, len = this.length; i < len; i++) {
       chr   = this.charCodeAt(i);
       hash  = ((hash << 5) - hash) + chr;
