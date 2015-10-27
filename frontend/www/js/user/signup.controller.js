@@ -20,7 +20,7 @@ angular.module('starter.controllers')
       });
     } else {
       requestData.user.password = requestData.user.password.hashString();
-      this.doSignup(requestData);
+      prepareLogin(requestData);
     }
   };
 
@@ -30,7 +30,7 @@ angular.module('starter.controllers')
         data: requestData,
         deviceToken: deviceToken
       };
-      $scope.doLogin(config);
+      $scope.doSignup(config);
     });
   }
 
