@@ -7,7 +7,7 @@ angular.module('starter.services')
       if(!config.groupId) throw "Group id needed to get group";
       var payload = {
             method: 'GET',
-            url: '/groups/' + config.groupId + '/users'
+            url: '/groups/' + config.groupId
           };
       return $httpService.makeRequest(payload);
     },

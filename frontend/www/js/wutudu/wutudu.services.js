@@ -21,7 +21,7 @@ angular.module('starter.services')
       var payload = {
             method: 'POST',
             data: config.data,
-            url: '/groups/' + config.groupId + '/prewutudu'
+            url: '/groups/' + config.groupId + '/pre_wutudu'
           };
       return $httpService.makeRequest(payload);
     },
