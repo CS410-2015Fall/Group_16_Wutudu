@@ -1,4 +1,6 @@
 class ApiController < ApplicationController
+  @gcm = GCM.new(ENV['GOOGLE-API-KEY'])
+
   def authenticate
     authenticate_or_request_with_http_token do |token, options|
       @user = User.where(api_key: token).first
@@ -17,15 +19,17 @@ class ApiController < ApplicationController
     render json: {errors: "Internal Server Error"}, status: 500
   end
 
-  def send_notification(tokens, title, message, payload=nil)
-    service = IonicPush::PushService.new(device_tokens: tokens)
-    note = {
-             alert: message,
-             android: {
-               title: title
-             }
-           }
-    note[:android][:payload] = payload unless payload.nil?
-    service.notify do note end
+  def send_notification(tokens, message, payload=nil)
+    options = {
+                delay_while_idle: true,
+                notification: {
+                  title: "Wutudu",
+                  message: message,
+                  style: "inbox",
+                  summaryText: "There are %n% notifications"
+                }
+              }
+    options[:data] = payload if payload
+    @gcm.send(tokens, options)
   end
 end

@@ -29,7 +29,6 @@ class FriendshipsController < ApiController
         user: @user.basic_info
       }
       send_notification([@friend.device_token], \
-                        "New Friend Request",
                         "You have received a friend request from #{@friend.name}", \
                         payload)
       return send_success({message: "Friend Request Sent"})
