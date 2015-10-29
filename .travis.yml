@@ -5,7 +5,7 @@ gemfile: backend/heroku/Gemfile
 before_script:
 - cd backend/heroku && bundle exec rake db:drop
 script:
-- bundle exec rake db:create db:migrate db:seed && echo "puts 10" | bundle exec rails console
+- bundle exec rake db:create db:migrate db:seed && echo "puts 10" | RACK_ENV=production bundle exec rails console
 deploy:
   provider: heroku
   api_key:
