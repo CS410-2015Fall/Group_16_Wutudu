@@ -109,6 +109,17 @@ angular.module('starter', ['ionic','ionic.service.core', 'ionic.service.push', '
     }
   })
 
+  .state('app.answerWutudu', {
+    url: '/group/:groupId/answerWutudu/:wutuduId',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/wutudu/questionPage.html',
+        controller: 'WutuduQuestionCtrl'
+      }
+    },
+    params: { preWutudu: null }
+  })
+
   .state('app.main', {
     url: '/main',
     views: {

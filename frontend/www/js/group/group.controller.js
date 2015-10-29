@@ -9,19 +9,35 @@ angular.module('starter.controllers')
 
   $scope.data = {};
 
-  $scope.inProgressWutudus = Wutudu.getInProgressWutudus(config);
-  $scope.upcomingWutudus = Wutudu.getInProgressWutudus(config);
+  // $scope.inProgressWutudus = Wutudu.getInProgressWutudus(config);
+  // $scope.upcomingWutudus = Wutudu.getInProgressWutudus(config);
 
   $scope.group = Group.getGroup(config)
     .then(setupGroup, handleError);
 
   function setupGroup(response) {
     var data = response.data,
-        members = response.data.group_users,
+        members = data.group_users,
+        preWutudus = data.pre_wutudus,
         activeMembers = members.active_users,
         pendingMembers = members.pending_users;
+
     $scope.activeMembers = activeMembers;
     $scope.pendingMembers = pendingMembers;
+    $scope.inProgressWutudus = formatPrewutudu(preWutudus);
+  }
+
+  function formatPrewutudu(preWutudus) {
+    var returnWutudus = [];
+    angular.forEach(preWutudus, function(preWutudu, key) {
+      // Format the JSON date as a string Tue Oct 27 2015
+      var eventDate = new Date(preWutudu.event_date),
+          stringDate = eventDate.toString();
+      stringDate = stringDate.substring(0, stringDate.indexOf(eventDate.toTimeString()));
+      preWutudu.display_date = stringDate;
+      this.push(preWutudu);
+    }, returnWutudus);
+    return returnWutudus;
   }
 
   function setupFriends(response) {
@@ -94,16 +110,10 @@ angular.module('starter.controllers')
     $ionicPopup.show(addFriendTplConfig);
   };
 
-  $scope.showWutuduQuestion = function(question) {
-    $scope.question = Wutudu.getQuestions(question);
-    $ionicPopup.show({
-      templateUrl: 'templates/wutudu/questionPage.html',
-      title: 'Question',
-      scope: $scope,
-      buttons: [
-        { text: 'Ok', type: 'button-positive'}
-      ]
-    });
+  $scope.showWutuduQuestion = function(preWutudu) {
+    config.preWutudu = preWutudu;
+    config.wutuduId = preWutudu.pre_wutudu_id.toString();
+    $state.go('app.answerWutudu', config);
   };
 
   $scope.showWutuduDetail = function(wutudu) {

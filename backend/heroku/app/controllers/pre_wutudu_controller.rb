@@ -4,7 +4,7 @@ class PreWutuduController < ApiController
   before_action :wutudu_in_group, except: [:create]
 
   def show
-    message = { pre_wutudu: @pre_wutudu.show_info }
+    message = { pre_wutudu: @pre_wutudu.basic_info }
     return send_success(message)
   end
 
@@ -30,7 +30,7 @@ class PreWutuduController < ApiController
     # send_notification(@group.active_users_device_tokens, \
     #                   "You have been invited to complete complete a Wutudu with Group #{@group.name}", \
     #                   payload)
-    return send_success({pre_wutudu: pre_wutudu.show_info, message: "PreWutudu Created"})
+    return send_success({pre_wutudu: pre_wutudu.basic_info, message: "PreWutudu Created"})
   end
 
   def destroy
@@ -48,7 +48,7 @@ class PreWutuduController < ApiController
   end
 
   def client_in_group
-    @group = @user.groups.find_by_id(params[:group_id])
+    @group = @user.groups.find_by_id(params[:gid])
     return send_errors("User Not In Group", 404) unless @group
   end
 

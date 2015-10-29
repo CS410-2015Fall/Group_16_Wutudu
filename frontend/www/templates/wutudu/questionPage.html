@@ -1,5 +1,29 @@
-<ion-slide-box on-slide-changed="slideHasChanged($index)">
-  <ion-slide ng-repeat="question in questions">
-    <div class="box"><h1>{{question.name}}</h1></div>
-  </ion-slide>
-</ion-slide-box>
+<ion-view view-title="Deciding on Wutudu">
+  <ion-header-bar>
+    <h1 class="title">Deciding on Wutudu</h1>
+  </ion-header-bar>
+  <ion-content>
+    <form>
+      <ion-slide-box on-slide-changed="slideHasChanged($index)" active-slide="currentQuestion" does-continue='false' pager-click='jumpToQuestion(index)' style="height:200px;">
+        <ion-slide ng-repeat="question in questions">
+          <div class="card">
+            <div class="item item-divider">
+              {{currentQuestion + 1}}. {{question.question_text}}
+            </div>
+            <div class="button-bar">
+              <a class="button" ng-click="answerQuestion(0, question)">{{question.a0_text}}</a>
+              <a class="button" ng-click="answerQuestion(1, question)">{{question.a1_text}}</a>
+            </div>
+            <div class="button-bar">
+              <a class="button" ng-click="answerQuestion(2, question)">{{question.a2_text}}</a>
+              <a class="button" ng-click="answerQuestion(3, question)">{{question.a3_text}}</a>
+            </div>
+          </div>
+        </ion-slide>
+      </ion-slide-box>
+      <button type="submit" class="button button-balanced" ng-click="submitAnswers()">Submit Responses</button>
+      <button type="submit" class="button button-assertive" ng-click="declineWutudu()">Decline Event</button>
+    </form>
+  </ion-content>
+</ion-view>
+

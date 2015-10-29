@@ -3,12 +3,16 @@ angular.module('starter.services')
 .factory('Wutudu', function($httpService) {
 
   return {
-    getInProgressWutudus: function(options) {
-      if(options.groupId) {
-        // return in progress wutudus for this group
-      } else if(options.friendId) {
-        // return in progress wutudus for all the group that contains friendId
+    getInProgressWutudu: function(options) {
+      if (!options.wutuduId || !options.groupId) {
+        return;
       }
+      var payload = {
+        method: 'GET',
+        url: '/groups/' + options.groupId + '/pre_wutudu/' + options.wutuduId
+      };
+      return $httpService.makeRequest(payload);
+
     },
     getUpcomingWutudus: function(options) {
       if(options.groupId) {
