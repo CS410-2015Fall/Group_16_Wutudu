@@ -1,9 +1,9 @@
 class GroupDetailsController < ApiController
   before_action :authenticate, :client_in_group
 
-  # Show all the information for a given group id
+  # Show all the information for a given group id, and user
   def show
-    return send_success(@group.all_info)
+    return send_success(@group.all_info_per_user(@user.id))
   end
 
   private

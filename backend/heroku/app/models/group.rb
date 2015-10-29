@@ -20,14 +20,14 @@ class Group < ActiveRecord::Base
     }
   end
 
-  def pre_wutudus_info
-  	self.pre_wutudus.collect {|pw| pw.basic_info}
+  def pre_wutudus_info_per_user(user_id)
+  	self.pre_wutudus.collect {|pw| pw.basic_info_per_user(user_id)}
   end
 
-  def all_info
+  def all_info_per_user(user_id)
   	{
   		group_users: self.group_users_info,
-  		pre_wutudus: self.pre_wutudus_info
+  		pre_wutudus: self.pre_wutudus_info_per_user(user_id),
   	}
   end
 

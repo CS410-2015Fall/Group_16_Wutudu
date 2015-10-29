@@ -1,10 +1,10 @@
 class PreWutuduController < ApiController
   before_action :authenticate
-  before_action :client_in_group
+  before_action :active_in_group
   before_action :wutudu_in_group, except: [:create]
 
   def show
-    message = { pre_wutudu: @pre_wutudu.basic_info }
+    message = { pre_wutudu: @pre_wutudu.basic_info_per_user(@user.id) }
     return send_success(message)
   end
 
@@ -25,12 +25,12 @@ class PreWutuduController < ApiController
     # Comment out for full implmentation later
     # payload = {
     #   group: @group.basic_info
-    #   pre_wutudu: pre_wutudu.show_info
+    #   pre_wutudu: pre_wutudu.basic_info
     # }
     # send_notification(@group.active_users_device_tokens, \
     #                   "You have been invited to complete complete a Wutudu with Group #{@group.name}", \
     #                   payload)
-    return send_success({pre_wutudu: pre_wutudu.basic_info, message: "PreWutudu Created"})
+    return send_success({pre_wutudu: pre_wutudu.basic_info_per_user(@user.id), message: "PreWutudu Created"})
   end
 
   def destroy
@@ -47,12 +47,13 @@ class PreWutuduController < ApiController
     c
   end
 
-  def client_in_group
-    @group = @user.groups.find_by_id(params[:gid])
-    return send_errors("User Not In Group", 404) unless @group
+  def active_in_group
+    @group = Group.find_by_id(params[:gid])
+    return send_errors("Group Not Found", 404) unless @group
+    return send_errors("User Not Active In Group", 400) \
+      unless @group.active_users.find_by_id(@user.id)
   end
 
-  # Check if client in the group that the wutudu refers to
   def wutudu_in_group
     @pre_wutudu = @group.pre_wutudus.find_by_id(params[:id])
     return send_errors("PreWutudu Not Found In Group", 404) unless @pre_wutudu

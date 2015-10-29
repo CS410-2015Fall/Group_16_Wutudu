@@ -16,7 +16,6 @@ Rails.application.routes.draw do
 
   match '/groups/:gid' => 'group_details#show', via: :get
 
-  match '/groups/:gid/users' => 'group_users#show', via: :get
   match '/groups/:gid/users' => 'group_users#create', via: :post
   match '/groups/:gid/users' => 'group_users#update', via: :put
   match '/groups/:gid/users' => 'group_users#destroy', via: :delete
@@ -24,6 +23,9 @@ Rails.application.routes.draw do
   match '/groups/:gid/pre_wutudu'     => 'pre_wutudu#create', via: :post
   match '/groups/:gid/pre_wutudu/:id' => 'pre_wutudu#show', via: :get
   match '/groups/:gid/pre_wutudu/:id' => 'pre_wutudu#destroy', via: :delete
+
+  match '/groups/:gid/pre_wutudu/:id/answers' => 'user_answer#create', via: :post
+  match '/groups/:gid/pre_wutudu/:id/answers' => 'user_answer#show', via: :get
 
   root  'application#show'
 end
