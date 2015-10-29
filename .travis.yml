@@ -5,12 +5,12 @@ gemfile: backend/heroku/Gemfile
 before_script:
 - cd backend/heroku && bundle exec rake db:drop
 script:
-- bundle exec rake db:create db:migrate db:seed
+- bundle exec rake db:create db:migrate db:seed && bundle exec puma -C config/puma.rb
 deploy:
   provider: heroku
   api_key:
     secure: CXDHaK2CFJ5C4IESQUmgMF/bzug/wlQ/lJtIWy/eNEkhoigX1MtxsG3MMSQOP37uM4Ep/VGQ7LhdG9r9DUCyR9QmukObHpWnANL9mNhj4hD10121L07QVqLNF0b9tGhAcHa3N7ta+AwgRRAr75v7M36lRfvPVIB83zdhKU6m/El8CqQpNq9vs35vyHWE7dHFBrRhnhRMCrAvGdZppIuHOFD0xa/1ZXcZgN+1vhJB+gei4W2W6Jpst75iWvTdpl0cmiE9gQIVLh3B/GWJeWrk3e0vTWu16yg0+61KAVzSZ7Tew5Hor5KlgCnbE09JyHBovsPsALjMjkYSsgCJGU8tbZ0RjktHzHZnmA70BjdRPa6aM4foYupCcolbvSr7ORhyrueuE7nZSSrbuoKgz8UBtOsSDO920yWoH6YrQHeHtsTLPbvRLaHL9UnL2s4qwa4Ium/GRH3QdzUOmBrzajvuXKWL5q+fG38yUZ2GsRPUDBWV69lHd9MK5Bg38P7BFgDil4MEudev+NIKASvrNNbLElrmDBwy5CkNyD2jShljRPeMJ7RpfhfX7BILzEqNvHZipxqzFa/dR95f2yvUMMMfCpW3ey7XXZvFptgowu7bwD+eMqdLHQlPeooHd4hO1g1pjML7fWbYbMWfOyrr2Yde2p2079N4LYF97XVjwnwSvQ4=
   app: stormy-hollows-9187
   run:
-    - "sleep 10 && rake db:migrate db:seed --trace"
+    - "rake db:migrate db:seed --trace"
 
