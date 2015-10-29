@@ -21,16 +21,21 @@ angular.module('starter.services')
         // return upcoming wutudus for all the group that contains friendId
       }
     },
-    createWutudu: function(config) {
+    createWutudu: function(options) {
       var payload = {
             method: 'POST',
-            data: config.data,
-            url: '/groups/' + config.groupId + '/pre_wutudu'
+            data: options.data,
+            url: '/groups/' + options.groupId + '/pre_wutudu'
           };
       return $httpService.makeRequest(payload);
     },
-    getQuestions: function(wutudu) {
-      // use wutudu id to retrieve the questions from server
+    sendAnswers: function(options) {
+      var payload = {
+            method: 'POST',
+            data: options.data,
+            url: '/groups/' + options.groupId + '/pre_wutudu/' + options.wutuduId + '/answers'
+          };
+      return $httpService.makeRequest(payload);
     }
   };
 

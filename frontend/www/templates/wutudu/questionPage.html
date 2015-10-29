@@ -11,17 +11,17 @@
               {{currentQuestion + 1}}. {{question.question_text}}
             </div>
             <div class="button-bar">
-              <a class="button" ng-click="answerQuestion(0, question)">{{question.a0_text}}</a>
-              <a class="button" ng-click="answerQuestion(1, question)">{{question.a1_text}}</a>
+              <a class="button" ng-class="answerStyle0" ng-click="answerQuestion(0, question)">{{question.a0_text}}</a>
+              <a class="button" ng-class="answerStyle1" ng-click="answerQuestion(1, question)">{{question.a1_text}}</a>
             </div>
             <div class="button-bar">
-              <a class="button" ng-click="answerQuestion(2, question)">{{question.a2_text}}</a>
-              <a class="button" ng-click="answerQuestion(3, question)">{{question.a3_text}}</a>
+              <a class="button" ng-class="answerStyle2" ng-click="answerQuestion(2, question)">{{question.a2_text}}</a>
+              <a class="button" ng-class="answerStyle3" ng-click="answerQuestion(3, question)">{{question.a3_text}}</a>
             </div>
           </div>
         </ion-slide>
       </ion-slide-box>
-      <button type="submit" class="button button-balanced" ng-click="submitAnswers()">Submit Responses</button>
+      <button type="submit" class="button button-balanced" ng-click="submitAnswers()" ng-disabled="disabledSubmit">Submit Responses</button>
       <button type="submit" class="button button-assertive" ng-click="declineWutudu()">Decline Event</button>
     </form>
   </ion-content>

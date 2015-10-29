@@ -91,6 +91,7 @@ angular.module('starter', ['ionic','ionic.service.core', 'ionic.service.push', '
 
   .state('app.group', {
     url: '/group/:groupId',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/group/group.html',

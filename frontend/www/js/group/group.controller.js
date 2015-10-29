@@ -110,6 +110,14 @@ angular.module('starter.controllers')
     $ionicPopup.show(addFriendTplConfig);
   };
 
+  $scope.displayStatus = function (preWutudu) {
+    return preWutudu.completed_answers + ' / ' + preWutudu.total_possible + ' answered'
+  };
+
+  $scope.userAnswered = function (preWutudu) {
+    return (preWutudu.user_answer === null);
+  };
+
   $scope.showWutuduQuestion = function(preWutudu) {
     config.preWutudu = preWutudu;
     config.wutuduId = preWutudu.pre_wutudu_id.toString();
