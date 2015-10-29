@@ -5,7 +5,7 @@ gemfile: backend/heroku/Gemfile
 before_script:
 - cd backend/heroku && bundle exec rake db:drop
 script:
-- bundle exec rake db:create db:migrate db:seed && bundle exec puma -C config/puma.rb
+- bundle exec rake db:create db:migrate db:seed && echo "puts test" | bundle exec rails console
 deploy:
   provider: heroku
   api_key:
