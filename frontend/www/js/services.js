@@ -25,8 +25,8 @@ angular.module('starter.services', [])
 })
 
 .factory('$httpService', function($http, User) {
-  var urlRoot = "http://localhost:5000";
-  // var urlRoot = "https://stormy-hollows-9187.herokuapp.com";
+  // var urlRoot = "http://localhost:5000";
+  var urlRoot = "https://stormy-hollows-9187.herokuapp.com";
 
   return {
     makeRequest: function(config) {
@@ -63,37 +63,49 @@ angular.module('starter.services', [])
   };
 })
 
-.factory('$wutuduNotification', function($q,
-  $ionicPush, $ionicPopup, $msgBox) {
+.factory('$wutuduNotification', function($ionicPlatform, $cordovaPush,
+    $rootScope, $q, $ionicPopup, $msgBox) {
 
   return {
     register: function() {
       return $q(function(resolve, reject) {
-        var config = {
-          "onNotification": function (notification) {
-            var msgObj = {
-                title: 'Cordova notification',
-                template: '<span>' + JSON.stringify(notification) + '</span>'
-              },
-              payload = notification.payload;
-            console.log(notification, payload);
-            $msgBox.show(msgObj);
-          },
-          "onRegister": function(data) {
-            $msgBox.show(null, {
-              title: 'Register notification',
-              template: '<span>'+ JSON.stringify(data) + '</span>',
-            });
-            if(data.token) {
-              console.log(data.token);
-              resolve(data.token);
-            } else {
-              reject();
+        $ionicPlatform.ready(function() {
+          var androidConfig = {
+            "senderID": "185225418332",
+            "forceShow": true
+          };
+          $cordovaPush.register(androidConfig).then(function(result) {
+            // Success
+            console.debug(result);
+          }, function(err) {
+            // Error
+            console.error(result);
+          });
+
+          $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
+            switch(notification.event) {
+              case 'registered':
+                if (notification.regid.length > 0 ) {
+                  console.table('registration ID = ' + notification.regid);
+                  resolve(notification.regid);
+                }
+                break;
+
+              case 'message':
+                // this is the actual push notification. its format depends on the data model from the push server
+                console.debug('message = ' + notification.message + ' msgCount = ' + notification.msgcnt);
+                break;
+
+              case 'error':
+                console.debug('GCM error = ' + notification.msg);
+                break;
+
+              default:
+                console.debug('An unknown GCM event has occurred');
+                break;
             }
-          }
-        };
-        $ionicPush.init(config);
-        $ionicPush.register();
+          });
+        });
       });
     }
   };
