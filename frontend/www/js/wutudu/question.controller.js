@@ -46,7 +46,7 @@ angular.module('starter.controllers')
     }
   };
 
-  $scope.submitAnswers = function (callback) {
+  $scope.submitAnswers = function () {
     if ($scope.answers.indexOf(-1) !== -1) {
       $ionicPopup.alert({
         title: 'Some questions are not answered!',

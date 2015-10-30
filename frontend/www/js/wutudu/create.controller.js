@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('WutuduCreateCtrl', function($scope, $stateParams, $state,
-         $ionicPopup, $ionicModal, $msgBox, Friend, Group, Wutudu) {
+         $ionicPopup, $ionicModal, $msgBox, $ionicPlatform, $cordovaGeolocation, Friend, Group, Wutudu) {
   var groupId = $stateParams.groupId,
       config = {
         groupId: groupId
@@ -9,14 +9,21 @@ angular.module('starter.controllers')
       map,
       marker;
 
+  var DEFAULT_LAT = 49.2827
+      DEFAULT_LNG = -123.1207;
+
   $scope.wutudu = {
-    latitude: 49.2827,
-    longitude: -123.1207,
+    latitude: DEFAULT_LAT,
+    longitude: DEFAULT_LNG,
   };
 
   (function init () {
-      initMap();
-      initDatePicker();
+    initDatePicker();
+    if (initMap()) {
+      $ionicPlatform.ready(function () {
+        initLocation();
+      });
+    }
   })();
 
   $scope.locationChange = function (wutudu) {
@@ -85,17 +92,19 @@ angular.module('starter.controllers')
     if (!google.maps.Map) {
       console.log('MAP NOT LOADED');
       setTimeout(initMap, 1000);
+      return false;
     } else {
       map = new google.maps.Map(document.getElementById('createWutuduMap'), {
-        center: {lat: 49.2827, lng: -123.1207},
+        center: {lat: DEFAULT_LAT, lng: DEFAULT_LNG},
         zoom: 15
       });
       map.addListener('click', setLocation);
       marker = new google.maps.Marker({
-        position: {lat: 49.2827, lng: -123.1207},
+        position: {lat: DEFAULT_LAT, lng: DEFAULT_LNG},
         map: map,
         title: 'This location'
       });
+      return true;
     }
   };
 
@@ -130,4 +139,27 @@ angular.module('starter.controllers')
       callback: onDatePick //Mandatory
     };
   }
+
+  function initLocation () {
+    var posOptions = {timeout: 10000, enableHighAccuracy: false};
+    $cordovaGeolocation
+      .getCurrentPosition(posOptions)
+      .then(function (position) {
+        var lat  = position.coords.latitude
+        var lng = position.coords.longitude
+        marker.setPosition({
+          lat: lat,
+          lng: lng
+        });
+        map.panTo(marker.getPosition());
+        $scope.wutudu.latitude = lat;
+        $scope.wutudu.longitude = lng;
+    }, function (err) {
+      console.log(err);
+      $ionicPopup.alert({
+        title: 'Failed to load user\'s geolocation.'
+      });
+    });
+  }
+
 });
