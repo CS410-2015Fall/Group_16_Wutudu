@@ -13,9 +13,9 @@ class PreWutudu < ActiveRecord::Base
       longitude: self.longitude,
       questions: self.qnum_and_questions,
       user_answer: self.user_answers.find_by_user_id(user_id),
-      total_possible: self.total_possible,
-      completed_answers: self.completed_answers,
-      declined_answers: self.declined_answers,
+      total_possible: self.total_possible_count,
+      completed_answers: self.completed_answers.count,
+      declined_answers: self.declined_answers_count,
     }
   end
 
@@ -27,15 +27,27 @@ class PreWutudu < ActiveRecord::Base
 		hash
 	end
 
-  def declined_answers
-    self.user_answers.where(declined: true).count
+  def aggregate_category_weights
+    aggregate_weights = {}
+    self.completed_answers.each do |x|
+      aggregate_weights.merge!(x.category_weights) {|key, v0, v1| v0 + v1} 
+    end
+    aggregate_weights
   end
 
   def completed_answers
-    self.user_answers.count - declined_answers
+    self.user_answers.where(declined: nil)
   end
 
-  def total_possible
-    self.group.active_users.count - self.declined_answers
+  def declined_answers_count
+    self.user_answers.where(declined: true).count
+  end
+
+  def completed_answers_count
+    self.completed_answers.count
+  end
+
+  def total_possible_count
+    self.group.active_users.count - self.declined_answers_count
   end
 end

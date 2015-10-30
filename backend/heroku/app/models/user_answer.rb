@@ -8,6 +8,15 @@ class UserAnswer < ActiveRecord::Base
     {id: self.id, declined: self.declined?, answers: self.answers}
   end
 
+  def category_weights
+    category_weights = {}
+    (0..9).each do |i|
+      q = self.pre_wutudu.pre_wutudu_questions.find_by_qnum(i).question
+      category_weights.merge!(q.category_weights(answers[i])) {|key, v0, v1| v0 + v1}  
+    end
+    category_weights
+  end
+
   private 
 
   def validate_answers

@@ -16,6 +16,7 @@ class UserAnswerController < ApiController
       user_answer.declined = true
     else
       user_answer.answers = answers
+      puts user_answer.answers
     end
     return send_errors("User Answer Invalid", 400) unless user_answer.valid?
     return send_errors("Failed To Save Answers", 400) unless user_answer.save

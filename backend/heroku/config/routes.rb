@@ -27,5 +27,7 @@ Rails.application.routes.draw do
   match '/groups/:gid/pre_wutudu/:id/answers' => 'user_answer#create', via: :post
   match '/groups/:gid/pre_wutudu/:id/answers' => 'user_answer#show', via: :get
 
+  match '/groups/:gid/pre_wutudu/:id/finish' =>  'wutudu_event#create', via: :post
+
   root  'application#show'
 end

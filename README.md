@@ -206,21 +206,7 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
 NOTE: If requester not in group with :gid, then always returns ["Not In Group", 404] for any actions
 ```
 ```
-1. GET:
-
-  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
-  * BODY: NONE
-  * RETURN: {
-              "group_users" : {
-                                "active_users" : [{"id" : id, "name" : name, "email" : email}...],
-                                "pending_users" : [{"id" : id, "name" : name, "email" : email}...]
-                             }
-            }
-            or
-            Request status ["Not Accepted To Group" 400] when the user has yet to accept group invitation
-```
-```
-2. POST:
+1. POST:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: {"group_user" : {"emails" : [emails]}}
@@ -233,7 +219,7 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
   * NOTE: Used to invite users to the group (assuming these users are friends)
 ```
 ```
-3. PUT:
+2. PUT:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
@@ -245,7 +231,7 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
   * NOTE: Used to accept confirm group invitation
 ```
 ```
-4. DELETE:
+3. DELETE:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
@@ -267,7 +253,7 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: {"pre_wutudu" : {"event_date" : "DD-MMM-YYYY", "latitude" : latitude, "longitude" : longitude}}
-  * RETURN: {
+  * RETURN: Request status. {
               "pre_wutudu" : {
                                 "pre_wutudu_id": pre_wutudu_id,
                                 "event_date": "YYYY-MM-DDT00:00:00.000Z",
@@ -352,3 +338,69 @@ NOTE: If requester not in group with :group_id, then always returns ["User Not I
                                    ]
   * NOTE: Used to delete a pre wutudu
 ```
+
+##/groups/:gid/prewutudu/:id/answers
+
+```
+NOTE: If requester not in group with :group_id, then always returns ["User Not In Group", 404] for any actions
+```
+```
+1. POST:
+
+  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
+  * BODY: {"answers" : [(Ten elements, 0 to 3)] or (Ten -1s, if declined)}
+  * RETURN: Request status. One of [
+                                    "PreWutudu Declined" 200,
+                                    "User Answer Saved" 200,
+                                    "User Already Answered" 400,
+                                    "User Answer Invalid" 400,
+                                    "Failed To Save Answers" 400
+                                   ]
+  * NOTE: Used to submit answers to the prewutudu 
+```
+```
+2. GET:
+
+  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
+  * BODY: NONE
+  * RETURN: Request status. One of [
+                                    {
+                                      "user_answer": {
+                                        "id": id, 
+                                        "declined": true or false
+                                        "answers" : [(Ten elements, 0 to 3)]
+                                      }, 
+                                    } 200,
+                                    or
+                                    "User Has Not Answered" 400
+                                   ]
+```
+
+##/groups/:gid/prewutudu/:id/finish
+
+```
+NOTE: If group not found, then always returns ["Group Not Found", 400]
+If requester not in group with :group_id, then always returns ["User Not In Group", 400] for any actions. 
+If pre_wutudu not in group get ["PreWutudu Not Found In Group", 404]
+```
+```
+#TEMPORARY - Will be changing later, once we get #magic working
+1. POST:
+
+  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
+  * BODY: NONE
+  * RETURN: Request status. One of [
+                                    {
+                                      "weights":{
+                                        cat_id: weight, cat_id: weight, ...
+                                        },
+                                      "top":{
+                                        "id": id,
+                                        "category_name": name,
+                                        "yelp_id": yelp_id,
+                                        "cat_id": cat_id
+                                      }
+                                    } 200,
+                                    or
+                                    "No Answers Completed" 400
+                                   ]

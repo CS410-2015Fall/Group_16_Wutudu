@@ -7,6 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # Might want the categories in the seed file too?
+UPDATE_EXISTING = true
 
 main_categories = [
       {cat_id: 1, category_name: 'Active Life', yelp_id: 'active'},
@@ -23,9 +24,15 @@ main_categories = [
     ]
     
 main_categories.each do |mc|
-  category = Category.where(cat_id: mc[:cat_id]).first_or_initialize
+  if UPDATE_EXISTING
+    category = Category.where(cat_id: mc[:cat_id]).first_or_initialize
     category.update_attributes!(mc) 
-  puts "Adding/Updated category #{mc[:category_name]} with #{mc[:cat_id]} successfully" if category.save
+    puts "Adding/Updated category #{mc[:category_name]} with #{mc[:cat_id]} successfully" if category.save
+  elsif !Category.exists?(cat_id: mc[:cat_id])
+    category = Category.new(cat_id: mc[:cat_id])
+    category.update_attributes!(mc)
+    puts "Adding category #{mc[:category_name]} with #{mc[:cat_id]} successfully" if category.save
+  end
 end
 
 
@@ -45,7 +52,7 @@ questions = [
   {id: 5, question_text: "Do you like playing video games?",
             a0_text: "Zero", a1_text: "One",
             a2_text: "Two", a3_text: "Three"},
-  {id: 6, question_text: "What message should show up if you Dad calls you when you are playing a message from your answering machine",
+  {id: 6, question_text: "What message should show up if your Dad calls you when you are playing a message from your answering machine?",
             a0_text: "Zero", a1_text: "One",
             a2_text: "Two", a3_text: "Three"},
   {id: 7, question_text: "Hello there. How are you?",
@@ -72,10 +79,40 @@ questions = [
   {id: 14, question_text: "What is the meaning of life?",
             a0_text: "Zero", a1_text: "One",
             a2_text: "Two", a3_text: "Three"},
+  {id: 15, question_text: "What is Kappa123?",
+            a0_text: "Zero", a1_text: "One",
+            a2_text: "Two", a3_text: "Three"},
 ]
 
+answer_weights = {
+  1 => {
+    0 => [{category: 1, weight: 1}],
+    1 => [{category: 2, weight: 1}, {category: 3, weight: -1}],
+    2 => [{category: 3, weight: 1}, {category: 11 , weight: 1}],
+    3 => [{category: 4, weight: 1}],
+    }, 
+}
+
 questions.each do |q|
-  question = Question.where(id: q[:id]).first_or_initialize
-  question.update_attributes!(q)
-  puts "Added/Updated question #{q[:id]} successfully" if question.save
+  if UPDATE_EXISTING
+    # Add answers
+    question = Question.where(id: q[:id]).first_or_initialize
+    question.answer_weights.destroy_all unless question.answer_weights.nil?
+    question.update_attributes!(q)
+    (0..3).each do |i|
+      answer_weights[1][i].each do |aw|
+        question.answer_weights.build(anum: i, category_id: aw[:category], weight: aw[:weight])
+      end
+    end
+    puts "Added/Updated question #{q[:id]} successfully" if question.save
+  elsif !Question.exists?(id: q[:id])
+    question = Question.new(q)
+    # should be answer_weights[q[:id]], but hardcoding sample weights for now
+    (0..3).each do |i|
+      answer_weights[1][i].each do |aw|
+        question.answer_weights.build(anum: i, category_id: aw[:category], weight: aw[:weight])
+      end
+    end
+    puts "Added question #{q[:id]} successfully" if question.save
+  end
 end
