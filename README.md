@@ -1,5 +1,7 @@
 # Group_16_Wutudu
 
+![](https://magnum.travis-ci.com/CS410-2015Fall/Group_16_Wutudu.svg?token=Jganyp582xULs9ySd19Q&branch=master)
+
 #API Docs (Reformat Later)
 
 ##/login
