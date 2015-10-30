@@ -40,7 +40,9 @@ gem 'rack-cors', require: 'rack/cors'
 gem 'bcrypt', '~> 3.1.7'
 
 gem 'responders', '~> 2.0'
+# GCM Notifications
 gem 'gcm', require: 'gcm'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

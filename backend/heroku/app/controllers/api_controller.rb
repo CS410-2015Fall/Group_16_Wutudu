@@ -1,5 +1,4 @@
 class ApiController < ApplicationController
-  @gcm = GCM.new(ENV['GOOGLE-API-KEY'])
 
   def authenticate
     authenticate_or_request_with_http_token do |token, options|
@@ -19,17 +18,19 @@ class ApiController < ApplicationController
     render json: {errors: "Internal Server Error"}, status: 500
   end
 
-  def send_notification(tokens, message, payload=nil)
+  def send_notification(tokens, message, payload)
+    gcm = GCM.new(ENV['GOOGLE-API-KEY'])
     options = {
                 delay_while_idle: true,
                 notification: {
+                  style: "inbox",
+                },
+                data: {
                   title: "Wutudu",
                   message: message,
-                  style: "inbox",
-                  summaryText: "There are %n% notifications"
                 }
               }
-    options[:data] = payload if payload
-    @gcm.send(tokens, options)
+    options[:data].merge!(payload) if payload
+    response = gcm.send(tokens, options)
   end
 end
