@@ -19,7 +19,9 @@ class GroupsController < ApiController
     if gu.save
       return send_success({group: group.basic_info, message: "Group Created"}) if group_params[:emails].nil?
       message, code = add_users_to_group(group.id, group_params[:emails])
-      return (code == 200 ? send_success(message) : send_errors(message, code))
+      return send_errors(message, code) unless code == 200
+      send_pending_users_notifications(group)
+      return send_success(message)
     else
       group.destroy
       render json: {errors: "Failed To Create Group and Add User"}, status: 400
@@ -35,6 +37,15 @@ class GroupsController < ApiController
     gp = params.require(:group).permit(:name, :emails => [])
     gp.require(:name)
     return gp
+  end
+
+  def send_pending_users_notifications(group)
+    payload = {
+      group: group.basic_info
+    }
+    send_notification(@group.pending_users_device_tokens, \
+                      "You have been invited to join Group #{group.name}", \
+                      payload)
   end
 
   def add_users_to_group(gid, emails)

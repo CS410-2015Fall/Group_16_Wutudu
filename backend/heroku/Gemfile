@@ -43,6 +43,14 @@ gem 'responders', '~> 2.0'
 # GCM Notifications
 gem 'gcm', require: 'gcm'
 
+# Google Place API
+gem 'google_places'
+
+# Four Square API
+gem 'foursquare2'
+
+# Yelp API
+gem 'yelp'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

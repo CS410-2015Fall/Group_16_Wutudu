@@ -17,7 +17,7 @@ class Group < ActiveRecord::Base
   def group_users_info
     {
       active_users: self.active_users.collect {|u| u.basic_info},
-     pending_users: self.pending_users.collect {|u| u.basic_info}
+      pending_users: self.pending_users.collect {|u| u.basic_info}
     }
   end
 
@@ -39,5 +39,9 @@ class Group < ActiveRecord::Base
 
   def active_users_device_tokens
     self.active_users.collect {|u| u.device_token}
+  end
+
+  def pending_users_device_tokens
+    self.pending_users.collect {|u| u.device_token}
   end
 end

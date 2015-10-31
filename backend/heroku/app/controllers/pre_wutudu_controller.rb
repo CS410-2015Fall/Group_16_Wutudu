@@ -23,14 +23,16 @@ class PreWutuduController < ApiController
 
     return send_internal_error if pre_wutudu.pre_wutudu_questions.size != 10
     return send_errors("Failed To Create PreWutudu", 400) unless pre_wutudu.save
-    # Comment out for full implmentation later
-    # payload = {
-    #   group: @group.basic_info
-    #   pre_wutudu: pre_wutudu.basic_info
-    # }
-    # send_notification(@group.active_users_device_tokens, \
-    #                   "You have been invited to complete complete a Wutudu with Group #{@group.name}", \
-    #                   payload)
+
+    # Send notifications
+    payload = {
+      group: @group.basic_info,
+      pre_wutudu: pre_wutudu.basic_info
+    }
+    send_notification(@group.active_users_device_tokens, \
+                      "You have been invited to complete complete a Wutudu with Group #{@group.name}", \
+                      payload)
+
     return send_success({pre_wutudu: pre_wutudu.basic_info_per_user(@user.id), message: "PreWutudu Created"})
   end
 

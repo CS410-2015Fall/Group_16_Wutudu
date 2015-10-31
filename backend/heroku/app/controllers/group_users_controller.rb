@@ -11,7 +11,9 @@ class GroupUsersController < GroupsController
 
   def create
     message, code = add_users_to_group(@group.id, group_user_params[:emails])
-    return (code == 200 ? send_success(message) : send_errors(message, code))
+    return send_errors(message, code) unless code == 200
+    send_pending_users_notifications(@group)
+    return send_success(message)
   end
 
   def update
