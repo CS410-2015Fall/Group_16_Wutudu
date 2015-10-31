@@ -23,7 +23,7 @@ class PreWutuduController < ApiController
 
     return send_internal_error if pre_wutudu.pre_wutudu_questions.size != 10
     return send_errors("Failed To Create PreWutudu", 400) unless pre_wutudu.save
-    send_active_users_notifications
+    send_active_users_notifications(pre_wutudu)
     return send_success({pre_wutudu: pre_wutudu.basic_info_per_user(@user.id), message: "PreWutudu Created"})
   end
 
@@ -57,7 +57,7 @@ class PreWutuduController < ApiController
     return send_errors("Action Invalid. PreWutudu Already Finished", 400) if @pre_wutudu.finished?
   end
 
-  def send_active_users_notifications
+  def send_active_users_notifications(pre_wutudu)
     unless @group.active_users_device_tokens.empty?
       payload = {
         group: @group.basic_info,
