@@ -91,7 +91,7 @@ angular.module('starter', ['ionic', 'ngCordova',
   })
 
   .state('app.group', {
-    url: '/group/:groupId',
+    url: '/group/:groupId/:groupName',
     cache: false,
     views: {
       'menuContent': {

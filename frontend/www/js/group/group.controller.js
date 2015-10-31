@@ -8,7 +8,6 @@ angular.module('starter.controllers')
         groupId: groupId
       };
 
-
   $scope.data = {
     name: groupName
   };

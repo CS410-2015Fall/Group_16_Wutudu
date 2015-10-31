@@ -15,7 +15,7 @@
       <ion-list>
         <ion-item ng-repeat="group in activeGroups">
           <span class="circle-border">{{$index + 1}}</span>
-          <a href="#/app/group/{{group.id}}">{{group.name}}</a>
+          <a href="#/app/group/{{group.id}}/{{group.name}}">{{group.name}}</a>
           <button class="button button-inline button-assertive" ng-click="leaveGroup(group.id)">Leave</button>
         </ion-item>
       </ion-list>
@@ -27,7 +27,7 @@
       <ion-list>
         <ion-item ng-repeat="group in pendingGroups">
           <span class="circle-border">{{$index + 1}}</span>
-          <a href="#/app/group/{{group.id}}?name={{group.name}}">{{group.name}}</a>
+          <a href="#/app/group/{{group.id}}/{{group.name}}">{{group.name}}</a>
           <button class="button button-inline button-assertive" ng-click="declineInvitation(group.id)">Decline</button>
           <button class="button button-inline button-balanced" ng-click="acceptInvitation(group.id)">Accept</button>
         </ion-item>

@@ -80,16 +80,16 @@ angular.module('starter.services', [])
     }
   }
 
-  function goToState(newState) {
+  function goToState(newState, params) {
     if($state.is(newState)) {
        $state.reload();
     } else {
-      $state.go(newState);
+      $state.go(newState, params);
     }
   }
 
-  function switchState(state) {
-    switch(state) {
+  function switchState(payload) {
+    switch(payload.state) {
       case 'friend':
         goToState('app.friendList');
         break;
@@ -97,7 +97,11 @@ angular.module('starter.services', [])
         goToState('app.groupList');
         break;
       case 'pre_wutudu':
-        goToState('app.group');
+        goToState('app.group',
+          {
+            groupId: payload.group.id,
+            groupName: payload.group.name
+          });
         break;
       default:
         break;
@@ -109,7 +113,7 @@ angular.module('starter.services', [])
     console.debug('message = ' + notification.message);
     console.debug('notification ', JSON.stringify(notification));
 
-    switchState(notification.payload.state);
+    switchState(notification.payload);
     $ionicPopup.alert({
       title: 'notification',
       template: '<div class="card">' +
