@@ -289,10 +289,14 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
             Request status ["User Not In Group" 400] when the user is not in the group
 ```
 
-##/groups/:gid/prewutudu/:id
+##/groups/:gid/prewutudu/:pid
 
 ```
-NOTE: If requester not in group with :group_id, then always returns ["User Not In Group", 404] for any actions
+NOTE: If group not found, it will always return ["Group Not Found", 404] for any actions
+      If requester not in group with :group_id, it will always return ["User Not Active In Group", 404] for any actions
+      If PreWutudu not found in group, then always return ["PreWutudu Not Found In Group", 404]
+      If the wutudu has already been finished, it will always return ["Action Invalid. PreWutudu Already Finished", 400] for any actions
+
 ```
 ```
 1. GET:
@@ -330,7 +334,7 @@ NOTE: If requester not in group with :group_id, then always returns ["User Not I
   * NOTE: Used to get the information of a pre_wutudu
 ```
 ```
-3. DELETE:
+2. DELETE:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
@@ -341,10 +345,13 @@ NOTE: If requester not in group with :group_id, then always returns ["User Not I
   * NOTE: Used to delete a pre wutudu
 ```
 
-##/groups/:gid/prewutudu/:id/answers
+##/groups/:gid/prewutudu/:pid/answers
 
 ```
-NOTE: If requester not in group with :group_id, then always returns ["User Not In Group", 404] for any actions
+NOTE: If group not found, it will always return ["Group Not Found", 404] for any actions
+      If requester not in group with :group_id, it will always return ["User Not Active In Group", 404] for any actions
+      If PreWutudu not found in group, then always return ["PreWutudu Not Found In Group", 404]
+      If the wutudu has already been finished, it will always return ["Action Invalid. PreWutudu Already Finished", 400] for any actions
 ```
 ```
 1. POST:
@@ -378,12 +385,13 @@ NOTE: If requester not in group with :group_id, then always returns ["User Not I
                                    ]
 ```
 
-##/groups/:gid/prewutudu/:id/finish
+##/groups/:gid/prewutudu/:pid/finish
 
 ```
-NOTE: If group not found, then always returns ["Group Not Found", 400]
-If requester not in group with :group_id, then always returns ["User Not In Group", 400] for any actions. 
-If pre_wutudu not in group get ["PreWutudu Not Found In Group", 404]
+NOTE: If group not found, it will always return ["Group Not Found", 404] for any actions
+      If requester not in group with :group_id, it will always return ["User Not Active In Group", 404] for any actions
+      If PreWutudu not found in group, then always return ["PreWutudu Not Found In Group", 404]
+      If the wutudu has already been finished, it will always return ["Action Invalid. PreWutudu Already Finished", 400] for any actions
 ```
 ```
 #TEMPORARY - Will be changing later, once we get #magic working
@@ -402,7 +410,50 @@ If pre_wutudu not in group get ["PreWutudu Not Found In Group", 404]
                                         "yelp_id": yelp_id,
                                         "cat_id": cat_id
                                       }
+                                        "wutudu_event": {
+                                          "id": id,
+                                          "activity_name": name,
+                                          "category_id": cat_id,
+                                          "event_time": time,
+                                          "latitude": lat,
+                                          "longitude": long,
+                                          "group_id": gid,
+                                          "pre_wutudu_id": pid
+                                        }
                                     } 200,
                                     or
+                                    "Wutudu Event Already Created" 400
+                                    or
                                     "No Answers Completed" 400
+                                    or
+                                    "Unable To Create Wutudu Event" 400
                                    ]
+  * NOTE: Used to submit answers to the prewutudu 
+```
+
+##/groups/:gid/wutudu_event/:wid
+
+```
+NOTE: If group not found, then always returns ["Group Not Found", 400]
+If requester not in group with :group_id, then always returns ["User Not In Group", 400] for any actions. 
+If wutudu event not in group, it will return ["WutuduEvent Not Found In Group", 404]
+```
+```
+1. GET:
+  * AUTHENTICATION: Header: "Authorization Token token=auth-token"
+  * BODY: NONE
+  * RETURN: Request status. {
+                            "wutudu_event": {
+                              "id": 5,
+                              "activity_name": null,
+                              "category_id": 2,
+                              "event_time": "2015-12-08T00:00:00.000Z",
+                              "latitude": "2.0",
+                              "longitude": "3.0",
+                              "group_id": 1,
+                              "pre_wutudu_id": 10
+                            }
+```
+
+
+

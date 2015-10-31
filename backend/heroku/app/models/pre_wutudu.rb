@@ -1,9 +1,12 @@
 class PreWutudu < ActiveRecord::Base
-	belongs_to :group
-	has_many :pre_wutudu_questions, dependent: :destroy
-	has_many :questions, through: :pre_wutudu_questions
-	# TODO: add validation of location
+  belongs_to :group
+  has_many :pre_wutudu_questions, dependent: :destroy
+  has_many :questions, through: :pre_wutudu_questions
+  # TODO: add validation of location
   has_many :user_answers, dependent: :destroy
+  has_one :wutudu_event
+
+  #after_update :check_if_completed
 
   def basic_info_per_user(user_id)
     {
@@ -16,16 +19,17 @@ class PreWutudu < ActiveRecord::Base
       total_possible: self.total_possible_count,
       completed_answers: self.completed_answers.count,
       declined_answers: self.declined_answers_count,
+      finished: self.finished?
     }
   end
 
-	def qnum_and_questions
-		hash = {}
-		self.pre_wutudu_questions.each do |x|
-			hash[x.qnum] = self.questions.find_by_id(x.question_id)
-		end
-		hash
-	end
+  def qnum_and_questions
+    hash = {}
+    self.pre_wutudu_questions.each do |x|
+      hash[x.qnum] = self.questions.find_by_id(x.question_id)
+    end
+    hash
+  end
 
   def aggregate_category_weights
     aggregate_weights = {}

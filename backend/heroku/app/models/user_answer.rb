@@ -17,7 +17,7 @@ class UserAnswer < ActiveRecord::Base
     category_weights
   end
 
-  private 
+  private
 
   def validate_answers
     if !self.answers.is_a?(Array) || \

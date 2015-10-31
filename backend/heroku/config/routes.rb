@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :widgets
 
   match '/users' => 'users#create', via: :post
   match '/users' => 'users#show', via: :get
@@ -21,13 +20,14 @@ Rails.application.routes.draw do
   match '/groups/:gid/users' => 'group_users#destroy', via: :delete
 
   match '/groups/:gid/pre_wutudu'     => 'pre_wutudu#create', via: :post
-  match '/groups/:gid/pre_wutudu/:id' => 'pre_wutudu#show', via: :get
-  match '/groups/:gid/pre_wutudu/:id' => 'pre_wutudu#destroy', via: :delete
+  match '/groups/:gid/pre_wutudu/:pid' => 'pre_wutudu#show', via: :get
+  match '/groups/:gid/pre_wutudu/:pid' => 'pre_wutudu#destroy', via: :delete
 
-  match '/groups/:gid/pre_wutudu/:id/answers' => 'user_answer#create', via: :post
-  match '/groups/:gid/pre_wutudu/:id/answers' => 'user_answer#show', via: :get
+  match '/groups/:gid/pre_wutudu/:pid/answers' => 'user_answer#create', via: :post
+  match '/groups/:gid/pre_wutudu/:pid/answers' => 'user_answer#show', via: :get
 
-  match '/groups/:gid/pre_wutudu/:id/finish' =>  'wutudu_event#create', via: :post
+  match '/groups/:gid/pre_wutudu/:pid/finish' =>  'wutudu_event#create', via: :post
+  match '/groups/:gid/wutudu_event/:wid' =>  'wutudu_event#show', via: :get
 
   root  'application#show'
 end

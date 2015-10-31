@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
 
   # PreWutudu
   has_many :pre_wutudus, through: :group
+  has_many :wudutu_events
 
   def bcrypt_password
     BCrypt::Password.new(self.password)

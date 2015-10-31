@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151028233859) do
+ActiveRecord::Schema.define(version: 20151030234942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20151028233859) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "group_id"
+    t.boolean  "finished"
   end
 
   add_index "pre_wutudus", ["group_id"], name: "index_pre_wutudus_on_group_id", using: :btree
@@ -126,6 +127,20 @@ ActiveRecord::Schema.define(version: 20151028233859) do
     t.datetime "updated_at"
   end
 
+  create_table "wutudu_events", force: :cascade do |t|
+    t.string   "activity_name"
+    t.integer  "category_id"
+    t.datetime "event_time"
+    t.decimal  "latitude"
+    t.decimal  "longitude"
+    t.integer  "group_id"
+    t.integer  "pre_wutudu_id"
+  end
+
+  add_index "wutudu_events", ["category_id"], name: "index_wutudu_events_on_category_id", using: :btree
+  add_index "wutudu_events", ["group_id"], name: "index_wutudu_events_on_group_id", using: :btree
+  add_index "wutudu_events", ["pre_wutudu_id"], name: "index_wutudu_events_on_pre_wutudu_id", using: :btree
+
   add_foreign_key "answer_weights", "categories"
   add_foreign_key "answer_weights", "questions"
   add_foreign_key "group_users", "groups"
@@ -135,4 +150,7 @@ ActiveRecord::Schema.define(version: 20151028233859) do
   add_foreign_key "pre_wutudus", "groups"
   add_foreign_key "user_answers", "pre_wutudus"
   add_foreign_key "user_answers", "users"
+  add_foreign_key "wutudu_events", "categories"
+  add_foreign_key "wutudu_events", "groups"
+  add_foreign_key "wutudu_events", "pre_wutudus"
 end

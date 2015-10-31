@@ -1,7 +1,8 @@
 class PreWutuduController < ApiController
   before_action :authenticate
   before_action :active_in_group
-  before_action :wutudu_in_group, except: [:create]
+  before_action :pre_wutudu_in_group, except: [:create]
+  before_action :pre_wutudu_not_finished
 
   def show
     message = { pre_wutudu: @pre_wutudu.basic_info_per_user(@user.id) }
@@ -54,8 +55,12 @@ class PreWutuduController < ApiController
       unless @group.active_users.find_by_id(@user.id)
   end
 
-  def wutudu_in_group
-    @pre_wutudu = @group.pre_wutudus.find_by_id(params[:id])
+  def pre_wutudu_in_group
+    @pre_wutudu = @group.pre_wutudus.find_by_id(params[:pid])
     return send_errors("PreWutudu Not Found In Group", 404) unless @pre_wutudu
+  end
+
+  def pre_wutudu_not_finished
+    return send_errors("Action Invalid. PreWutudu Already Finished", 400) if @pre_wutudu.finished?
   end
 end
