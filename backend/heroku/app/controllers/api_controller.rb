@@ -21,13 +21,9 @@ class ApiController < ApplicationController
   def send_notification(tokens, message, payload)
     gcm = GCM.new(ENV['GOOGLE-API-KEY'])
     options = {
-                delay_while_idle: true,
-                notification: {
-                  style: "inbox",
-                },
                 data: {
                   title: "Wutudu",
-                  message: message,
+                  message: message
                 }
               }
     options[:data].merge!(payload) if payload

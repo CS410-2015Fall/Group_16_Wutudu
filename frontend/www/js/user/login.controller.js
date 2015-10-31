@@ -2,9 +2,10 @@ angular.module('starter.controllers')
 
 .controller('LoginCtrl', function ($scope, $state, $httpService, $ionicPopup,
   User, $wutuduNotification) {
-  // if (User.getSession()) {
-  //   $state.go('app.main');
-  // }
+  if (User.getSession()) {
+    // TODO check for token validity
+    $state.go('app.main');
+  }
 
   $scope.loginData = {};
 

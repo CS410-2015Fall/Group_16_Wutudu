@@ -64,50 +64,89 @@ angular.module('starter.services', [])
 })
 
 .factory('$wutuduNotification', function($ionicPlatform, $cordovaPush,
-    $rootScope, $q, $ionicPopup, $msgBox) {
+    $rootScope, $q, $state, $ionicPopup, $msgBox) {
+
+  var config = {
+    "senderID": "185225418332",
+  },
+      deferred;
+
+  $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
+
+  function onRegistered(notification) {
+    if (notification.regid.length > 0 ) {
+      console.table('registration ID = ' + notification.regid);
+      deferred.resolve(notification.regid);
+    }
+  }
+
+  function switchState(state) {
+    switch(state) {
+      case 'friend':
+        if($state.is('app.friendList'))
+          $state.reload();
+        else {
+          $state.go('app.friendList');
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  function onMessage(notification) {
+    // this is the actual push notification. its format depends on the data model from the push server
+    console.debug('message = ' + notification.message);
+    console.debug('notification ', JSON.stringify(notification));
+
+    switchState(notification.payload.state);
+    $ionicPopup.alert({
+      title: 'notification',
+      template: '<div class="card">' +
+                  '<div class="item item-text-wrap">' +
+                    notification.message +
+                  '</div>' +
+                '</div>'
+    });
+  }
+
+  function onNotification(event, notification) {
+    switch(notification.event) {
+      case 'registered':
+        onRegistered(notification);
+        break;
+
+      case 'message':
+        onMessage(notification);
+        break;
+
+      case 'error':
+        console.debug('GCM error = ' + notification.msg);
+        break;
+
+      default:
+        console.debug('An unknown GCM event has occurred');
+        break;
+    }
+  }
 
   return {
     register: function() {
-      return $q(function(resolve, reject) {
-        $ionicPlatform.ready(function() {
-          var androidConfig = {
-            "senderID": "185225418332",
-            "forceShow": true
-          };
-          $cordovaPush.register(androidConfig).then(function(result) {
-            // Success
-            console.debug(result);
-          }, function(err) {
-            // Error
-            console.error(result);
-          });
+      deferred = $q.defer();
 
-          $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
-            switch(notification.event) {
-              case 'registered':
-                if (notification.regid.length > 0 ) {
-                  console.table('registration ID = ' + notification.regid);
-                  resolve(notification.regid);
-                }
-                break;
-
-              case 'message':
-                // this is the actual push notification. its format depends on the data model from the push server
-                console.debug('message = ' + notification.message + ' msgCount = ' + notification.msgcnt);
-                break;
-
-              case 'error':
-                console.debug('GCM error = ' + notification.msg);
-                break;
-
-              default:
-                console.debug('An unknown GCM event has occurred');
-                break;
-            }
-          });
+      $ionicPlatform.ready(function() {
+        $cordovaPush.register(config).then(function(result) {
+          // Success
+          console.debug(result);
+        }, function(err) {
+          // Error
+          console.error(result);
         });
       });
+
+      return deferred.promise;
     }
   };
 
 });
+
