@@ -80,14 +80,24 @@ angular.module('starter.services', [])
     }
   }
 
+  function goToState(newState) {
+    if($state.is(newState)) {
+       $state.reload();
+    } else {
+      $state.go(newState);
+    }
+  }
+
   function switchState(state) {
     switch(state) {
       case 'friend':
-        if($state.is('app.friendList'))
-          $state.reload();
-        else {
-          $state.go('app.friendList');
-        }
+        goToState('app.friendList');
+        break;
+      case 'group':
+        goToState('app.groupList');
+        break;
+      case 'pre_wutudu':
+        goToState('app.group');
         break;
       default:
         break;

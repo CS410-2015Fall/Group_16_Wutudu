@@ -2,7 +2,7 @@ class PreWutuduController < ApiController
   before_action :authenticate
   before_action :active_in_group
   before_action :pre_wutudu_in_group, except: [:create]
-  before_action :pre_wutudu_not_finished
+  before_action :pre_wutudu_not_finished, except: [:create]
 
   def show
     message = { pre_wutudu: @pre_wutudu.basic_info_per_user(@user.id) }
@@ -61,7 +61,6 @@ class PreWutuduController < ApiController
     unless @group.active_users_device_tokens.empty?
       payload = {
         group: @group.basic_info,
-        pre_wutudu: pre_wutudu.basic_info,
         state: 'pre_wutudu'
       }
       send_notification(@group.active_users_device_tokens, \

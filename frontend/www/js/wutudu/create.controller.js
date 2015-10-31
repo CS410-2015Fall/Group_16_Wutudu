@@ -9,7 +9,7 @@ angular.module('starter.controllers')
       map,
       marker;
 
-  var DEFAULT_LAT = 49.2827
+  var DEFAULT_LAT = 49.2827,
       DEFAULT_LNG = -123.1207;
 
   $scope.wutudu = {
@@ -28,7 +28,7 @@ angular.module('starter.controllers')
 
   $scope.locationChange = function (wutudu) {
     marker.setPosition({
-      lat: parseFloat(wutudu.latitude), 
+      lat: parseFloat(wutudu.latitude),
       lng: parseFloat(wutudu.longitude)
     });
     map.panTo(marker.getPosition());
@@ -79,14 +79,14 @@ angular.module('starter.controllers')
       return false;
     }
     return true;
-  };
+  }
 
   function setLocation (event) {
     marker.setPosition(event.latLng);
     $scope.wutudu.latitude = event.latLng.lat();
     $scope.wutudu.longitude = event.latLng.lng();
     $scope.$apply();
-  };
+  }
 
   function initMap () {
     if (!google.maps.Map) {
@@ -106,7 +106,7 @@ angular.module('starter.controllers')
       });
       return true;
     }
-  };
+  }
 
   function onDatePick (val) {
     if (typeof(val) === 'undefined') {
@@ -114,7 +114,7 @@ angular.module('starter.controllers')
     } else {
       $scope.datepickerObject.inputDate = val;
     }
-  };
+  }
 
   function initDatePicker () {
     var start = new Date();
@@ -145,8 +145,8 @@ angular.module('starter.controllers')
     $cordovaGeolocation
       .getCurrentPosition(posOptions)
       .then(function (position) {
-        var lat  = position.coords.latitude
-        var lng = position.coords.longitude
+        var lat  = position.coords.latitude;
+        var lng = position.coords.longitude;
         marker.setPosition({
           lat: lat,
           lng: lng
@@ -157,7 +157,7 @@ angular.module('starter.controllers')
     }, function (err) {
       console.log(err);
       $ionicPopup.alert({
-        title: 'Failed to load user\'s geolocation.'
+        title: err.message
       });
     });
   }

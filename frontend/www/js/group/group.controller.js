@@ -3,14 +3,15 @@ angular.module('starter.controllers')
 .controller('GroupCtrl', function($scope, $stateParams, $state,
          $ionicPopup, $ionicModal, $msgBox, Friend, Group, Wutudu) {
   var groupId = $stateParams.groupId,
+      groupName = $stateParams.groupName,
       config = {
         groupId: groupId
       };
 
-  $scope.data = {};
 
-  // $scope.inProgressWutudus = Wutudu.getInProgressWutudus(config);
-  // $scope.upcomingWutudus = Wutudu.getInProgressWutudus(config);
+  $scope.data = {
+    name: groupName
+  };
 
   $scope.group = Group.getGroup(config)
     .then(setupGroup, handleError);
@@ -111,7 +112,8 @@ angular.module('starter.controllers')
   };
 
   $scope.displayStatus = function (preWutudu) {
-    return preWutudu.completed_answers + ' / ' + preWutudu.total_possible + ' answered'
+    return preWutudu.completed_answers + ' / ' +
+          preWutudu.total_possible + ' answered';
   };
 
   $scope.userAnswered = function (preWutudu) {
