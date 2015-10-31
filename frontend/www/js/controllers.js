@@ -37,62 +37,6 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('MainCtrl', function ($scope, $ionicPopup, $http) {
-  $scope.getTest = function () {
-    $http({
-      method: 'GET',
-      headers: {
-       'Content-Type': 'application/json'
-      },
-      url: this.$root.SERVER_URL + '/widgets/1',
-    }).then(function successCallback (response) {
-        var alertPopup = $ionicPopup.alert({
-          title: 'GET test success',
-          template: response.data.name
-        });
-    }, function errorCallback (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
-      $scope.response = response;
-      $ionicPopup.show({
-        title: 'Get Test Error',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
-    });
-  };
-
-  $scope.postTest = function (widget) {
-    var formData = angular.copy(widget);
-    formData = {'widget' : formData };
-    $http({
-      method: 'POST',
-      headers: {
-       'Content-Type': 'application/json'
-      },
-      data: formData,
-      url: this.$root.SERVER_URL + '/widgets'
-    }).then(function successCallback (response) {
-      var templateString = '<p><b>Status:</b> ' + response.status + ' ' + response.statusText + '</p>'
-        + '<p><b>Request:</b> ' + response.config.method + ' ' + response.config.url + '</p>'
-        + '<p><b>Headers:</b> ' + JSON.stringify(response.config.headers) + '</p>'
-        + '<p><b>Data:</b> ' + JSON.stringify(response.config.data) + '</p>';
-      $ionicPopup.alert({
-        title: 'POST test success',
-        template: templateString
-      });
-    }, function errorCallback (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
-      $scope.response = response;
-      $ionicPopup.show({
-        title: 'Post Test Error',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
-    });
-  };
+.controller('MainCtrl', function ($scope) {
 });
 
