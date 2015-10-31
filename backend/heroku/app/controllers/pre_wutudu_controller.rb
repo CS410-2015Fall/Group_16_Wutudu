@@ -23,16 +23,7 @@ class PreWutuduController < ApiController
 
     return send_internal_error if pre_wutudu.pre_wutudu_questions.size != 10
     return send_errors("Failed To Create PreWutudu", 400) unless pre_wutudu.save
-
-    # Send notifications
-    payload = {
-      group: @group.basic_info,
-      pre_wutudu: pre_wutudu.basic_info
-    }
-    send_notification(@group.active_users_device_tokens, \
-                      "You have been invited to complete complete a Wutudu with Group #{@group.name}", \
-                      payload)
-
+    send_active_users_notifications
     return send_success({pre_wutudu: pre_wutudu.basic_info_per_user(@user.id), message: "PreWutudu Created"})
   end
 
@@ -64,5 +55,18 @@ class PreWutuduController < ApiController
 
   def pre_wutudu_not_finished
     return send_errors("Action Invalid. PreWutudu Already Finished", 400) if @pre_wutudu.finished?
+  end
+
+  def send_active_users_notifications
+    unless @group.active_users_device_tokens.empty?
+      payload = {
+        group: @group.basic_info,
+        pre_wutudu: pre_wutudu.basic_info,
+        state: 'pre_wutudu'
+      }
+      send_notification(@group.active_users_device_tokens, \
+                        "You have been invited to complete a Wutudu with Group #{@group.name}", \
+                        payload)
+    end
   end
 end

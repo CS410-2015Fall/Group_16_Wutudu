@@ -27,13 +27,15 @@ class FriendshipsController < ApiController
       return send_errors("Unable To Send Friend Request", 400) unless friendship.save
       # TODO add attribute to tell client which page to go to
       # eg state: 'group', so that client can do $state.go[data.state]
-      payload = {
-        user: @user.basic_info,
-        state: 'friend'
-      }
-      send_notification([@friend.device_token], \
-                        "You have received a friend request from #{@user.name}", \
-                        payload)
+      if @friend.device_token
+        payload = {
+          user: @user.basic_info,
+          state: 'friend'
+        }
+        send_notification([@friend.device_token], \
+                          "You have received a friend request from #{@user.name}", \
+                          payload)
+      end
       return send_success({message: "Friend Request Sent"})
     end
   end

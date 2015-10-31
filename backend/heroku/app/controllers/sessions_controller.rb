@@ -21,6 +21,7 @@ class SessionsController < ApiController
 
   def destroy
     @user.api_key = nil
+    @user.device_token = nil
     return send_errors("Logout Unsuccessful", 400) unless @user.save
     return send_success({message: "Logout Failed"})
   end

@@ -38,10 +38,10 @@ class Group < ActiveRecord::Base
   end
 
   def active_users_device_tokens
-    self.active_users.collect {|u| u.device_token}
+    self.active_users.collect {|u| u.device_token}.compact
   end
 
   def pending_users_device_tokens
-    self.pending_users.collect {|u| u.device_token}
+    self.pending_users.collect {|u| u.device_token}.compact
   end
 end
