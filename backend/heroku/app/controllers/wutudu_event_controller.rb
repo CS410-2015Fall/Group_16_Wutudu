@@ -23,7 +23,7 @@ class WutuduEventController < ApiController
     @pre_wutudu.wutudu_event = wutudu_event
     @pre_wutudu.finished = true;
     return send_errors("Unable To Create Wutudu Event", 400) unless @pre_wutudu.save
-    return send_success({weights: weights, top: top_category.basic_info, wutudu_event: wutudu_event})
+    return send_success({weights: weights, top: top_category.basic_info, wutudu_event: wutudu_event.basic_info})
   end
 
   private
