@@ -97,10 +97,10 @@ angular.module('starter.services', [])
         goToState('app.groupList');
         break;
       case 'pre_wutudu':
-        goToState('app.group',
+        goToState('app.answerWutudu',
           {
-            groupId: payload.group.id,
-            groupName: payload.group.name
+            preWutudu:  payload.pre_wutudu,
+            wutuduId: payload.pre_wutudu.id
           });
         break;
       default:
@@ -113,7 +113,6 @@ angular.module('starter.services', [])
     console.debug('message = ' + notification.message);
     console.debug('notification ', JSON.stringify(notification));
 
-    switchState(notification.payload);
     $ionicPopup.alert({
       title: 'notification',
       template: '<div class="card">' +
@@ -121,6 +120,8 @@ angular.module('starter.services', [])
                     notification.message +
                   '</div>' +
                 '</div>'
+    }).then(function() {
+      switchState(notification.payload);
     });
   }
 

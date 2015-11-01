@@ -29,7 +29,6 @@ class FriendshipsController < ApiController
       # eg state: 'group', so that client can do $state.go[data.state]
       if @friend.device_token
         payload = {
-          user: @user.basic_info,
           state: 'friend'
         }
         send_notification([@friend.device_token], \
@@ -48,6 +47,11 @@ class FriendshipsController < ApiController
 
     friendship.update(approved: true)
     return send_errors("Unable To Accept Friend", 400) unless friendship.save
+    payload = {
+      state: 'friend'
+    }
+    send_notification([@friend.device_token],\
+                      "#{@user.name} is now your friend", payload)
     return send_success({message: "Friend Accepted"})
   end
 

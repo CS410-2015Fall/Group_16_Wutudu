@@ -59,6 +59,7 @@ class PreWutuduController < ApiController
     unless @group.active_users_device_tokens.empty?
       payload = {
         group: @group.basic_info,
+        pre_wutudu: pre_wutudu.basic_info_per_user(@user.id),
         state: 'pre_wutudu'
       }
       send_notification(@group.active_users_device_tokens, \
