@@ -1,8 +1,6 @@
 class PreWutuduController < ApiController
-  before_action :authenticate
-  before_action :active_in_group
-  before_action :pre_wutudu_in_group, except: [:create]
-  before_action :pre_wutudu_not_finished, except: [:create]
+  before_action :authenticate, :active_in_group
+  before_action :pre_wutudu_in_group, :pre_wutudu_not_finished, except: [:create]
 
   def show
     message = { pre_wutudu: @pre_wutudu.basic_info_per_user(@user.id) }

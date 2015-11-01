@@ -40,12 +40,12 @@ class GroupsController < ApiController
   end
 
   def send_pending_users_notifications(group)
-    unless @group.pending_users_device_tokens.empty?
+    unless group.pending_users_device_tokens.empty?
       payload = {
         group: group.basic_info,
         state: 'group'
       }
-      send_notification(@group.pending_users_device_tokens, \
+      send_notification(group.pending_users_device_tokens, \
                         "You have been invited to join Group #{group.name}", \
                         payload)
     end
