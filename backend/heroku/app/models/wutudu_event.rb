@@ -12,7 +12,8 @@ class WutuduEvent < ActiveRecord::Base
       event_time: self.event_time,
       latitude: self.latitude,
       longitude: self.longitude,
-      accepted_users: self.accepted_user_info
+      accepted_users: self.accepted_user_info,
+      event_details: eval(self.event_details)
     }
   end
 
