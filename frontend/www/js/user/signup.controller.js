@@ -39,9 +39,7 @@ angular.module('starter.controllers')
       method: 'POST',
       data: config.data,
       url: '/users',
-      headers: {
-        "Device-Token": config.deviceToken
-      }
+      deviceToken: config.deviceToken
     };
     $httpService.makeRequest(payload).then(function successCallback (response) {
       console.log('Create user success: auth token=' + response.data.token);

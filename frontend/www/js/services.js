@@ -35,12 +35,13 @@ angular.module('starter.services', [])
       var token = User.getSession(),
           headers = {
             'Content-Type': 'application/json',
-            'Authorization' : 'Token token=' + token
+            'Authorization' : 'Token token=' + token,
+            'Device-Token': config.deviceToken
           },
           httpConfig = {
             method: config.method,
             data: config.data,
-            headers: angular.merge(headers, config.headers),
+            headers: headers,
             url: urlRoot + config.url,
           };
       return $http(httpConfig);
@@ -71,8 +72,6 @@ angular.module('starter.services', [])
   },
       deferred;
 
-  $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
-
   function onRegistered(notification) {
     if (notification.regid.length > 0 ) {
       console.table('registration ID = ' + notification.regid);
@@ -99,8 +98,9 @@ angular.module('starter.services', [])
       case 'pre_wutudu':
         goToState('app.answerWutudu',
           {
+            groupId: payload.group.id,
             preWutudu:  payload.pre_wutudu,
-            wutuduId: payload.pre_wutudu.id
+            wutuduId: payload.pre_wutudu.pre_wutudu_id
           });
         break;
       default:
@@ -148,7 +148,7 @@ angular.module('starter.services', [])
   return {
     register: function() {
       deferred = $q.defer();
-
+      $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
       $ionicPlatform.ready(function() {
         $cordovaPush.register(config).then(function(result) {
           // Success
@@ -158,7 +158,6 @@ angular.module('starter.services', [])
           console.error(result);
         });
       });
-
       return deferred.promise;
     }
   };

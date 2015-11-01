@@ -1,22 +1,22 @@
 angular.module('starter.services')
 
 .factory('User', function($localstorage) {
-  var user;
 
   return {
     getUserInfo: function() {
-      return user;
+      var user = $localstorage.get('user');
+      return user? JSON.parse(user): {};
     },
     setSession: function(token, userInfo) {
-      user = userInfo;
+      $localstorage.set('user', JSON.stringify(userInfo));
       $localstorage.set('token', token);
     },
     removeSession: function() {
-      user = {};
+      $localstorage.remove('user');
       $localstorage.remove('token');
     },
     getSession: function() {
       return $localstorage.get('token');
     }
-  }
+  };
 });

@@ -1,10 +1,17 @@
 angular.module('starter.controllers')
 
-.controller('LoginCtrl', function ($scope, $state, $httpService, $ionicPopup,
-  User, $wutuduNotification) {
+.controller('LoginCtrl', function ($scope, $state, $httpService,
+  User, $wutuduNotification, $ionicPopup, $ionicLoading) {
   if (User.getSession()) {
     // TODO check for token validity
-    $state.go('app.main');
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    $wutuduNotification.register().then(function() {
+      $ionicLoading.hide();
+      $state.go('app.main');
+    });
+    return;
   }
 
   $scope.loginData = {};
@@ -30,6 +37,9 @@ angular.module('starter.controllers')
   };
 
   function prepareLogin(requestData) {
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
     $wutuduNotification.register().then(function(deviceToken) {
       var config = {
         data: requestData,
@@ -44,14 +54,13 @@ angular.module('starter.controllers')
       method: 'POST',
       data: config.data,
       url: '/login',
-      headers: {
-        "Device-Token": config.deviceToken
-      }
+      deviceToken: config.deviceToken
     };
     $httpService.makeRequest(payload).then(function successCallback (response) {
       console.log('Login success: auth token=' + response.data.token);
       $scope.loginData = {}; // Clear form data
       User.setSession(response.data.token, response.data.user);
+      $ionicLoading.hide();
       $state.go('app.main');
     }, function errorCallback (response) {
       response.config.headers = JSON.stringify(response.config.headers);
