@@ -13,22 +13,15 @@ module ThirdPartyAPI
     end
   end
 
-  # Yelp API
-  # Example:
-  # ys = ThirdPartyAPI::YelpSearch.new(49.283552, -123.119506, ["food", "nightlife", "shopping"])
-  #
-  # ys.summary contains [bid, distance(from lat long), rating, review_count, is_close]
-  #
-  # ys.business_summary(bid, cat) gives the formatted output of specified bid.
-  #   If cat specified, then return from existing query
-  #   If not, then fire a new query
-  # Example:
-  # ys.business_summary("moms-grilled-cheese-truck-vancouver", "food")
-  # or
-  # ys.business_summary("moms-grilled-cheese-truck-vancouver")
-  # The second call makes an additional Yelp API query to find the business info
-
   class YelpSearch < API
+
+    # Params:
+    # lat: latitude (Float)
+    # long: longitude (Float)
+    # cats: categories (Array)
+    #
+    # Example:
+    # ys = ThirdPartyAPI::YelpSearch.new(49.283552, -123.119506, ["food", "nightlife", "shopping"])
     def initialize(lat, long, categories)
       super(lat, long, categories)
       @client = Yelp.client
@@ -36,6 +29,17 @@ module ThirdPartyAPI
       query_summary
     end
 
+    # Gives the formatted output of specified bid.
+    # Params:
+    # bid: business id (String)
+    # *cat: optional category (String)
+    #   If specified, then return from existing query
+    #   Else fire a new query to find business info of bid
+    #
+    # Example:
+    # ys.business_summary("moms-grilled-cheese-truck-vancouver", "food")
+    # or
+    # ys.business_summary("moms-grilled-cheese-truck-vancouver")
     def business_summary(bid, *cat)
       if cat.empty?
         b = search_by_bid(bid)

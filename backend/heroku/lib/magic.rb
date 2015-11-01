@@ -3,34 +3,41 @@ module Magic
   WEIGHTS = {distance: 0.40, rating: 0.4, review_count: 0.2}
 
   class BestLocation
-    attr_reader :location, :scores, :data
-    # lat: latitude (Fixnum)
-    # long: longitude (Fixnum) 
+    attr_reader :location, :scores, :data, :categories
+    # Params:
+    # lat: latitude (Float)
+    # long: longitude (Float)
     # cats: categories with decreasing rank (Array)
+    #
     # Example:
     # bl = Magic::BestLocation.new(49.283552, -123.119506, ["food", "nightlife", "shopping"])
-    # bl.find_best_location
-    # Will only produce best location for "food"
     def initialize(lat, long, cats)
       @api = ThirdPartyAPI::YelpSearch.new(lat, long, cats)
-      top_cat = cats[0]
-
+      @categories = cats
       @sums = {}
       @avgs = {}
       @scores = []
-
-      @data = @api.summary[top_cat].dup
-      unless @data.empty?
-        eliminate_closed
-        normalize_data
-        calculate_score
-      end
     end
 
-    # Outputs the formatted yelp result with the maximum score
-    def find_best_location
-      id = @data[:id][@scores.index(@scores.max)]
-      @location = @api.business_summary(id)
+    # Outputs (and saves to @location) the formatted yelp result with the maximum score
+    # Params:
+    # cat: optional category (String)
+    #
+    # Example:
+    # result = bl.find_best_location #Will only produce best location for "food" by default
+    # result = bl.find_best_location("nightlife") #Will produce best location for nightlife
+    # OR
+    # Call bl.location since it stores the result
+    def find_best_location(*cat)
+      c = (cat.empty? ? @categories[0] : cat[0])
+      if @categories.include?(c)
+        transform_data(c)
+        id = @data[:id][@scores.index(@scores.max)]
+        @location = @api.business_summary(id)
+      else
+        @location = nil
+      end
+      @location
     end
 
     private
@@ -61,6 +68,15 @@ module Magic
         DATA_VARIABLES.each do |v|
           @scores[i] += @data[v][i] * WEIGHTS[v]
         end
+      end
+    end
+
+    def transform_data(cat)
+      @data = @api.summary[cat].dup
+      unless @data.empty?
+        eliminate_closed
+        normalize_data
+        calculate_score
       end
     end
   end
