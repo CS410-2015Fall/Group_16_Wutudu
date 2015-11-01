@@ -7,7 +7,7 @@ class Group < ActiveRecord::Base
   has_many :pending_users, -> { where(group_users: { approved: false}) }, :through => :group_users, :source => :user
 
   # Wutudus
-  has_many :pre_wutudus
+  has_many :pre_wutudus, -> { where(finished: nil) }
   has_many :wutudu_events
 
   def basic_info

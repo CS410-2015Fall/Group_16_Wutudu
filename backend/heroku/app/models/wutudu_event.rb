@@ -9,6 +9,9 @@ class WutuduEvent < ActiveRecord::Base
     {
       id: self.id,
       category: self.category.basic_info,
+      event_time: self.event_time,
+      latitude: self.latitude,
+      longitude: self.longitude,
       accepted_users: self.accepted_user_info
     }
   end
