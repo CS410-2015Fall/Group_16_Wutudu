@@ -37,9 +37,8 @@
       </div>
 
      <ion-list>
-       <ion-item class="item" ng-repeat="wutudu in inProgressWutudus">
-         {{wutudu.display_date}} ({{displayStatus(wutudu)}})
-         <button class="button button-inline button-balanced" ng-show="userAnswered(wutudu)" ng-click="showWutuduQuestion(wutudu)">Decide Wutudu!</button>
+       <ion-item class="item" ng-repeat="wutudu in inProgressWutudus" ng-click="showPreWutuduOptions(wutudu)">
+         {{wutudu.display_date}} ({{userAnswered(wutudu) ? "Answered" : "Unanswered"}})
        </ion-item>
      </ion-list>
 
@@ -48,8 +47,8 @@
       </div>
 
       <ion-list>
-        <ion-item class="item" ng-repeat="wutudu in upcomingWutudus" ng-click="showWutuduDetail(wutudu)">
-          {{wutudu.name}}
+        <ion-item class="item" ng-repeat="wutudu in wutuduEvents" ng-click="showWutuduDetail(wutudu)">
+          {{wutudu.display_date}}
         </ion-item>
       </ion-list>
 

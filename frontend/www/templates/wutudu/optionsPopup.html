@@ -1,0 +1,19 @@
+<ion-modal-view >
+  <ion-header-bar>
+    <h1 class="title">Wutudu Options</h1>
+    <button class="button ion-close" ng-click="cancelPreWutuduOptions()"></button>
+  </ion-header-bar>
+  <ion-content>
+    <h3 class="text-center">
+      {{activePreWutudu.display_date}}
+      <br>
+      ({{displayStatus(activePreWutudu)}})
+      <br>
+      {{activePreWutudu.declined_answers}} declined
+    </h3>
+    <button class="button button-block button-outline button-positive" ng-hide="userAnswered(activePreWutudu)" ng-click="showWutuduQuestion(activePreWutudu)">Answer Questions</button>
+    <button class="button button-block button-outline button-balanced" ng-show="canEndPreWutudu(activePreWutudu)" ng-click="finishPreWutudu(activePreWutudu)">Decide Wutudu!</button>
+    <button class="button button-block button-outline button-assertive" ng-click="cancelPreWutuduOptions()">Cancel</button>
+  </ion-content>
+</ion-modal-view>
+

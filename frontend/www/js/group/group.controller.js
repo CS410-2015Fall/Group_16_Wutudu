@@ -15,16 +15,32 @@ angular.module('starter.controllers')
   $scope.group = Group.getGroup(config)
     .then(setupGroup, handleError);
 
+  var optionsTplUrl = 'templates/wutudu/optionsPopup.html',
+    modelConfig = {
+        scope: $scope,
+        animation: 'slide-in-up'
+    };
+  $ionicModal
+    .fromTemplateUrl(optionsTplUrl, modelConfig)
+    .then(setupModal);
+
   function setupGroup(response) {
     var data = response.data,
         members = data.group_users,
-        preWutudus = data.pre_wutudus,
+        preWutudus = data.pre_wutudus
+        wutuduEvents = data.wutudu_events,
         activeMembers = members.active_users,
         pendingMembers = members.pending_users;
 
     $scope.activeMembers = activeMembers;
     $scope.pendingMembers = pendingMembers;
     $scope.inProgressWutudus = formatPrewutudu(preWutudus);
+    $scope.wutuduEvents = formatWutudu(wutuduEvents);
+  }
+
+  function setupModal(modal) {
+    $scope.modal = modal;
+    $scope.activePreWutudu = null;
   }
 
   function formatPrewutudu(preWutudus) {
@@ -36,6 +52,19 @@ angular.module('starter.controllers')
       stringDate = stringDate.substring(0, stringDate.indexOf(eventDate.toTimeString()));
       preWutudu.display_date = stringDate;
       this.push(preWutudu);
+    }, returnWutudus);
+    return returnWutudus;
+  }
+
+  function formatWutudu(wutudus) {
+    var returnWutudus = [];
+    angular.forEach(wutudus, function(wutudu, key) {
+      // Format the JSON date as a string Tue Oct 27 2015
+      var eventDate = new Date(wutudu.event_time),
+          stringDate = eventDate.toString();
+      stringDate = stringDate.substring(0, stringDate.indexOf(eventDate.toTimeString()));
+      wutudu.display_date = stringDate;
+      this.push(wutudu);
     }, returnWutudus);
     return returnWutudus;
   }
@@ -66,6 +95,12 @@ angular.module('starter.controllers')
       buttons: [{ text: 'OK' }]
     };
     $ionicPopup.show(data);
+  }
+
+  function filterCompletedWutudu(pre_wutudu_id) {
+    $scope.inProgressWutudus = $scope.inProgressWutudus.filter(function (w) {
+      return w.pre_wutudu_id !== pre_wutudu_id;
+    });
   }
 
   $scope.addFriendToGroup = function() {
@@ -110,13 +145,33 @@ angular.module('starter.controllers')
     $ionicPopup.show(addFriendTplConfig);
   };
 
+  $scope.showPreWutuduOptions = function (preWutudu) {
+    $scope.activePreWutudu = preWutudu;
+    $scope.modal.show();
+  };
+
+  //Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+
+  $scope.cancelPreWutuduOptions = function() {
+    $scope.modal.hide();
+  };
+
   $scope.displayStatus = function (preWutudu) {
+    if (!preWutudu) {
+      return '';
+    }
     return preWutudu.completed_answers + ' / ' +
           preWutudu.total_possible + ' answered';
   };
 
   $scope.userAnswered = function (preWutudu) {
-    return (preWutudu.user_answer === null);
+    if (!preWutudu) {
+      return false;
+    }
+    return (preWutudu.user_answer !== null);
   };
 
   $scope.showWutuduQuestion = function(preWutudu) {
@@ -125,8 +180,36 @@ angular.module('starter.controllers')
     $state.go('app.answerWutudu', config);
   };
 
+  $scope.finishPreWutudu = function(preWutudu) {
+    config.wutuduId = preWutudu.pre_wutudu_id.toString();
+    Wutudu.finishWutudu(config).then(function (response) {
+      var newWutudu = response.data.wutudu_event;
+      $scope.cancelPreWutuduOptions();
+      filterCompletedWutudu(newWutudu.pre_wutudu_id);
+      $scope.wutuduEvents.push(formatWutudu([newWutudu])[0]);
+    }, function (response) {
+      response.config.headers = JSON.stringify(response.config.headers);
+      response.config.data = JSON.stringify(response.config.data);
+      $scope.response = response;
+      $ionicPopup.show({
+        title: 'Finish Wutudu error',
+        templateUrl: 'templates/errorPopup.html',
+        scope: $scope,
+        buttons: [{ text: 'OK' }]
+      });
+    });
+  };
+
+  $scope.canEndPreWutudu = function(preWutudu) {
+    if (!preWutudu) {
+      return false;
+    }
+    return preWutudu.completed_answers > 0;
+  };
+
   $scope.showWutuduDetail = function(wutudu) {
     // use wutudu object to show the details
+    // TODO
     $ionicPopup.show({
       templateUrl: 'templates/wutudu/detailPage.html',
       title: 'Wutudu',

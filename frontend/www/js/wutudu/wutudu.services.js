@@ -36,6 +36,13 @@ angular.module('starter.services')
             url: '/groups/' + options.groupId + '/pre_wutudu/' + options.wutuduId + '/answers'
           };
       return $httpService.makeRequest(payload);
+    },
+    finishWutudu: function (options) {
+      var payload = {
+        method: 'POST',
+        url: '/groups/' + options.groupId + '/pre_wutudu/' + options.wutuduId + '/finish'
+      };
+      return $httpService.makeRequest(payload);
     }
   };
 
