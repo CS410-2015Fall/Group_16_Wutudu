@@ -122,6 +122,17 @@ angular.module('starter', ['ionic', 'ngCordova',
     params: { preWutudu: null }
   })
 
+  .state('app.wutuduDetails', {
+    url: '/group/:groupId/wutuduDetails/:wutuduId',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/wutudu/detailPage.html',
+        controller: 'WutuduDetailsCtrl'
+      }
+    },
+    params: { wutudu: null }
+  })
+
   .state('app.main', {
     url: '/main',
     views: {

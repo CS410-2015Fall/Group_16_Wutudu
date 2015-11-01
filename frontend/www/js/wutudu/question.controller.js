@@ -16,7 +16,10 @@ angular.module('starter.controllers')
 
   (function init () {
     if (!$scope.preWutudu) {
-      reloadQuestions();
+      $state.go('app.group', config);
+      // TODO it would be better if we can just reload the questions
+      // reloadQuestions();
+      return;
     } else {
       $scope.questions = $stateParams.preWutudu.questions;
     }

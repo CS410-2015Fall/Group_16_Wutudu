@@ -208,15 +208,9 @@ angular.module('starter.controllers')
   };
 
   $scope.showWutuduDetail = function(wutudu) {
-    // use wutudu object to show the details
-    // TODO
-    $ionicPopup.show({
-      templateUrl: 'templates/wutudu/detailPage.html',
-      title: 'Wutudu',
-      buttons: [
-        { text: 'Ok', type: 'button-positive'}
-      ]
-    });
+    config.wutudu = wutudu;
+    config.wutuduId = wutudu.id;
+    $state.go('app.wutuduDetails', config);
   };
 
   $scope.showCreateWutudu = function() {
