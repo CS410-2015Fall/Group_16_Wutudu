@@ -83,14 +83,19 @@ module ThirdPartyAPI
     def query_summary
       @summary = {}
       @categories.each do |cat|
-        @summary[cat] = @response[cat].businesses.collect do |b|
-          {
-           id: b.id,
-           distance: b.distance,
-           rating: b.rating,
-           review_count: b.review_count,
-           is_closed: b.is_closed
-          }
+        @summary[cat] = {
+                          id: [],
+                          distance: [],
+                          rating: [],
+                          review_count: [],
+                          is_closed: []
+                        }
+        @response[cat].businesses.each do |b|
+          @summary[cat][:id].push(b.id)
+          @summary[cat][:distance].push(b.distance)
+          @summary[cat][:rating].push(b.rating)
+          @summary[cat][:review_count].push(b.review_count)
+          @summary[cat][:is_closed].push(b.is_closed)
         end
       end
     end
