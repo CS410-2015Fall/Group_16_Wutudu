@@ -12,13 +12,13 @@ class WutuduEventController < ApiController
     return send_errors("No Answers Completed", 400) if @pre_wutudu.completed_answers_count == 0
     top_category = @pre_wutudu.top_category
     return send_internal_error unless top_category
-    wutudu_event = @pre_wutudu.generate_wutudu_event
-    return send_errors("Unable To Create Wutudu Event", 400) unless wutudu_event
+    message, code = @pre_wutudu.generate_wutudu_event
+    return send_errors(message, code) unless code == 200
     return send_success(
                 {
                   weights: @pre_wutudu.aggregate_category_weights,
                   top: top_category.basic_info,
-                  wutudu_event: wutudu_event.basic_info
+                  wutudu_event: @pre_wutudu.wutudu_event.basic_info
                 }
             )
   end

@@ -19,8 +19,7 @@ class WutuduEvent < ActiveRecord::Base
   end
 
   def get_event_details
-    return self.get_event_details unless self.event_details.nil?
-    ""
+    self.event_details.presence || ""
   end
 
   def accepted_user_info
