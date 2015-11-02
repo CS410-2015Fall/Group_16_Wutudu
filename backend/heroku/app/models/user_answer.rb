@@ -1,5 +1,5 @@
 class UserAnswer < ActiveRecord::Base
-  belongs_to :pre_wutudu
+  belongs_to :pre_wutudu, touch: true
   belongs_to :user
   serialize :answers
   validate :validate_answers, unless: :declined?

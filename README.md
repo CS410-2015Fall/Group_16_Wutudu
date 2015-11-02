@@ -444,14 +444,14 @@ If wutudu event not in group, it will return ["WutuduEvent Not Found In Group", 
   * BODY: NONE
   * RETURN: Request status. {
                             "wutudu_event": {
-                              "id": 5,
-                              "activity_name": null,
-                              "category_id": 2,
-                              "event_time": "2015-12-08T00:00:00.000Z",
-                              "latitude": "2.0",
-                              "longitude": "3.0",
-                              "group_id": 1,
-                              "pre_wutudu_id": 10
+                              "id": id,
+                              "pre_wutudu_id": pid
+                              "activity_name": name,
+                              "category_id": cat_id,
+                              "event_time": time,
+                              "latitude": latitude,
+                              "longitude": longitude,
+                              "group_id": gid,
                             }
 ```
 

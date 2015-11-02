@@ -8,13 +8,19 @@ class WutuduEvent < ActiveRecord::Base
   def basic_info
     {
       id: self.id,
+      pre_wutudu_id: self.pre_wutudu.id,
       category: self.category.basic_info,
       event_time: self.event_time,
       latitude: self.latitude,
       longitude: self.longitude,
       accepted_users: self.accepted_user_info,
-      event_details: eval(self.event_details)
+      event_details: eval(self.get_event_details)
     }
+  end
+
+  def get_event_details
+    return self.get_event_details unless self.event_details.nil?
+    ""
   end
 
   def accepted_user_info
