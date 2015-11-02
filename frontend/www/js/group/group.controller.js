@@ -1,7 +1,9 @@
 angular.module('starter.controllers')
 
 .controller('GroupCtrl', function($scope, $stateParams, $state,
-         $ionicPopup, $ionicModal, $msgBox, Friend, Group, Wutudu) {
+    $ionicPopup, $ionicModal, $ionicLoading, $msgBox, Friend,
+    Group, Wutudu) {
+
   var groupId = $stateParams.groupId,
       groupName = $stateParams.groupName,
       config = {
@@ -11,6 +13,10 @@ angular.module('starter.controllers')
   $scope.data = {
     name: groupName
   };
+
+  $ionicLoading.show({
+      template: 'Loading...'
+  });
 
   $scope.group = Group.getGroup(config)
     .then(setupGroup, handleError);
@@ -27,7 +33,7 @@ angular.module('starter.controllers')
   function setupGroup(response) {
     var data = response.data,
         members = data.group_users,
-        preWutudus = data.pre_wutudus
+        preWutudus = data.pre_wutudus,
         wutuduEvents = data.wutudu_events,
         activeMembers = members.active_users,
         pendingMembers = members.pending_users;
@@ -36,6 +42,7 @@ angular.module('starter.controllers')
     $scope.pendingMembers = pendingMembers;
     $scope.inProgressWutudus = formatPrewutudu(preWutudus);
     $scope.wutuduEvents = formatWutudu(wutuduEvents);
+    $ionicLoading.hide();
   }
 
   function setupModal(modal) {
@@ -94,6 +101,7 @@ angular.module('starter.controllers')
       scope: $scope,
       buttons: [{ text: 'OK' }]
     };
+    $ionicLoading.hide();
     $ionicPopup.show(data);
   }
 

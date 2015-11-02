@@ -88,6 +88,7 @@ angular.module('starter.services', [])
   }
 
   function switchState(payload) {
+    var stateConfig = {};
     switch(payload.state) {
       case 'friend':
         goToState('app.friendList');
@@ -96,12 +97,20 @@ angular.module('starter.services', [])
         goToState('app.groupList');
         break;
       case 'pre_wutudu':
-        goToState('app.answerWutudu',
-          {
-            groupId: payload.group.id,
-            preWutudu:  payload.pre_wutudu,
-            wutuduId: payload.pre_wutudu.pre_wutudu_id
-          });
+        stateConfig = {
+          groupId: payload.group.id,
+          preWutudu:  payload.pre_wutudu,
+          wutuduId: payload.pre_wutudu.pre_wutudu_id
+        };
+        goToState('app.answerWutudu',stateConfig);
+        break;
+      case 'wutudu':
+        stateConfig = {
+          groupId: payload.group.id,
+          wutudu: payload.wutudu_event,
+          wutuduId: payload.wutudu_event.id
+        };
+        goToState('app.wutuduDetails', stateConfig);
         break;
       default:
         break;

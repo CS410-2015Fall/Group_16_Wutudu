@@ -14,6 +14,7 @@ class WutuduEventController < ApiController
     return send_internal_error unless top_category
     message, code = @pre_wutudu.generate_wutudu_event
     return send_errors(message, code) unless code == 200
+    send_active_users_notifications(@pre_wutudu)
     return send_success(
                 {
                   weights: @pre_wutudu.aggregate_category_weights,
@@ -40,5 +41,18 @@ class WutuduEventController < ApiController
   def wutudu_event_in_group
     @wutudu_event = @group.wutudu_events.find_by_id(params[:wid])
     return send_errors("WutuduEvent Not Found In Group", 404) unless @wutudu_event
+  end
+
+  def send_active_users_notifications(pre_wutudu)
+    unless @group.active_users_device_tokens.empty?
+      payload = {
+        group: @group.basic_info,
+        wutudu_event: pre_wutudu.wutudu_event.basic_info,
+        state: 'wutudu'
+      }
+      send_notification(@group.active_users_device_tokens, \
+                        "A Wutudu have been generated for Group #{@group.name}", \
+                        payload)
+    end
   end
 end

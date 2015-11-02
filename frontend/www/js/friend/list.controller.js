@@ -1,11 +1,15 @@
 angular.module('starter.controllers')
 
-.controller('FriendListCtrl', function ($scope, $ionicPopup, Friend) {
+.controller('FriendListCtrl', function ($scope, $ionicPopup,
+  $ionicLoading, Friend) {
 
   var data = $scope.data = {
     friendToAdd: ''
   };
 
+  $ionicLoading.show({
+      template: 'Loading...'
+  });
   // Gets called each time tab is open
   Friend.getFriends({
     'token': $scope.$root.TOKEN,
@@ -15,7 +19,9 @@ angular.module('starter.controllers')
     $scope.friends = response.data.friendships.friends;
     $scope.sentRequests = response.data.friendships.sent_requests;
     $scope.receivedRequests = response.data.friendships.received_requests;
+    $ionicLoading.hide();
   }, function errorCallback (response) {
+    $ionicLoading.hide();
     response.config.headers = JSON.stringify(response.config.headers);
     response.config.data = JSON.stringify(response.config.data);
     $scope.response = response;

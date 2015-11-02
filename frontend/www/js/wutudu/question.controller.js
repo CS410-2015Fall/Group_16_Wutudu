@@ -61,9 +61,6 @@ angular.module('starter.controllers')
       'answers': $scope.answers
     }};
     Wutudu.sendAnswers(options).then(function (response) {
-      $ionicPopup.alert({
-        title: 'Your answers have been successfully submitted.',
-      });
       $state.go('app.group', config);
     }, function (response) {
       response.config.headers = JSON.stringify(response.config.headers);
@@ -106,7 +103,7 @@ angular.module('starter.controllers')
     if ($scope.answers.indexOf(-1) === -1) {
       $scope.disabledSubmit = false;
     }
-  };
+  }
 
   function updateButtonStyles (index) {
     // Clear all button styles
@@ -128,8 +125,8 @@ angular.module('starter.controllers')
       case 3:
         $scope.answerStyle3 = 'button button-balanced';
         break;
-    } 
-  };
+    }
+  }
 
   function reloadQuestions () {
     Wutudu.getInProgressWutudu(config).then(function (response) {
@@ -149,5 +146,5 @@ angular.module('starter.controllers')
         buttons: [{ text: 'OK' }]
       });
     });
-  };
+  }
 });

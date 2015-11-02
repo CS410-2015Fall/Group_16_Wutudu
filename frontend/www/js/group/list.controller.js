@@ -1,14 +1,17 @@
 angular.module('starter.controllers')
 
-.controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal, $state,
-      $msgBox, Friend, Group) {
+.controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal,
+  $ionicLoading, $state, $msgBox, Friend, Group) {
 
-    var createGroupTplUrl = 'templates/group/createGroup.html',
-      createGroupTplConfig = {
-          scope: $scope,
-          animation: 'slide-in-up'
-      };
+  var createGroupTplUrl = 'templates/group/createGroup.html',
+    createGroupTplConfig = {
+        scope: $scope,
+        animation: 'slide-in-up'
+    };
 
+  $ionicLoading.show({
+      template: 'Loading...'
+  });
   Group.getAllGroups()
                 .then(setupGroups, handleError);
 
@@ -25,6 +28,7 @@ angular.module('starter.controllers')
     var groups = response.data.groups;
     $scope.activeGroups = groups.active_groups;
     $scope.pendingGroups = groups.pending_groups;
+    $ionicLoading.hide();
   }
 
   function setupModal(modal) {
@@ -41,6 +45,7 @@ angular.module('starter.controllers')
       scope: $scope,
       buttons: [{ text: 'OK' }]
     };
+    $ionicLoading.hide();
     $ionicPopup.show(data);
   }
 

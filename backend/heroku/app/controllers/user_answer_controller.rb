@@ -12,13 +12,14 @@ class UserAnswerController < ApiController
       if @pre_wutudu.user_answers.find_by_user_id(@user.id)
     user_answer = @pre_wutudu.user_answers.build(user_id: @user.id)
     answers = create_user_answer_params[:answers]
-    if answers.count(-1) == answers.size 
+    if answers.count(-1) == answers.size
       user_answer.declined = true
     else
       user_answer.answers = answers
     end
     return send_errors("User Answer Invalid", 400) unless user_answer.valid?
     return send_errors("Failed To Save Answers", 400) unless user_answer.save
+    send_active_users_notifications(@pre_wutudu)
     return (user_answer.declined? ? send_success({message: "PreWutudu Declined"}) : \
                                     send_success({message: "User Answer Saved"}))
   end
@@ -45,5 +46,18 @@ class UserAnswerController < ApiController
 
   def pre_wutudu_not_finished
     return send_errors("Action Invalid. PreWutudu Already Finished", 400) if @pre_wutudu.finished?
+  end
+
+  def send_active_users_notifications(pre_wutudu)
+    unless @group.active_users_device_tokens.empty?
+      payload = {
+        group: @group.basic_info,
+        wutudu_event: pre_wutudu.wutudu_event.basic_info,
+        state: 'wutudu'
+      }
+      send_notification(@group.active_users_device_tokens, \
+                        "A Wutudu have been generated for Group #{@group.name}", \
+                        payload)
+    end
   end
 end
