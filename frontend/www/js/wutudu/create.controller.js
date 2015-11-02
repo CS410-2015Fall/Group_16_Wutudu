@@ -53,12 +53,12 @@ angular.module('starter.controllers')
     };
     Wutudu.createWutudu(createConfig)
     .then(function successCallback (response) {
-      $ionicPopup.alert({
-        title: 'Successfully create wutudu'
-      }).then(function() {
-        $state.go('app.group', config);
-      });
-
+      // $ionicPopup.alert({
+      //   title: 'Successfully create wutudu'
+      // }).then(function() {
+      //   $state.go('app.group', config);
+      // });
+      $state.go('app.group', config);
     }, function errorCallback (response) {
       response.config.headers = JSON.stringify(response.config.headers);
       response.config.data = JSON.stringify(response.config.data);
