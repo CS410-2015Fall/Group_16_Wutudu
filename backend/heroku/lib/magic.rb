@@ -12,11 +12,15 @@ module Magic
     # Example:
     # bl = Magic::BestLocation.new(49.283552, -123.119506, ["food", "nightlife", "shopping"])
     def initialize(lat, long, cats)
-      @api = ThirdPartyAPI::YelpSearch.new(lat, long, cats)
-      @categories = cats
-      @sums = {}
-      @avgs = {}
-      @scores = []
+      begin
+        @categories = cats
+        @sums = {}
+        @avgs = {}
+        @scores = []
+        @api = ThirdPartyAPI::YelpSearch.new(lat, long, cats)
+      rescue
+        @api = nil
+      end
     end
 
     # Outputs (and saves to @location) the formatted yelp result with the maximum score
@@ -29,11 +33,13 @@ module Magic
     # OR
     # Call bl.location since it stores the result
     def find_best_location(*cat)
-      c = (cat.empty? ? @categories[0] : cat[0])
-      if @categories.include?(c)
-        transform_data(c)
-        id = @data[:id][@scores.index(@scores.max)]
-        @location = @api.business_summary(id)
+      if @api
+        c = (cat.empty? ? @categories[0] : cat[0])
+        if @categories.include?(c)
+          transform_data(c)
+          id = @data[:id][@scores.index(@scores.max)]
+          @location = @api.business_summary(id)
+        end
       else
         @location = nil
       end

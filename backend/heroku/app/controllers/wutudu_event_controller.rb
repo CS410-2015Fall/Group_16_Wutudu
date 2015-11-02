@@ -11,14 +11,23 @@ class WutuduEventController < ApiController
     return send_errors("Wutudu Event Already Created", 400) unless @pre_wutudu.wutudu_event.nil?
     weights = @pre_wutudu.aggregate_category_weights
     return send_internal_error unless weights
+    p weights
     return send_errors("No Answers Completed", 400) if weights.empty?
     top_category = Category.find_by_id(weights.max_by{|k,v| v}[0])
     return send_internal_error unless top_category
+
+    bl = Magic::BestLocation.new(@pre_wutudu.latitude, @pre_wutudu.longitude, [top_category.yelp_id])
+    event_details = bl.find_best_location
+    p bl
+    p event_details
+    return send_errors("Unable To Create Wutudu Event", 400) unless event_details
+
     wutudu_event = @group.wutudu_events.build( \
                           category_id: top_category.id, \
                           latitude: @pre_wutudu.latitude, \
                           longitude: @pre_wutudu.longitude, \
-                          event_time: @pre_wutudu.event_date \
+                          event_time: @pre_wutudu.event_date, \
+                          event_details: event_details.to_s \
                           )
     @pre_wutudu.wutudu_event = wutudu_event
     @pre_wutudu.finished = true;
