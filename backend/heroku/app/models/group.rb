@@ -7,9 +7,8 @@ class Group < ActiveRecord::Base
   has_many :pending_users, -> { where(group_users: { approved: false}) }, :through => :group_users, :source => :user
 
   # Wutudus
-  has_many :pre_wutudus
-  has_many :ongoing_pre_wutudus, -> { where(finished: nil) }, :class_name => "PreWutudu"
-  has_many :wutudu_events
+  has_many :pre_wutudus, -> { order('event_date')}
+  has_many :wutudu_events, -> { order('event_time')}
 
   def basic_info
     {id: self.id, name: self.name}
@@ -23,7 +22,7 @@ class Group < ActiveRecord::Base
   end
 
   def ongoing_pre_wutudus_info_per_user(user_id)
-    self.ongoing_pre_wutudus.collect {|pw| pw.basic_info_per_user(user_id)}
+    self.pre_wutudus.where(finished: nil).collect {|pw| pw.basic_info_per_user(user_id)}
   end
 
   def wutudu_events_info
