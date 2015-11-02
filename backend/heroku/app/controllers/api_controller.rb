@@ -16,6 +16,6 @@ class ApiController < ApplicationController
   end
 
   def send_internal_error
-    render json: {errors: "Internal Server Error"}, status: 500
+    render json: {errors: 'Internal Server Error'}, status: 500
   end
 end

@@ -67,7 +67,6 @@ class PreWutudu < ActiveRecord::Base
   def generate_wutudu_event
     bl = Magic::BestLocation.new(self.latitude, self.longitude, [self.top_category.yelp_id])
     event_details = bl.find_best_location
-    p bl
     # might need to throw something if event_details is nil
     return "Unable To Create Wutudu Event", 500 unless event_details
     self.wutudu_event = WutuduEvent.create(
@@ -105,7 +104,7 @@ class PreWutudu < ActiveRecord::Base
           state: 'wutudu'
         }
         send_notification(tokens, \
-                          "A Wutudu have been generated for Group #{@group.name}", \
+                          "A Wutudu has been generated for Group #{group.name}", \
                           payload)
       end
     end 
