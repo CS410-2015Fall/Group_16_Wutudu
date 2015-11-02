@@ -65,6 +65,7 @@ class PreWutudu < ActiveRecord::Base
   def generate_wutudu_event
     bl = Magic::BestLocation.new(self.latitude, self.longitude, [self.top_category.yelp_id])
     event_details = bl.find_best_location
+    p bl
     # might need to throw something if event_details is nil
     return "Unable To Create Wutudu Event", 500 unless event_details
     self.wutudu_event = WutuduEvent.create(
@@ -78,7 +79,7 @@ class PreWutudu < ActiveRecord::Base
                         )
     self.finished = true
     self.save
-   return "Success", 200
+    return "Success", 200
   end
 
   private
@@ -87,10 +88,11 @@ class PreWutudu < ActiveRecord::Base
     if self.total_possible_count == 0
       wid = self.id
       self.destroy
-      p "All users declined. pre_wutudu #{wid} destroyed"
+      p "All users declined. pre_wutudu #{wid} destroyed" if self.destroyed?
     elsif self.completed_answers_count == self.total_possible_count
-      self.generate_wutudu_event
-      p "All possible users answered. wutudu event #{wutudu_event.id} created"
+      success, error = self.generate_wutudu_event
+      p "There was a #{error} error with wutudu event creation" unless error == 200
+      p "All possible users answered. wutudu event created" if error == 200
     end 
   end
 end
