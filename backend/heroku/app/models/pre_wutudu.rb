@@ -1,4 +1,6 @@
 class PreWutudu < ActiveRecord::Base
+  include GCMNotification
+
   belongs_to :group
   has_many :pre_wutudu_questions, dependent: :destroy
   has_many :questions, through: :pre_wutudu_questions
@@ -93,6 +95,19 @@ class PreWutudu < ActiveRecord::Base
       success, error = self.generate_wutudu_event
       p "There was a #{error} error with wutudu event creation" unless error == 200
       p "All possible users answered. wutudu event created" if error == 200
+
+      group = self.group
+      tokens = group.active_users_device_tokens
+      unless tokens.empty?
+        payload = {
+          group: group.basic_info,
+          wutudu_event: self.wutudu_event.basic_info,
+          state: 'wutudu'
+        }
+        send_notification(tokens, \
+                          "A Wutudu have been generated for Group #{@group.name}", \
+                          payload)
+      end
     end 
   end
 end

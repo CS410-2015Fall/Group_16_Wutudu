@@ -1,4 +1,5 @@
 class ApiController < ApplicationController
+  include GCMNotification
 
   def authenticate
     authenticate_or_request_with_http_token do |token, options|
@@ -16,17 +17,5 @@ class ApiController < ApplicationController
 
   def send_internal_error
     render json: {errors: "Internal Server Error"}, status: 500
-  end
-
-  def send_notification(tokens, message, payload)
-    gcm = GCM.new(ENV['GOOGLE-API-KEY'])
-    options = {
-                data: {
-                  title: "Wutudu",
-                  message: message
-                }
-              }
-    options[:data].merge!(payload) if payload
-    response = gcm.send(tokens, options)
   end
 end

@@ -44,13 +44,14 @@ class WutuduEventController < ApiController
   end
 
   def send_active_users_notifications(pre_wutudu)
-    unless @group.active_users_device_tokens.empty?
+    tokens = @group.active_users_device_tokens
+    unless tokens.empty?
       payload = {
         group: @group.basic_info,
         wutudu_event: pre_wutudu.wutudu_event.basic_info,
         state: 'wutudu'
       }
-      send_notification(@group.active_users_device_tokens, \
+      send_notification(tokens, \
                         "A Wutudu have been generated for Group #{@group.name}", \
                         payload)
     end
