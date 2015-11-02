@@ -16,6 +16,7 @@ angular.module('starter.controllers')
       return;
     }
     $scope.wutudu = $stateParams.wutudu;
+    $scope.wutudu.event_details = $scope.wutudu.event_details || {};
     initMap() 
   })();
 
@@ -26,8 +27,8 @@ angular.module('starter.controllers')
       return false;
     } else {
       var wut = $scope.wutudu;
-      var lat = parseFloat(wut.latitude),
-          lng = parseFloat(wut.longitude);
+      var lat = wut.event_details.location.lat || parseFloat(wut.latitude),
+          lng = wut.event_details.location.long || parseFloat(wut.longitude);
       map = new google.maps.Map(document.getElementById('wutuduDetailMap'), {
         center: {lat: lat, lng: lng},
         zoom: 15
@@ -40,5 +41,22 @@ angular.module('starter.controllers')
       return true;
     }
   }
+
+  $scope.displayRating = function () {
+    var wut = $scope.wutudu;
+    if (!wut) {
+      return '';
+    }
+    var ratings = wut.event_details.rating || {rating: 0, count:0};
+    return ratings.value + ' (' + ratings.count + ' votes)';
+  };
+
+  $scope.eventType = function () {
+    var wut = $scope.wutudu;
+    if (!wut) {
+      return '';
+    }
+    return wut.event_details.categories || '';
+  };
 
 });

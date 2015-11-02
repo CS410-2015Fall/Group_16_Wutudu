@@ -7,3 +7,7 @@
     font-size: 12px;
     line-height: 21px;
 }
+
+.inline {
+	display: inline;
+}

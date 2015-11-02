@@ -3,11 +3,25 @@
     <h1 class="title">Wutudu Event Details</h1>
   </ion-header-bar>
   <ion-content>
-    <h1>Event</h1>
-    <h3>Map</h3>
-    <h4>Location name</h4>
-    <h4>Address</h4>
-    <h4>Time</h4>
+    <h4 class="inline">Place:&nbsp;</h4><span>{{wutudu.event_details.name}}</span>
+    <br>
+    <h4 class="inline">Type:&nbsp;</h4><span>{{eventType()}}</span>
+    <br>
+    <h4 class="inline">Time:&nbsp;</h4><span>{{wutudu.display_date}}</span>
+    <br>
+    <h4 class="inline">Rating:&nbsp;</h4><span>{{displayRating()}}</span>
+    <br>
+    <h4 class="inline">Yelp URL:&nbsp;</h4><span>{{wutudu.event_details.yelp_url}}</span>
+    <br>
+    <h4 class="inline">Phone Number:&nbsp;</h4><span>{{wutudu.event_details.phone_number}}</span>
+    <br>
+    <h4 class="inline">Address:&nbsp;</h4><span>{{wutudu.event_details.location.address}}</span>
     <div id="wutuduDetailMap" style="height: 300px; width: 100%;"></div> 
+    <h4>Invited Friends:</h4>
+    <div class="list list-inset">
+      <ion-item ng-repeat="user in wutudu.accepted_users">
+        {{user.name}} / {{user.email}}
+      </ion-item>
+    </div>
   </ion-content>
 </ion-view>
