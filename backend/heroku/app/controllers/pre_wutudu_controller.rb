@@ -39,6 +39,7 @@ class PreWutuduController < ApiController
     c
   end
 
+  #TODO: Move these to an abstract prewutudu controller, since they are used in various places
   def active_in_group
     @group = Group.find_by_id(params[:gid])
     return send_errors("Group Not Found", 404) unless @group

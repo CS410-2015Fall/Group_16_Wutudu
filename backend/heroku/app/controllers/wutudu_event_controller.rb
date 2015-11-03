@@ -19,7 +19,8 @@ class WutuduEventController < ApiController
                 {
                   weights: @pre_wutudu.aggregate_category_weights,
                   top: top_category.basic_info,
-                  wutudu_event: @pre_wutudu.wutudu_event.basic_info
+                  wutudu_event: @pre_wutudu.wutudu_event.basic_info,
+                  message: message
                 }
             )
   end

@@ -16,11 +16,11 @@ class PreWutudu < ActiveRecord::Base
       event_date: self.event_date,
       latitude: self.latitude,
       longitude: self.longitude,
-      user_answer: self.user_answers.find_by_user_id(user_id),
       total_possible: self.total_possible_count,
       completed_answers: self.completed_answers.count,
       declined_answers: self.declined_answers_count,
       finished: self.finished?,
+      user_answer: self.user_answers.find_by_user_id(user_id),
       questions: self.qnum_and_questions,
     }
   end
@@ -62,12 +62,9 @@ class PreWutudu < ActiveRecord::Base
     self.group.active_users.count - self.declined_answers_count
   end
 
-  # Don't know if it should create or 'new' the wutudu event
-  # Should the caller be responsible in saving the wutudu_event?
   def generate_wutudu_event
     bl = Magic::BestLocation.new(self.latitude, self.longitude, [self.top_category.yelp_id])
     event_details = bl.find_best_location
-    # might need to throw something if event_details is nil
     return "Unable To Create Wutudu Event", 500 unless event_details
     self.wutudu_event = WutuduEvent.create(
                           pre_wutudu_id: self.id,
@@ -80,7 +77,7 @@ class PreWutudu < ActiveRecord::Base
                         )
     self.finished = true
     self.save
-    return "Success", 200
+    return "Wutudu Event Created", 200
   end
 
   private

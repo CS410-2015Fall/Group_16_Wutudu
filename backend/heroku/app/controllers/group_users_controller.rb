@@ -1,13 +1,6 @@
 class GroupUsersController < GroupsController
   before_action :authenticate, :client_in_group
 
-  def show
-    all_users = {
-                  group_users: @group.group_users_info
-                }
-    return send_success(all_users)
-  end
-
   def create
     message, code = add_users_to_group(@group.id, group_user_params[:emails])
     return send_errors(message, code) unless code == 200

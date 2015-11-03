@@ -1,6 +1,4 @@
-# Group_16_Wutudu
-
-![](https://magnum.travis-ci.com/CS410-2015Fall/Group_16_Wutudu.svg?token=Jganyp582xULs9ySd19Q&branch=master)
+# Group_16_Wutudu ![](https://magnum.travis-ci.com/CS410-2015Fall/Group_16_Wutudu.svg?token=Jganyp582xULs9ySd19Q&branch=master)
 
 #API Docs (Reformat Later)
 
@@ -53,13 +51,20 @@
 
   * AUTHENTICATION: NONE
   * BODY: {"user" : {"email" : email, "name" : name, "password" : password}}
-  * RETURN: {"token" : token}
+  * RETURN: {"token" : token }, 200
+            or 
+            Request status. One of [
+                                    "Email Already Registered" 400,
+                                    "Failed To Create User" 400
+                                   ]
+  * NOTE: Used to sign up a user, a token is returned that is used for all other requests
 ```
 
 ##/friends
 
 ```
 NOTE: If requested email does not exist, then always returns ["User With Email Not found", 404] for any actions except GET
+      If requested email is the same as the user's email, then always return [ "Cannot Send Friend Request To Yourself" 400] for any actions except GET
 ```
 ```
 1. GET:
@@ -73,6 +78,7 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
                                 "received_requests" : [{"id" : id, "name" : name, "email" : email}...]
                              }
             }
+  * NOTE: Used to query for all the friendships of the user            
 ```
 ```
 2. POST:
@@ -86,7 +92,7 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
                                     "Exisitng Friend Request From User" 400,
                                     "Unable To Send Friend Request" 400
                                    ]
-  * NOTE: Used to send request to user
+  * NOTE: Used to send friend request to user
 ```
 ```
 3. PUT:
@@ -135,8 +141,10 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: {"group" : {"name" : name, "emails" : [emails]}}
   * RETURN: Request status. One of [
-                                    {"group_id" : group_id, message: "Group Created"} 200,
-                                    {"group_id" : group_id, message: "All Users Invited"} 200,
+                                    {"group": {"id" : group_id, "name" : name},
+                                     "message": "Group Created"} 200,
+                                    {"group": {"id" : group_id, "name" : name},
+                                     "message": "All Users Invited"} 200,
                                     "Failed To Create Group" 400,
                                     "Group Not Found" 404,
                                     "No Users Were Invited" 400,
@@ -166,7 +174,7 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
   * RETURN: {
-             "group_users" : {
+              "group_users" : {
                                 "active_users" : [{"id" : id, "name" : name, "email" : email}...],
                                 "pending_users" : [{"id" : id, "name" : name, "email" : email}...]
                              },
@@ -175,6 +183,16 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
                                 "event_date": "YYYY-MM-DDT00:00:00.000Z",
                                 "latitude": latitude,
                                 "longitude": longitude,
+                                "total_possible": total_num,
+                                "completed_answers": completed_num,
+                                "declined_answers": declined_num,
+                                "finished": true or false,
+                                "user_answer": {
+                                    "id": id, 
+                                    "user_id": user_id,
+                                    "pre_wutudu_id": pre_wutudu_id
+                                    "answers": [(Ten elements, 0 to 3)] or null
+                                } or null
                                 "questions": {
                                     "0": {
                                         "id": question_id,
@@ -194,7 +212,41 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
                                         "a3_text": answer_3
                                       }
                                   }
-                             } ... ]
+                             }, ... ]
+              "wutudu_events" : [
+                                 {
+                                  "id": wutudu_event_id,
+                                  "pre_wutudu_id": pre_wutudu_id,
+                                  "category": {
+                                    "cat_id": cat_id,
+                                    "name": cat_name
+                                  },
+                                  "event_time": "YYYY-MM-DDT00:00:00.000Z",
+                                  "latitude": orig_lat,
+                                  "longitude": orig_long,
+                                  "accepted_users": [
+                                    {
+                                      "id": user_id,
+                                      "email": email,
+                                      "name": name
+                                    }, ...
+                                  ],
+                                  "event_details": {
+                                    "name": event_name, 
+                                    "location": {
+                                      "lat": event_lat,
+                                      "long": event_long,
+                                      "address": event_address
+                                    },
+                                    "categories": cat_name,
+                                    "rating": {
+                                      "value": avg_rating,
+                                      "count": rating_num
+                                    },
+                                    "phone_number": phone_number,
+                                    "yelp_url": yelp_url
+                                  }
+                                 }, ... ]
             }, 200
             or
             Request status ["User Not In Group" 400] when the user is not in the group
@@ -213,7 +265,8 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: {"group_user" : {"emails" : [emails]}}
   * RETURN: Request status. One of [
-                                    {"group_id" : group_id, message: "All Users Invited"} 200,
+                                    {"group": {"id" : group_id, "name" : name},
+                                     "message": "All Users Invited"} 200,
                                     "Group Not Found" 404,
                                     "No Users Were Invited" 400,
                                     "Failed To Invite At Least One User" 400
@@ -256,37 +309,45 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: {"pre_wutudu" : {"event_date" : "DD-MMM-YYYY", "latitude" : latitude, "longitude" : longitude}}
   * RETURN: Request status. {
-              "pre_wutudu" : {
-                                "pre_wutudu_id": pre_wutudu_id,
-                                "event_date": "YYYY-MM-DDT00:00:00.000Z",
-                                "latitude": latitude,
-                                "longitude": longitude,
-                                "questions": {
-                                    "0": {
-                                        "id": question_id,
-                                        "question_text": question,
-                                        "a0_text": answer_0,
-                                        "a1_text": answer_1,
-                                        "a2_text": answer_2,
-                                        "a3_text": answer_3
-                                      }
-                                      (...)
-                                    "9": {
-                                        "id": question_id,
-                                        "question_text": question,
-                                        "a0_text": answer_0,
-                                        "a1_text": answer_1,
-                                        "a2_text": answer_2,
-                                        "a3_text": answer_3
-                                      }
-                                  }
-                             },
-              "message" : "PreWutudu Created"
-            } 200
-            or
-            Request Status ["Failed To Create PreWutudu" 400] if the creation failed
-            or
-            Request status ["User Not In Group" 400] when the user is not in the group
+                             "pre_wutudu" : {
+                                      "pre_wutudu_id": pre_wutudu_id,
+                                      "event_date": "YYYY-MM-DDT00:00:00.000Z",
+                                      "latitude": latitude,
+                                      "longitude": longitude,
+                                      "total_possible": total_num,
+                                      "completed_answers": completed_num,
+                                      "declined_answers": declined_num,
+                                      "finished": true or false,
+                                      "user_answer": {
+                                          "id": id, 
+                                          "user_id": user_id,
+                                          "pre_wutudu_id": pre_wutudu_id
+                                          "answers": [(Ten elements, 0 to 3)] or null
+                                      } or null
+                                      "questions": {
+                                          "0": {
+                                              "id": question_id,
+                                              "question_text": question,
+                                              "a0_text": answer_0,
+                                              "a1_text": answer_1,
+                                              "a2_text": answer_2,
+                                              "a3_text": answer_3
+                                            }
+                                            (...)
+                                          "9": {
+                                              "id": question_id,
+                                              "question_text": question,
+                                              "a0_text": answer_0,
+                                              "a1_text": answer_1,
+                                              "a2_text": answer_2,
+                                              "a3_text": answer_3
+                                            }
+                                        }
+                                    } 
+                               "message" : "PreWutudu Created"
+                            } 200,
+                            "Failed To Create PreWutudu" 400,
+                            "User Not In Group" 400
 ```
 
 ##/groups/:gid/prewutudu/:pid
@@ -304,34 +365,44 @@ NOTE: If group not found, it will always return ["Group Not Found", 404] for any
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
   * RETURN: Request status. One of [
-                                    {"pre_wutudu" : {
-                                        "pre_wutudu_id": pre_wutudu_id,
-                                        "event_date": "YYYY-MM-DDT00:00:00.000Z",
-                                        "latitude": latitude,
-                                        "longitude": longitude,
-                                        "questions": {
-                                            "0": {
-                                                "id": question_id,
-                                                "question_text": question,
-                                                "a0_text": answer_0,
-                                                "a1_text": answer_1,
-                                                "a2_text": answer_2,
-                                                "a3_text": answer_3
-                                              }
-                                              (...)
-                                            "9": {
-                                                "id": question_id,
-                                                "question_text": question,
-                                                "a0_text": answer_0,
-                                                "a1_text": answer_1,
-                                                "a2_text": answer_2,
-                                                "a3_text": answer_3
-                                              }
-                                          }
-                                      }} 200,
+                                    {
+                                      "pre_wutudu_id": pre_wutudu_id,
+                                      "event_date": "YYYY-MM-DDT00:00:00.000Z",
+                                      "latitude": latitude,
+                                      "longitude": longitude,
+                                      "total_possible": total_num,
+                                      "completed_answers": completed_num,
+                                      "declined_answers": declined_num,
+                                      "finished": true or false,
+                                      "user_answer": {
+                                          "id": id, 
+                                          "user_id": user_id,
+                                          "pre_wutudu_id": pre_wutudu_id
+                                          "answers": [(Ten elements, 0 to 3)] or null
+                                      } or null
+                                      "questions": {
+                                          "0": {
+                                              "id": question_id,
+                                              "question_text": question,
+                                              "a0_text": answer_0,
+                                              "a1_text": answer_1,
+                                              "a2_text": answer_2,
+                                              "a3_text": answer_3
+                                            }
+                                            (...)
+                                          "9": {
+                                              "id": question_id,
+                                              "question_text": question,
+                                              "a0_text": answer_0,
+                                              "a1_text": answer_1,
+                                              "a2_text": answer_2,
+                                              "a3_text": answer_3
+                                            }
+                                        }
+                                    } 200,
                                     "PreWutudu Not Found In Group" 404,
                                    ]
-  * NOTE: Used to get the information of a pre_wutudu
+  * NOTE: Used to get the information of a pre_wutudu relevant to the user (ie. it wont return the answers of other users)
 ```
 ```
 2. DELETE:
@@ -377,7 +448,7 @@ NOTE: If group not found, it will always return ["Group Not Found", 404] for any
                                       "user_answer": {
                                         "id": id, 
                                         "declined": true or false
-                                        "answers" : [(Ten elements, 0 to 3)]
+                                        "answers" : [(Ten elements, each 0 to 3)]
                                       }, 
                                     } 200,
                                     or
@@ -394,7 +465,6 @@ NOTE: If group not found, it will always return ["Group Not Found", 404] for any
       If the wutudu has already been finished, it will always return ["Action Invalid. PreWutudu Already Finished", 400] for any actions
 ```
 ```
-#TEMPORARY - Will be changing later, once we get #magic working
 1. POST:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
@@ -406,29 +476,48 @@ NOTE: If group not found, it will always return ["Group Not Found", 404] for any
                                         },
                                       "top":{
                                         "id": id,
-                                        "category_name": name,
-                                        "yelp_id": yelp_id,
-                                        "cat_id": cat_id
+                                        "category_name": name
                                       }
-                                        "wutudu_event": {
-                                          "id": id,
-                                          "activity_name": name,
-                                          "category_id": cat_id,
-                                          "event_time": time,
-                                          "latitude": lat,
-                                          "longitude": long,
-                                          "group_id": gid,
-                                          "pre_wutudu_id": pid
+                                      "wutudu_event": {
+                                        "id": wutudu_event_id,
+                                        "pre_wutudu_id": pre_wutudu_id,
+                                        "category": {
+                                          "cat_id": cat_id,
+                                          "name": cat_name
+                                        },
+                                        "event_time": "YYYY-MM-DDT00:00:00.000Z",
+                                        "latitude": orig_lat,
+                                        "longitude": orig_long,
+                                        "accepted_users": [
+                                          {
+                                            "id": user_id,
+                                            "email": email,
+                                            "name": name
+                                          }, ...
+                                        ],
+                                        "event_details": {
+                                          "name": event_name, 
+                                          "location": {
+                                            "lat": event_lat,
+                                            "long": event_long,
+                                            "address": event_address
+                                          },
+                                          "categories": cat_name,
+                                          "rating": {
+                                            "value": avg_rating,
+                                            "count": rating_num
+                                          },
+                                          "phone_number": phone_number,
+                                          "yelp_url": yelp_url
                                         }
+                                      }
+                                      "message": "Wutudu Event Created"
                                     } 200,
-                                    or
-                                    "Wutudu Event Already Created" 400
-                                    or
-                                    "No Answers Completed" 400
-                                    or
+                                    "Wutudu Event Already Created" 400,
+                                    "No Answers Completed" 400,
                                     "Unable To Create Wutudu Event" 400
                                    ]
-  * NOTE: Used to submit answers to the prewutudu 
+  * NOTE: Used to complete a prewutudu, and generate a wutudu event
 ```
 
 ##/groups/:gid/wutudu_event/:wid
@@ -443,16 +532,39 @@ If wutudu event not in group, it will return ["WutuduEvent Not Found In Group", 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
   * BODY: NONE
   * RETURN: Request status. {
-                            "wutudu_event": {
-                              "id": id,
-                              "pre_wutudu_id": pid
-                              "activity_name": name,
-                              "category_id": cat_id,
-                              "event_time": time,
-                              "latitude": latitude,
-                              "longitude": longitude,
-                              "group_id": gid,
-                            }
+                              "wutudu_event": {
+                                "id": wutudu_event_id,
+                                "pre_wutudu_id": pre_wutudu_id,
+                                "category": {
+                                  "cat_id": cat_id,
+                                  "name": cat_name
+                                },
+                                "event_time": "YYYY-MM-DDT00:00:00.000Z",
+                                "latitude": orig_lat,
+                                "longitude": orig_long,
+                                "accepted_users": [
+                                  {
+                                    "id": user_id,
+                                    "email": email,
+                                    "name": name
+                                  }, ...
+                                ],
+                                "event_details": {
+                                  "name": event_name, 
+                                  "location": {
+                                    "lat": event_lat,
+                                    "long": event_long,
+                                    "address": event_address
+                                  },
+                                  "categories": cat_name,
+                                  "rating": {
+                                    "value": avg_rating,
+                                    "count": rating_num
+                                  },
+                                  "phone_number": phone_number,
+                                  "yelp_url": yelp_url
+                                }
+                              }
 ```
 
 

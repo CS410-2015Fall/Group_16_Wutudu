@@ -30,13 +30,10 @@ class GroupsController < ApiController
 
   private
 
-  def params_for_create
-  end
-
   def group_params
     gp = params.require(:group).permit(:name, :emails => [])
     gp.require(:name)
-    return gp
+    gp
   end
 
   def send_pending_users_notifications(group)

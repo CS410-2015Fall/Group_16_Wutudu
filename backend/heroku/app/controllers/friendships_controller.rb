@@ -59,7 +59,6 @@ class FriendshipsController < ApiController
     friendship = Friendship.where(user_id: [@user.id, @friend.id]).where(friend_id: [@user.id, @friend.id]).first
     return send_errors("Not A Friend", 404) unless friendship
 
-
     approved = friendship.approved
     friendship.destroy
     return (approved ? send_success({message: "Unfriended"}) : \
