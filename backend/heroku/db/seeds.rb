@@ -37,10 +37,10 @@ end
 
 
 questions = [
-  {id: 1, question_text: "If life were to give you lemons, what would you do?", 
+  {id: 1, question_text: "If life gives you lemons, you will", 
             a0_text: "Throw them", a1_text: "Make lemonade",
             a2_text: "Eat them", a3_text: "Sell them"},
-  {id: 2, question_text: "On a nice day, what would you rather do?",
+  {id: 2, question_text: "On a nice day, you will",
             a0_text: "Go for a jog", a1_text: "Eat a nice sandwich",
             a2_text: "Hide from sun", a3_text: "Visit an Art Gallery"},
   {id: 3, question_text: "How much can you eat?",
@@ -57,7 +57,7 @@ questions = [
             a2_text: "Eating", a3_text: "CPSC 410"},
   {id: 7, question_text: "Song name??",
             a0_text: "Darude Sandstorm", a1_text: "Friday",
-            a2_text: "Never gonna give you up", a3_text: "23"},
+            a2_text: "NEVER GONNA GIVE YOU UP", a3_text: "23"},
   {id: 8, question_text: "Do you like buying clothes?",
             a0_text: "Yes", a1_text: "No",
             a2_text: "Only if on sale", a3_text: "Sometimes"},
