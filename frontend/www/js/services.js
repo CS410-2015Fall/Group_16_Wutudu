@@ -122,15 +122,26 @@ angular.module('starter.services', [])
     console.debug('message = ' + notification.message);
     console.debug('notification ', JSON.stringify(notification));
 
-    $ionicPopup.alert({
+    var popup = $ionicPopup.show({
       title: 'Notification',
       template: '<div class="card">' +
                   '<div class="item item-text-wrap">' +
                     notification.message +
                   '</div>' +
-                '</div>'
-    }).then(function() {
-      switchState(notification.payload);
+                '</div>',
+      buttons: [{
+          text: 'Cancel',
+          type: 'button-default',
+          onTap: function(e) {
+            popup.close();
+          }
+        }, {
+          text: 'OK',
+          type: 'button-positive',
+          onTap: function(e) {
+            switchState(notification.payload);
+          }
+        }]
     });
   }
 
