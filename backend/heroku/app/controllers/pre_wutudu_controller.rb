@@ -57,13 +57,14 @@ class PreWutuduController < ApiController
   end
 
   def send_active_users_notifications(pre_wutudu)
-    unless @group.active_users_device_tokens.empty?
+    device_tokens = @group.active_users_device_tokens.reject{|t| t == @user.device_token}
+    unless device_tokens.empty?
       payload = {
         group: @group.basic_info,
         pre_wutudu: pre_wutudu.basic_info_per_user(@user.id),
         state: 'pre_wutudu'
       }
-      send_notification(@group.active_users_device_tokens, \
+      send_notification(device_tokens, \
                         "You have been invited to complete a Wutudu with Group #{@group.name}", \
                         payload)
     end

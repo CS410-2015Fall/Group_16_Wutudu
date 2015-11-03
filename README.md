@@ -51,8 +51,11 @@
 
   * AUTHENTICATION: NONE
   * BODY: {"user" : {"email" : email, "name" : name, "password" : password}}
-  * RETURN: {"token" : token }, 200
-            or 
+  * RETURN: {
+              "token" : token,
+              "user" : {"id" : id, "email" : email, "name" : name}
+            }
+            200 or
             Request status. One of [
                                     "Email Already Registered" 400,
                                     "Failed To Create User" 400

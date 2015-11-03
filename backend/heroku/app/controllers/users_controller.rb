@@ -4,9 +4,13 @@ class UsersController < ApiController
   def create
     return send_errors("Email Already Registered", 400) if user_email_exist?(user_params[:email])
 
+    return send_errors('No Device Token', 400) \
+      unless request.headers["Device-Token"]
+
     @user = User.new(user_params)
+    @user.device_token = request.headers["Device-Token"]
     return send_errors('Failed To Create User', 400) unless @user.save
-    return send_success({token: @user.api_key})
+    return send_success({token: @user.api_key, user: @user.basic_info})
   end
 
   def show
