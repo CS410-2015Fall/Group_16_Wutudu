@@ -79,7 +79,7 @@ class PreWutudu < ActiveRecord::Base
                         )
     self.finished = true
     self.save
-    return "Wutudu Event created", 200
+    return "Wutudu Event Created", 200
   end
 
   private
