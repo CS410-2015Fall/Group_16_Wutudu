@@ -38,7 +38,7 @@
 
      <ion-list>
        <ion-item class="item" ng-repeat="wutudu in inProgressWutudus" ng-click="showPreWutuduOptions(wutudu)">
-         {{wutudu.display_date}} ({{userAnswered(wutudu) ? "Answered" : "Unanswered"}})
+         {{wutudu.display_date}} ({{answeredStateString(wutudu)}})
        </ion-item>
      </ion-list>
 

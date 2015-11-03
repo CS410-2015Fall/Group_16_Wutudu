@@ -15,10 +15,18 @@ angular.module('starter.controllers')
       $state.go('app.group', config);
       return;
     }
-    $scope.wutudu = $stateParams.wutudu;
+    $scope.wutudu = formatWutudu($stateParams.wutudu);
     $scope.wutudu.event_details = $scope.wutudu.event_details || {};
     initMap() 
   })();
+
+  function formatWutudu(wutudu) {
+      var eventDate = new Date(wutudu.event_time),
+          stringDate = eventDate.toString();
+      stringDate = stringDate.substring(0, stringDate.indexOf(eventDate.toTimeString()));
+      wutudu.display_date = stringDate;
+    return wutudu;
+  }
 
   function initMap () {
     if (!google.maps.Map) {

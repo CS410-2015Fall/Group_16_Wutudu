@@ -82,9 +82,9 @@ angular.module('starter.controllers')
       'answers': $scope.answers
     }};
     Wutudu.sendAnswers(options).then(function (response) {
-      $ionicPopup.alert({
-        title: 'You have declined this Wutudu',
-      });
+      // $ionicPopup.alert({
+      //   title: 'You have declined this Wutudu',
+      // });
       $state.go('app.group', config);
     }, function (response) {
       response.config.headers = JSON.stringify(response.config.headers);

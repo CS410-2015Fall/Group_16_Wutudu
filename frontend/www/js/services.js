@@ -123,7 +123,7 @@ angular.module('starter.services', [])
     console.debug('notification ', JSON.stringify(notification));
 
     $ionicPopup.alert({
-      title: 'notification',
+      title: 'Notification',
       template: '<div class="card">' +
                   '<div class="item item-text-wrap">' +
                     notification.message +

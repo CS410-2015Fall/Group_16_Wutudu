@@ -182,6 +182,22 @@ angular.module('starter.controllers')
     return (preWutudu.user_answer !== null);
   };
 
+  $scope.answeredStateString = function (preWutudu) {
+    var state = 'Unanswered';
+    if (!preWutudu) {
+      return state;
+    }
+    var user_answer = preWutudu.user_answer;
+    if (user_answer) {
+      if (user_answer.declined) {
+        state = 'Declined';
+      } else {
+        state = 'Answered';
+      }
+    }
+    return state; 
+  };
+
   $scope.showWutuduQuestion = function(preWutudu) {
     config.preWutudu = preWutudu;
     config.wutuduId = preWutudu.pre_wutudu_id.toString();
