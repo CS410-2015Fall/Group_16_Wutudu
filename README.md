@@ -298,7 +298,7 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
 ```
 
 
-##/groups/:gid/prewutudu
+##/groups/:gid/pre_wutudu
 
 ```
 NOTE: If requester not in group with :gid, then always returns ["Not In Group", 404] for any actions
@@ -350,7 +350,7 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
                             "User Not In Group" 400
 ```
 
-##/groups/:gid/prewutudu/:pid
+##/groups/:gid/pre_wutudu/:pid
 
 ```
 NOTE: If group not found, it will always return ["Group Not Found", 404] for any actions
@@ -416,7 +416,7 @@ NOTE: If group not found, it will always return ["Group Not Found", 404] for any
   * NOTE: Used to delete a pre wutudu
 ```
 
-##/groups/:gid/prewutudu/:pid/answers
+##/groups/:gid/pre_wutudu/:pid/answers
 
 ```
 NOTE: If group not found, it will always return ["Group Not Found", 404] for any actions
@@ -456,7 +456,7 @@ NOTE: If group not found, it will always return ["Group Not Found", 404] for any
                                    ]
 ```
 
-##/groups/:gid/prewutudu/:pid/finish
+##/groups/:gid/pre_wutudu/:pid/finish
 
 ```
 NOTE: If group not found, it will always return ["Group Not Found", 404] for any actions
