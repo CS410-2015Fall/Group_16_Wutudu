@@ -1,7 +1,22 @@
 require 'bcrypt'
+
+# Aux function for email: true
+class EmailValidator < ActiveModel::EachValidator
+ def validate_each(record, attribute, value)
+   record.errors.add attribute, (options[:message] || "is not an email") unless
+   value =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+ end
+end
+
 class User < ActiveRecord::Base
   include BCrypt
+
   before_create :generate_new_api_key, :hash_password
+
+  # Requirements:
+  validates :name, :password, :email, presence: true, allow_blank: false
+  validates :email, uniqueness: true, email: true, length: { maximum: 50 }
+  validates :name, length: { maximum: 50 }
 
   # Friendships
   has_many :friendships

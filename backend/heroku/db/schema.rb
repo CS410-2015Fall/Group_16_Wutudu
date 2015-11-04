@@ -119,6 +119,14 @@ ActiveRecord::Schema.define(version: 20151101055014) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
+  create_table "widgets", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "stock"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "wutudu_events", force: :cascade do |t|
     t.string   "activity_name"
     t.integer  "category_id"

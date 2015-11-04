@@ -65,8 +65,6 @@ class PreWutudu < ActiveRecord::Base
   def generate_wutudu_event
     bl = Magic::BestLocation.new(self.latitude, self.longitude, [self.top_category.yelp_id])
     event_details = bl.find_best_location
-    p self.top_category
-    p bl
     return "Unable To Create Wutudu Event", 500 unless event_details
     self.wutudu_event = WutuduEvent.create(
                           pre_wutudu_id: self.id,
@@ -90,22 +88,27 @@ class PreWutudu < ActiveRecord::Base
       self.destroy
       p "All users declined. pre_wutudu #{wid} destroyed" if self.destroyed?
     elsif self.completed_answers_count == self.total_possible_count
-      success, error = self.generate_wutudu_event
-      p "There was a #{error} error with wutudu event creation" unless error == 200
-      p "All possible users answered. wutudu event created" if error == 200
 
-      group = self.group
-      tokens = group.active_users_device_tokens
-      unless tokens.empty?
-        payload = {
-          group: group.basic_info,
-          wutudu_event: self.wutudu_event.basic_info,
-          state: 'wutudu'
-        }
-        send_notification(tokens, \
-                          "A Wutudu has been generated for Group #{group.name}", \
-                          payload)
+      Thread.new do
+        success, error = self.generate_wutudu_event
+        p "There was a #{error} error with wutudu event creation" unless error == 200
+        p "All possible users answered. wutudu event created" if error == 200
+        group = self.group
+        tokens = group.active_users_device_tokens
+        unless tokens.empty?
+          payload = {
+            group: group.basic_info,
+            wutudu_event: self.wutudu_event.basic_info,
+            state: 'wutudu'
+          }
+          send_notification(tokens, \
+                            "A Wutudu has been generated for Group #{group.name}", \
+                            payload)
+        end
+        exit
+        ActiveRecord::Base.connection.close
+        Thread.exit
       end
-    end 
+    end
   end
 end
