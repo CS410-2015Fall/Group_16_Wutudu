@@ -74,7 +74,7 @@ angular.module('starter.services', [])
 
   function onRegistered(notification) {
     if (notification.regid.length > 0 ) {
-      console.table('registration ID = ' + notification.regid);
+      console.debug('registration ID = ' + JSON.stringify(notification));
       deferred.resolve(notification.regid);
     }
   }
