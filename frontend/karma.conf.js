@@ -35,7 +35,7 @@ module.exports = function(config) {
       'www/lib/ionic-datepicker/dist/ionic-datepicker.bundle.min.js',
       'www/lib/ngCordova/dist/ng-cordova.js',
       'node_modules/angular-mocks/angular-mocks.js',
-      'www/js/**/*.mocha.js'
+      'www/test/**/*.mocha.js'
     ],
 
 
@@ -47,6 +47,10 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      // source files, that you wanna generate coverage for
+      // do not include tests or libraries
+      // (these files will be instrumented by Istanbul)
+      './www/js/**/*.js': ['coverage']
     },
 
 
@@ -54,7 +58,7 @@ module.exports = function(config) {
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     // reporters: ['progress'],
-    reporters: ['mocha'],
+    reporters: ['mocha', 'coverage'],
 
 
     // web server port
