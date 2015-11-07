@@ -1,10 +1,9 @@
 angular.module('starter.services')
 
 .factory('Group', function($httpService) {
-
   return {
     getGroup: function(config) {
-      if(!config.groupId) throw "Group id needed to get group";
+      if(!config.groupId) throw 'Need to specify groupId to get group';
       var payload = {
             method: 'GET',
             url: '/groups/' + config.groupId
@@ -12,35 +11,33 @@ angular.module('starter.services')
       return $httpService.makeRequest(payload);
     },
     inviteFriends: function(config) {
-      if(!config.groupId) throw "Need to specify groupId to add";
-      if(!config.emails.length) throw "Need to invite at least one friend";
-      var memberEmails = config.emails,
-          data = {
-            group_user: {
-              emails : memberEmails
-            }
-          },
-          payload = {
+      if(!config.groupId) throw 'Need to specify groupId to add';
+      if(!config.emails.length) throw 'Need to specify at least 1 friend\'s email';
+      var payload = {
             method: 'POST',
-            data: data,
+            data: {
+              group_user: {
+                emails : config.emails
+              }
+            },
             url: '/groups/' + config.groupId + '/users'
           };
       return $httpService.makeRequest(payload);
     },
     addGroup: function(config) {
-      if(!config.groupId) throw "Need to specify groupId to add";
+      if(!config.groupId) throw 'Need to specify groupId to add';
       var payload = {
-        method: 'PUT',
-        url: '/groups/' + config.groupId + '/users'
-      };
+            method: 'PUT',
+            url: '/groups/' + config.groupId + '/users'
+          };
       return $httpService.makeRequest(payload);
     },
     removeGroup: function(config) {
-      if(!config.groupId) throw "Need to specify groupId to remove";
+      if(!config.groupId) throw 'Need to specify groupId to remove';
       var payload = {
-        method: 'DELETE',
-        url: '/groups/' + config.groupId + '/users'
-      };
+            method: 'DELETE',
+            url: '/groups/' + config.groupId + '/users'
+          };
       return $httpService.makeRequest(payload);
     },
     getAllGroups: function() {
@@ -51,18 +48,15 @@ angular.module('starter.services')
       return $httpService.makeRequest(payload);
     },
     createGroup: function(config) {
-      if(!config.name) throw "Please specify group name";
-      var groupName = config.name,
-          memberEmails = config.emails,
-          data = {
-            group: {
-              name: groupName,
-              emails : memberEmails
-            }
-          },
-          payload = {
+      if(!config.name) throw 'Need to specify group name to create';
+      var payload = {
             method: 'POST',
-            data: data,
+            data: {
+              group: {
+                name: config.name,
+                emails : config.emails
+              }
+            },
             url: '/groups'
           };
       return $httpService.makeRequest(payload);

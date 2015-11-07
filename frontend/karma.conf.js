@@ -10,12 +10,11 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai'],
+    frameworks: ['mocha', 'chai', 'sinon'],
 
 
     // list of files / patterns to load in the browser
     files: [
-      // 'www/lib/angular/angular.js',
       'www/lib/ionic/js/ionic.bundle.js',
       'www/js/app.js',
       'www/js/controllers.js',
@@ -54,7 +53,8 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    // reporters: ['progress'],
+    reporters: ['mocha'],
 
 
     // web server port
@@ -82,7 +82,8 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true,//false,
+    // singleRun: false,
+    singleRun: true,
 
     // Concurrency level
     // how many browser should be started simultanous

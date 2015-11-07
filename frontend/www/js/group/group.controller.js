@@ -142,7 +142,7 @@ angular.module('starter.controllers')
           data = {
             "emails" : friendsToInvite
           };
-
+          // TODO change to angular merge
           Object.assign(config, data);
           Group.inviteFriends(config)
             .then(inviteSucess, handleError);
@@ -195,7 +195,7 @@ angular.module('starter.controllers')
         state = 'Answered';
       }
     }
-    return state; 
+    return state;
   };
 
   $scope.showWutuduQuestion = function(preWutudu) {

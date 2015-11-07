@@ -2,6 +2,9 @@
   "name": "Wutudu",
   "version": "1.0.0",
   "description": "Wutudu: An Ionic project",
+  "scripts": {
+    "test": "./node_modules/.bin/karma start"
+  },
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",
@@ -18,10 +21,13 @@
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.2.1",
     "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs-launcher": "^0.2.1",
+    "karma-sinon": "^1.0.4",
     "mocha": "^2.3.3",
     "phantomjs": "^1.9.18",
-    "shelljs": "^0.3.0"
+    "shelljs": "^0.3.0",
+    "sinon": "^1.17.2"
   },
   "cordovaPlugins": [
     "cordova-plugin-device",

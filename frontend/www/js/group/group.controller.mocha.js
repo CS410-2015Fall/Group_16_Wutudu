@@ -1,4 +1,6 @@
 describe('GroupListController', function() {
+  var $controller;
+
   beforeEach(function() {
     module('starter');
     inject(function(_$controller_){
@@ -6,8 +8,6 @@ describe('GroupListController', function() {
         $controller = _$controller_;
     });
   });
-
-  var $controller;
 
   describe('$scope.activeGroups', function() {
     var $scope, controller;
