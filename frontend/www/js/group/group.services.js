@@ -12,7 +12,7 @@ angular.module('starter.services')
     },
     inviteFriends: function(config) {
       if(!config.groupId) throw 'Need to specify groupId to add';
-      if(!config.emails.length) throw 'Need to specify at least 1 friend\'s email';
+      if(!config.emails || !config.emails.length) throw 'Need to specify at least 1 friend\'s email';
       var payload = {
             method: 'POST',
             data: {

@@ -1,7 +1,6 @@
 angular.module('starter.services')
 
 .factory('Friend', function ($httpService) {
-  console.log('friend service');
 
   return {
     addFriendTplConfig: function($scope, handleAddFriendFn) {
@@ -19,7 +18,7 @@ angular.module('starter.services')
         ]
       }
     },
-    getFriends: function (config) {
+    getFriends: function () {
       var payload = {
         method: 'GET',
         url: '/friends'
@@ -29,7 +28,7 @@ angular.module('starter.services')
     sendFriendRequest: function (config) {
       var payload = {
         method: 'POST',
-        data: config.data,
+        data: { 'friendship' : { 'email' : config.email }},
         url: '/friends'
       };
       return $httpService.makeRequest(payload);
@@ -37,7 +36,7 @@ angular.module('starter.services')
     acceptFriendRequest: function (config) {
       var payload = {
         method: 'PUT',
-        data: config.data,
+        data: { 'friendship' : { 'email' : config.email }},
         url: '/friends'
       };
       return $httpService.makeRequest(payload);
@@ -45,7 +44,7 @@ angular.module('starter.services')
     removeFriend: function (config) {
       var payload = {
         method: 'DELETE',
-        data: config.data,
+        data: { 'friendship' : { 'email' : config.email }},
         url: '/friends'
       }
       return $httpService.makeRequest(payload);

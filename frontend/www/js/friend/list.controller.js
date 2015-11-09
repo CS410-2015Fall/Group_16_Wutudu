@@ -11,10 +11,7 @@ angular.module('starter.controllers')
       template: 'Loading...'
   });
   // Gets called each time tab is open
-  Friend.getFriends({
-    'token': $scope.$root.TOKEN,
-    'urlRoot': $scope.$root.SERVER_URL,
-  }).then(function successCallback (response) {
+  Friend.getFriends().then(function successCallback (response) {
     console.log('Get friends success');
     $scope.friends = response.data.friendships.friends;
     $scope.sentRequests = response.data.friendships.sent_requests;
@@ -49,9 +46,7 @@ angular.module('starter.controllers')
       return;
     }
     Friend.sendFriendRequest({
-      'token': $scope.$root.TOKEN,
-      'urlRoot': $scope.$root.SERVER_URL,
-      'data': { 'friendship' : { 'email' : data.friendToAdd }}
+      'email': data.friendToAdd
     }).then(function successCallback (response) {
       $ionicPopup.alert({
         title: 'Friend Request Sent!'
@@ -75,9 +70,7 @@ angular.module('starter.controllers')
   $scope.acceptFriend = function (friend) {
     console.log('acceptFriend');
     Friend.acceptFriendRequest({
-      'token': $scope.$root.TOKEN,
-      'urlRoot': $scope.$root.SERVER_URL,
-      'data': { 'friendship' : { 'email' : friend.email }}
+      'email': friend.email
     }).then(function successCallback (response) {
       $scope.friends.push({ 'email' : friend.email });
       $scope.receivedRequests = $scope.receivedRequests.filter(function (f) {
@@ -126,9 +119,7 @@ angular.module('starter.controllers')
   $scope.doRemoveFriend = function (friend, type) {
     console.log('removeFriend');
     Friend.removeFriend({
-      'token': $scope.$root.TOKEN,
-      'urlRoot': $scope.$root.SERVER_URL,
-      'data': { 'friendship' : { 'email' : friend.email }}
+      'email': friend.email
     }).then(function successCallback (response) {
       var popupMsg;
       if (type === 'remove') {
