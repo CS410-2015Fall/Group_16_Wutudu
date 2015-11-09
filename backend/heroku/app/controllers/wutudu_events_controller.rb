@@ -1,4 +1,4 @@
-class WutuduEventController < ApiController
+class WutuduEventsController < ApiController
   before_action :authenticate, :active_in_group
   before_action :pre_wutudu_in_group, only: [:create]
   before_action :wutudu_event_in_group, except: [:create]

@@ -1,4 +1,4 @@
-class PreWutuduController < ApiController
+class PreWutudusController < ApiController
   before_action :authenticate, :active_in_group
   before_action :pre_wutudu_in_group, :pre_wutudu_not_finished, except: [:create]
 

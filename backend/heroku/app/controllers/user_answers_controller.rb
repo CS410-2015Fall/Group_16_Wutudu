@@ -1,4 +1,4 @@
-class UserAnswerController < ApiController
+class UserAnswersController < ApiController
   before_action :authenticate, :active_in_group, :pre_wutudu_in_group, :pre_wutudu_not_finished
 
   def show
