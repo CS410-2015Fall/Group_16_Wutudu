@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  pre_wutudu_id: 
+  answers: MyText
+  declined: false
+
+two:
+  user_id: 
+  pre_wutudu_id: 
+  answers: MyText
+  declined: false

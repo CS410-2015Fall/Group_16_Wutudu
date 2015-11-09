@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  activity_name: MyString
+  category_id: 
+  event_time: 2015-11-08 22:35:28
+  latitude: 9.99
+  longitude: 9.99
+  group_id: 
+  pre_wutudu_id: 
+  event_details: MyString
+
+two:
+  activity_name: MyString
+  category_id: 
+  event_time: 2015-11-08 22:35:28
+  latitude: 9.99
+  longitude: 9.99
+  group_id: 
+  pre_wutudu_id: 
+  event_details: MyString

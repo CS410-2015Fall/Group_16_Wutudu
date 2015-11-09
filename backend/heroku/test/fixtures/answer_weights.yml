@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  anum: 
+  weight: 
+  question_id: 
+  category_id: 
+
+two:
+  anum: 
+  weight: 
+  question_id: 
+  category_id: 

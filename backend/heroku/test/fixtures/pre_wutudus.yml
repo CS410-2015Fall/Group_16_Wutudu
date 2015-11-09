@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+pre_wutudu_one:
+# column: value
+  group: group_one
+  event_date: 2015-11-21 00:00:00 #maybe have this set to tomorrow's date?
+  latitude: 49.283552
+  longitude: -123.119506
+  finished: null
+
+pre_wutudu_two:
+#  column: value
+  group: group_one
+  event_date: 2015-11-21 00:00:00 #maybe have this set to tomorrow's date?
+  latitude: 49.283552
+  longitude: -123.119506
+  finished: true
