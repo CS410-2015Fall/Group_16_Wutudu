@@ -1,15 +1,13 @@
-language: node_js
-node_js:
-  - 0.12
-
 language: ruby
 rvm:
 - 2.2.3
 gemfile: backend/heroku/Gemfile
 before_script:
 - cd backend/heroku && bundle exec rake db:drop
+- cd frontend && npm install
 script:
 - bundle exec rake db:create db:migrate db:seed && echo "puts 10" | RACK_ENV=production bundle exec rails console
+- ls
 deploy:
   provider: heroku
   api_key:
@@ -18,3 +16,9 @@ deploy:
   run:
     - "rake db:migrate db:seed --trace"
 
+matrix: 
+  exclude:
+    - before_script: cd backend/heroku && bundle exec rake db:drop
+      script: ls
+    - before_script: cd frontend && npm install
+      script: bundle exec rake db:create db:migrate db:seed && echo "puts 10" | RACK_ENV=production bundle exec rails console
