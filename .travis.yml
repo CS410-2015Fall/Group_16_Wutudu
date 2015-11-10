@@ -6,7 +6,7 @@ before_script:
 - cd backend/heroku && bundle exec rake db:drop
 script:
 - bundle exec rake db:create db:migrate db:seed && echo "puts 10" | RACK_ENV=production bundle exec rails console
-- cd ../frontend && npm install && npm test
+- cd ../../frontend && npm install && npm test
 deploy:
   provider: heroku
   api_key:
