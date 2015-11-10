@@ -4,7 +4,7 @@ rvm:
 gemfile: backend/heroku/Gemfile
 script:
 - cd frontend && npm install && npm test
-- cd backend/heroku && bundle exec rake db:drop db:create db:migrate db:seed && echo "puts 10" | RACK_ENV=production bundle exec rails console
+- cd ../backend/heroku && bundle exec rake db:drop db:create db:migrate db:seed && echo "puts 10" | RACK_ENV=production bundle exec rails console
 deploy:
   provider: heroku
   api_key:
