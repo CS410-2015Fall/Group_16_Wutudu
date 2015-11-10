@@ -4,17 +4,15 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-pre_wutudu_one:
-# column: value
-  group: group_one
+pre_wutudu_1:
+  group: group_1
   event_date: 2015-11-21 00:00:00 #maybe have this set to tomorrow's date?
   latitude: 49.283552
   longitude: -123.119506
   finished: null
 
-pre_wutudu_two:
-#  column: value
-  group: group_one
+pre_wutudu_2:
+  group: group_2
   event_date: 2015-11-21 00:00:00 #maybe have this set to tomorrow's date?
   latitude: 49.283552
   longitude: -123.119506

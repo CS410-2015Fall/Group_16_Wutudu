@@ -1,13 +1,26 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# User answers for the pre_wutudus
+# pre_wutudu_1:
+#     - user_1: [0, 1, 1, 0, 1, 0, 1, 3, 2, 3]
+#     - user_2: nil
+# pre_wutudu_2:
+#     - user_1: declined
+#     - user_2: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
 
-one:
-  user_id: 
-  pre_wutudu_id: 
-  answers: MyText
-  declined: false
+user_1_pw_1_answer:
+  user: user_1
+  pre_wutudu: pre_wutudu_1
+  answers: [0, 1, 1, 0, 1, 0, 1, 3, 2, 3]
+  declined: null
 
-two:
-  user_id: 
-  pre_wutudu_id: 
-  answers: MyText
-  declined: false
+user_2_pw_2_answer:
+  user: user_2
+  pre_wutudu: pre_wutudu_2
+  answers: null
+  declined: true
+
+user_2_pw_2_answer:
+  user: user_2
+  pre_wutudu: pre_wutudu_2
+  answers: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+  declined: null

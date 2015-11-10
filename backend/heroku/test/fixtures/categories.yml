@@ -1,11 +1,21 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  cat_id: 
-  category_name: MyString
-  yelp_id: MyString
+category_1:
+  cat_id: 1
+  category_name: Category One
+  yelp_id: catone
 
-two:
-  cat_id: 
-  category_name: MyString
-  yelp_id: MyString
+category_2:
+  cat_id: 2
+  category_name: Category Two
+  yelp_id: cattwo
+
+category_3:
+  cat_id: 3
+  category_name: Category Three
+  yelp_id: catthree
+
+category_4:
+  cat_id: 4
+  category_name: Category Four
+  yelp_id: catfour

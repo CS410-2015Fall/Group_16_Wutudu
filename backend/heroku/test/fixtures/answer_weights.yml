@@ -1,13 +1,36 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# aw_0_question_1:
+#   anum: 0
+#   weight: 1 
+#   question: question_1
+#   category: category_1
+#
+# aw_1_question_1:
+#   anum: 1
+#   weight: 1
+#   question: question_1
+#   category: category_2
+#
+# ...
+#
+# aw_2_question_100:
+#   anum: 2
+#   weight: 1
+#   question: question_100
+#   category: category_3
+#
+# aw_3_question_100:
+#   anum: 3
+#   weight: 1
+#   question: question_100
+#   category: category_4
 
-one:
-  anum: 
-  weight: 
-  question_id: 
-  category_id: 
-
-two:
-  anum: 
-  weight: 
-  question_id: 
-  category_id: 
+<% (1..100).each do |n| %>
+    <% (0..3).each do |a| %>
+aw_<%= a %>_question_<%= n %>:
+  anum: <%= a %>
+  weight: 1
+  question: <%= "question_#{n}" %>
+  category: <%= "category_#{a+1}" %>
+  <% end %>
+<% end %>

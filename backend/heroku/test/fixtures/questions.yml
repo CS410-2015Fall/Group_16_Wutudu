@@ -1,15 +1,23 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Question_1:
+#   question_text: Question 1?
+#   a0_text: AnswerZero
+#   a1_text: AnswerOne
+#   a2_text: AnswerTwo
+#   a3_text: AnswerThree
+#  ... 
+# Question_100:
+#   question_text: Question 100?
+#   a0_text: AnswerZero
+#   a1_text: AnswerOne
+#   a2_text: AnswerTwo
+#   a3_text: AnswerThree
 
-one:
-  question_text: MyText
-  a0_text: MyText
-  a1_text: MyText
-  a2_text: MyText
-  a3_text: MyText
-
-two:
-  question_text: MyText
-  a0_text: MyText
-  a1_text: MyText
-  a2_text: MyText
-  a3_text: MyText
+<% (1..100).each do |n| %>
+question_<%= n %>:
+  question_text: <%= "Question #{n}?" %>
+  a0_text: AnswerZero
+  a1_text: AnswerOne
+  a2_text: AnswerTwo
+  a3_text: AnswerThree
+<% end %>

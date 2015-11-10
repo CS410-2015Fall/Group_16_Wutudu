@@ -1,15 +1,22 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  email: MyString
-  password: MyString
-  api_key: MyString
-  device_token: MyString
+user_1:
+  name: User One
+  email: user1@email.com
+  password: #KEVIN-TODO:
+  api_key: Nrhr7a47c6n5bZn8guCNlgtt
+  device_token: 1
 
-two:
-  name: MyString
-  email: MyString
-  password: MyString
-  api_key: MyString
-  device_token: MyString
+user_2:
+  name: User Two
+  email: user2@email.com
+  password: #KEVIN-TODO:
+  api_key: gzfjGPy7719F4G9grr9BVgtt
+  device_token: 1
+
+user_3:
+  name: User Three
+  email: user3@email.com
+  password: #KEVIN-TODO:
+  api_key: HWqeFFNxPyLXLpvBVqpkKAtt
+  device_token: 1
