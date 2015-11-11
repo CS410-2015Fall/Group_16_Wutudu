@@ -1,4 +1,4 @@
-describe('GroupListController', function() {
+describe('GroupController', function() {
   var $controller;
 
   beforeEach(function() {

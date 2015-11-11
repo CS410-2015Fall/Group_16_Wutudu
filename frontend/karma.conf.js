@@ -60,6 +60,10 @@ module.exports = function(config) {
     // reporters: ['progress'],
     reporters: ['mocha', 'coverage'],
 
+    coverageReporter: {
+      type: 'text-summary',
+      dir: 'coverage/'
+    },
 
     // web server port
     port: 9876,

@@ -3,21 +3,31 @@ angular.module('starter.controllers')
 .controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal,
   $ionicLoading, $state, $msgBox, Friend, Group) {
 
-  var createGroupTplUrl = 'templates/group/createGroup.html',
-    createGroupTplConfig = {
-        scope: $scope,
-        animation: 'slide-in-up'
+  function initData() {
+    $scope.data = {
+      createGroup: {
+        name: ''
+      },
+      friends : [],
+      friendsInvited: []
     };
+  }
 
-  $ionicLoading.show({
-      template: 'Loading...'
-  });
-  Group.getAllGroups()
-                .then(setupGroups, handleError);
+  function initModal() {
+    var createGroupTplUrl = 'templates/group/createGroup.html',
+      createGroupTplConfig = {
+          scope: $scope,
+          animation: 'slide-in-up'
+      };
 
-  $ionicModal
-    .fromTemplateUrl(createGroupTplUrl, createGroupTplConfig)
-    .then(setupModal);
+    $ionicModal
+      .fromTemplateUrl(createGroupTplUrl, createGroupTplConfig)
+      .then(setupModal);
+  }
+
+  function setupModal(modal) {
+      $scope.modal = modal;
+  }
 
   function setupFriends(response) {
     var friends = response.data.friendships.friends;
@@ -29,10 +39,6 @@ angular.module('starter.controllers')
     $scope.activeGroups = groups.active_groups;
     $scope.pendingGroups = groups.pending_groups;
     $ionicLoading.hide();
-  }
-
-  function setupModal(modal) {
-      $scope.modal = modal;
   }
 
   function handleError(response) {
@@ -49,89 +55,23 @@ angular.module('starter.controllers')
     $ionicPopup.show(data);
   }
 
-  $scope.acceptInvitation = function(groupId) {
-    var config = {
-      groupId: groupId
-    };
-    Group.addGroup(config)
-      .then(addGroupToView, handleError);
-  };
-
   function addGroupToView(response) {
     var data = response.data,
-        msg = {
-          title: 'Join group',
-          template: '<span>' + JSON.stringify(data) + '</span>'
+        selectedGroup = function(group) {
+          return group.id !== data.group.id;
         };
-    $msgBox.show($scope, msg);
-    var selectedGroup = function(group) {
-      return group.id !== data.group.id;
-    };
     $scope.activeGroups.push(data.group);
     $scope.pendingGroups = $scope.pendingGroups.filter(selectedGroup);
   }
 
-  $scope.leaveGroup = function(groupId) {
-    var config = {
-      groupId: groupId
-    };
-    Group.removeGroup(config)
-      .then(removeGroupFromView, handleError);
-  };
-
   function removeGroupFromView(response) {
-    var data = response.data,
-        msg = {
-          title: 'Left/Decline group',
-          template: '<span>' + JSON.stringify(data) + '</span>'
-        };
-    $msgBox.show($scope, msg);
+    var data = response.data;
     var groupLeft = function(group) {
       return group.id !== data.group.id;
     };
     $scope.activeGroups = $scope.activeGroups.filter(groupLeft);
     $scope.pendingGroups = $scope.pendingGroups.filter(groupLeft);
   }
-
-  $scope.declineInvitation = function(groupId) {
-    $scope.leaveGroup(groupId);
-  };
-
-  $scope.showCreateGroup = function() {
-    $scope.data = {
-      createGroup: {
-        name: ''
-      },
-      friends : [],
-      friendsInvited: []
-    };
-    Friend.getFriends()
-      .then(setupFriends, handleError);
-    $scope.modal.show();
-  };
-
-  $scope.cancelCreateGroup = function() {
-    $scope.modal.hide();
-  };
-
-  $scope.createGroup = function() {
-    var name = $scope.data.createGroup.name,
-        friendEmails = function(friend) {
-          return friend.email;
-        },
-        emails = $scope.data.friendsInvited.map(friendEmails),
-        config;
-
-    if(!validateCreateGroup(name)) return;
-
-    config = {
-      name: name,
-      emails: emails
-    };
-
-    Group.createGroup(config)
-      .then(groupCreated, handleError);
-  };
 
   function validateCreateGroup(name) {
     if(!name) {
@@ -148,7 +88,6 @@ angular.module('starter.controllers')
   function groupCreated(response) {
     var msg = {
       title: 'Group successfully created',
-      template: '<span>' + JSON.stringify(response.data) + '</span>'
     };
     $msgBox.show($scope, msg);
     // opportunisitc update
@@ -156,25 +95,68 @@ angular.module('starter.controllers')
     $scope.modal.hide();
   }
 
-  $scope.goToFriend = function(friendId) {
-    $state.go('app.friend', {friendId: friendId});
-    $scope.cancelCreateGroup();
+  $scope.init = function() {
+    initData();
+    initModal();
+
+    Group.getAllGroups()
+      .then(setupGroups, handleError);
+
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
   };
 
   //Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
     $scope.modal.remove();
   });
-  // Execute action on hide modal
-  $scope.$on('modal.hidden', function() {
-    // Execute action
-    console.log('modal hidden');
-  });
-  // Execute action on remove modal
-  $scope.$on('modal.removed', function() {
-    // Execute action
-    console.log('modal removed');
-  });
+
+  $scope.acceptInvitation = function(groupId) {
+    var config = {
+      groupId: groupId
+    };
+    Group.addGroup(config)
+      .then(addGroupToView, handleError);
+  };
+
+  $scope.leaveGroup = function(groupId) {
+    var config = {
+      groupId: groupId
+    };
+    Group.removeGroup(config)
+      .then(removeGroupFromView, handleError);
+  };
+
+  $scope.declineInvitation = function(groupId) {
+    $scope.leaveGroup(groupId);
+  };
+
+  $scope.showCreateGroup = function() {
+    Friend.getFriends()
+      .then(setupFriends, handleError);
+    $scope.modal.show();
+  };
+
+  $scope.createGroup = function() {
+    var name = $scope.data.createGroup.name,
+        friendEmails = function(friend) {
+          return friend.email;
+        },
+        emails,
+        config;
+
+    if(!validateCreateGroup(name)) return;
+
+    emails = $scope.data.friendsInvited.map(friendEmails);
+    config = {
+      name: name,
+      emails: emails
+    };
+
+    Group.createGroup(config)
+      .then(groupCreated, handleError);
+  };
 
   $scope.addFriendToGroup = function() {
     var isFriendInvited = function(friend) {
@@ -187,5 +169,11 @@ angular.module('starter.controllers')
         addFriendTplConfig = Friend.addFriendTplConfig($scope, handleAddFriend);
     $ionicPopup.show(addFriendTplConfig);
   };
+
+  $scope.cancelCreateGroup = function() {
+    $scope.modal.hide();
+  };
+
+  $scope.init();
 
 });

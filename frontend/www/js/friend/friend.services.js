@@ -16,7 +16,7 @@ angular.module('starter.services')
            },
          { text: 'Cancel', type: 'button-assertive'}
         ]
-      }
+      };
     },
     getFriends: function () {
       var payload = {
@@ -46,8 +46,8 @@ angular.module('starter.services')
         method: 'DELETE',
         data: { 'friendship' : { 'email' : config.email }},
         url: '/friends'
-      }
+      };
       return $httpService.makeRequest(payload);
     }
-  }
+  };
 });
