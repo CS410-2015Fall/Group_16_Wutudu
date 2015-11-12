@@ -3,13 +3,14 @@ class GroupDetailsController < ApiController
 
   # Show all the information for a given group id, and user
   def show
-    return send_success(@group.all_info_per_user(@user.id))
+    render success_msg(@group.all_info_per_user(@user.id)) and return
   end
 
   private
   # Check if requester is in group
   def client_in_group
     @group = @user.groups.find_by_id(params[:gid])
-    return send_errors("User Not In Group", 404) unless @group
+    render errors_msg("User Not In Group", 404) and return \
+      unless @group
   end
 end

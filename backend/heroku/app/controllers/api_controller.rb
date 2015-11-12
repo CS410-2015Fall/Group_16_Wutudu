@@ -1,21 +1,23 @@
 class ApiController < ApplicationController
   include GCMNotification
 
+  respond_to :json
+
   def authenticate
     authenticate_or_request_with_http_token do |token, options|
       @user = User.where(api_key: token).first
     end
   end
 
-  def send_success(return_msg)
-    render json: return_msg, status: 200
+  def success_msg(return_msg)
+    {json: return_msg, status: 200}
   end
 
-  def send_errors(err_msg, code)
-    render json: {errors: err_msg}, status: code
+  def errors_msg(err_msg, code)
+    {json: {errors: err_msg}, status: code}
   end
 
-  def send_internal_error
-    render json: {errors: 'Internal Server Error'}, status: 500
+  def internal_error_msg
+    {json: {errors: 'Internal Server Error'}, status: 500}
   end
 end

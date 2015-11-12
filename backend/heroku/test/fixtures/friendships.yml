@@ -9,3 +9,8 @@ friendship_2:
   user: user_1
   friend: user_3
   approved: false
+
+friendship_3:
+  user: user_3
+  friend: user_2
+  approved: false

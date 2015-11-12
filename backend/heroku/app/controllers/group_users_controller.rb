@@ -3,24 +3,28 @@ class GroupUsersController < GroupsController
 
   def create
     message, code = add_users_to_group(@group.id, group_user_params[:emails])
-    return send_errors(message, code) unless code == 200
+    render errors_msg(message, code) and return \
+      unless code == 200
     send_friends_notification(group_user_params[:emails])
-    return send_success(message)
+    render success_msg(message) and return
   end
 
   def update
-    return send_errors("Already In Group", 400) if @g_user.approved
+    render errors_msg("Already In Group", 400) and return \
+      if @g_user.approved
 
     @g_user.approved = true
-    return send_errors("Failed To Join Group", 400) unless @g_user.save
-    return send_success({group: @group.basic_info, message: "Group Joined"})
+    render errors_msg("Failed To Join Group", 400) and return \
+      unless @g_user.save
+    render success_msg({group: @group.basic_info, message: "Group Joined"}) and return
   end
 
   def destroy
     approved = @g_user.approved
     @g_user.destroy
-    return send_success({group: @group.basic_info, message: "Request Declined"}) unless approved
-    return send_success({group: @group.basic_info, message: "Left Group"})
+    render success_msg({group: @group.basic_info, message: "Request Declined"}) and return \
+      unless approved
+    render success_msg({group: @group.basic_info, message: "Left Group"}) and return
   end
 
   private
@@ -33,7 +37,8 @@ class GroupUsersController < GroupsController
   # Check if requester is in group
   def client_in_group
     @group = @user.groups.find_by_id(params[:gid])
-    return send_errors("Not In Group", 404) unless @group
+    render errors_msg("Not In Group", 404) and return \
+      unless @group
     @g_user = GroupUser.where(group_id: @group.id, user_id: @user.id).first
   end
 

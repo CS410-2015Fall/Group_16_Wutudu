@@ -8,23 +8,26 @@ class GroupsController < ApiController
                            pending_groups: @user.pending_groups.collect{|g| g.basic_info}
                          }
                }
-    return send_success(message)
+    render success_msg(message) and return
   end
 
   def create
     group = Group.new(name: group_params[:name])
-    return send_errors("Failed To Create Group", 400) unless group.save
+    render errors_msg("Failed To Create Group", 400) and return \
+      unless group.save
 
     gu = group.group_users.build(user_id: @user.id, approved: true)
     if gu.save
-      return send_success({group: group.basic_info, message: "Group Created"}) if group_params[:emails].nil?
+      render success_msg({group: group.basic_info, message: "Group Created"}) and return \
+        if group_params[:emails].nil?
       message, code = add_users_to_group(group.id, group_params[:emails])
-      return send_errors(message, code) unless code == 200
+      render errors_msg(message, code) and return \
+        unless code == 200
       send_pending_users_notifications(group)
-      return send_success(message)
+      render success_msg(message) and return
     else
       group.destroy
-      render json: {errors: "Failed To Create Group and Add User"}, status: 400
+      render errors_msg("Failed To Create Group and Add User", status: 400) and return
     end
   end
 

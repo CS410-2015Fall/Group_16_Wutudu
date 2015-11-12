@@ -2,28 +2,30 @@ class SessionsController < ApiController
   before_action :authenticate, only: [:destroy]
 
   def create
-    return send_errors('User With Email Not Found', 404) \
+    render errors_msg('User With Email Not Found', 404) and return\
       unless User.exists?(email: login_params[:email])
 
     @user = User.find_by_email(login_params[:email])
 
-    return send_errors('Incorrect Password', 400) \
+    render errors_msg('Incorrect Password', 400) and return\
       unless @user.bcrypt_password == login_params[:password]
 
-    return send_errors('No Device Token', 400) \
+    render errors_msg('No Device Token', 400) and return\
       unless request.headers["Device-Token"]
 
     @user.renew_api_key
     @user.device_token = request.headers["Device-Token"]
-    return send_errors("Failed To Log In - #{@user.errors.full_messages}", 400) unless @user.save
-    return send_success({token: @user.api_key, user: @user.basic_info})
+    render errors_msg("Failed To Log In - #{@user.errors.full_messages}", 400) and return \
+      unless @user.save
+    render success_msg({token: @user.api_key, user: @user.basic_info}) and return
   end
 
   def destroy
     @user.api_key = nil
     @user.device_token = nil
-    return send_errors("Logout Failed", 400) unless @user.save
-    return send_success({message: "Logout Successful"})
+    render errors_msg("Logout Failed", 400) and return \
+      unless @user.save
+    render success_msg({message: "Logout Successful"}) and return
   end
 
   private

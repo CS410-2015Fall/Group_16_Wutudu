@@ -51,6 +51,8 @@ gem 'foursquare2'
 
 # Yelp API
 gem 'yelp'
+
+gem 'mocha', :require => false
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

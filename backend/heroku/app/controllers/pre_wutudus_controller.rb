@@ -4,31 +4,38 @@ class PreWutudusController < ApiController
 
   def show
     message = { pre_wutudu: @pre_wutudu.basic_info_per_user(@user.id) }
-    return send_success(message)
+    render success_msg(message) and return
   end
 
   def create
     pre_wutudu = @group.pre_wutudus.build(create_params)
 
     questions = Question.all.sample(10)
-    return send_internal_error unless questions
-    return send_internal_error if questions.empty?
+    render internal_error_msg and return \
+      unless questions
+    render internal_error_msg and return \
+      if questions.empty?
 
     (0..9).each do |qnum|
-      return send_internal_error if pre_wutudu.pre_wutudu_questions.exists?(qnum: qnum)
+      render internal_error_msg and return \
+        if pre_wutudu.pre_wutudu_questions.exists?(qnum: qnum)
       pre_wutudu.pre_wutudu_questions.build(question_id: questions[qnum].id, qnum: qnum)
     end
 
-    return send_internal_error if pre_wutudu.pre_wutudu_questions.size != 10
-    return send_errors("Failed To Create PreWutudu", 400) unless pre_wutudu.save
+    render internal_error_msg and return \
+      if pre_wutudu.pre_wutudu_questions.size != 10
+    render errors_msg("Failed To Create PreWutudu", 400) and return \
+      unless pre_wutudu.save
     send_active_users_notifications(pre_wutudu)
-    return send_success({pre_wutudu: pre_wutudu.basic_info_per_user(@user.id), message: "PreWutudu Created"})
+    render success_msg({pre_wutudu: pre_wutudu.basic_info_per_user(@user.id),
+                        message: "PreWutudu Created"}) and return
   end
 
   def destroy
     @pre_wutudu.destroy
-    return send_errors("Failed To Delete PreWutudu", 400) unless @pre_wutudu.destroyed?
-    return send_success({message: "PreWutudu Deleted"})
+    render errors_msg("Failed To Delete PreWutudu", 400) and return \
+      unless @pre_wutudu.destroyed?
+    render success_msg({message: "PreWutudu Deleted"}) and return
   end
 
   private
@@ -42,18 +49,21 @@ class PreWutudusController < ApiController
   #TODO: Move these to an abstract prewutudu controller, since they are used in various places
   def active_in_group
     @group = Group.find_by_id(params[:gid])
-    return send_errors("Group Not Found", 404) unless @group
-    return send_errors("User Not Active In Group", 400) \
+    render errors_msg("Group Not Found", 404) and return \
+      unless @group
+    render errors_msg("User Not Active In Group", 400) \
       unless @group.active_users.find_by_id(@user.id)
   end
 
   def pre_wutudu_in_group
     @pre_wutudu = @group.pre_wutudus.find_by_id(params[:pid])
-    return send_errors("PreWutudu Not Found In Group", 404) unless @pre_wutudu
+    render errors_msg("PreWutudu Not Found In Group", 404) and return \
+      unless @pre_wutudu
   end
 
   def pre_wutudu_not_finished
-    return send_errors("Action Invalid. PreWutudu Already Finished", 400) if @pre_wutudu.finished?
+    render errors_msg("Action Invalid. PreWutudu Already Finished", 400) and return \
+      if @pre_wutudu.finished?
   end
 
   def send_active_users_notifications(pre_wutudu)
