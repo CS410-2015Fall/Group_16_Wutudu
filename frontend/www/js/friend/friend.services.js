@@ -4,6 +4,7 @@ angular.module('starter.services')
 
   return {
     addFriendTplConfig: function($scope, handleAddFriendFn) {
+      // remove this
       return {
         templateUrl: 'templates/friend/addFriend.html',
         title: 'Add Friend to Group',

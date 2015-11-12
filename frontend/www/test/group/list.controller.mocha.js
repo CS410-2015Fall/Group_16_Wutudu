@@ -1,6 +1,6 @@
 describe('GroupListController', function() {
   /*jshint expr: true*/ // for chai syntax, testing only
-  var GROUP_CTRL = 'GroupListCtrl',
+  var GROUPLIST_CTRL = 'GroupListCtrl',
       $controller,
       controller,
       Group,
@@ -13,12 +13,6 @@ describe('GroupListController', function() {
       $controller = _$controller_;
       Group = _Group_;
       Friend = _Friend_;
-      getFn = Group.getGroup;
-      inviteFn = Group.inviteFriends;
-      addFn = Group.addGroup;
-      removeFn = Group.removeGroup;
-      getAllFn = Group.getAllGroups;
-      createFn = Group.createGroup;
       $ionicModal = _$ionicModal_;
 
       var returnPromise = function(response) {
@@ -44,9 +38,7 @@ describe('GroupListController', function() {
         };
         return returnPromise(response);
       });
-
       sinon.stub(Friend, 'addFriendTplConfig', function() {});
-
       sinon.stub($ionicModal, 'fromTemplateUrl', function() {
         var mockModal = {
           show: function() {},
@@ -54,22 +46,21 @@ describe('GroupListController', function() {
         };
         return returnPromise(mockModal);
       });
-
-      sinon.stub(Group, 'addGroup', function (group) {
+      sinon.stub(Group, 'addGroup', function (config) {
         var response = {
           data: {
             group: {
-              id: group.groupId
+              id: config.groupId
             }
           }
         };
         return returnPromise(response);
       });
-      sinon.stub(Group, 'removeGroup', function (group) {
+      sinon.stub(Group, 'removeGroup', function (config) {
         var response = {
           data: {
             group: {
-              id: group.groupId
+              id: config.groupId
             }
           }
         };
@@ -105,13 +96,13 @@ describe('GroupListController', function() {
     });
   });
 
-  describe('On Group List init', function() {
+  describe('On Group List Controller init', function() {
     var $scope;
     beforeEach(function() {
       $scope = {
         $on: function(a,b) {}
       };
-      controller = $controller(GROUP_CTRL,{ $scope: $scope });
+      controller = $controller(GROUPLIST_CTRL,{ $scope: $scope });
     });
     it('should get all groups', function() {
       expect(Group.getAllGroups.callCount).to.equal(1);
@@ -122,9 +113,6 @@ describe('GroupListController', function() {
       expect($ionicModal.fromTemplateUrl.callCount).to.equal(1);
       expect($scope.modal).to.exist;
     });
-    it('should handle get group error', function() {
-
-    });
   });
 
   describe('When accepted invitation', function() {
@@ -133,7 +121,7 @@ describe('GroupListController', function() {
        $scope = {
          $on: function(a,b) {}
        };
-       controller = $controller(GROUP_CTRL, {$scope: $scope});
+       controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
     });
     it('should add user to group when invitation is accepted', function() {
       var data = {
@@ -153,7 +141,7 @@ describe('GroupListController', function() {
        $scope = {
          $on: function(a,b) {}
        };
-       controller = $controller(GROUP_CTRL, {$scope: $scope});
+       controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
     });
     it('should remove group from pending list when invitation is declined', function() {
       var data = {
@@ -173,7 +161,7 @@ describe('GroupListController', function() {
        $scope = {
          $on: function(a,b) {}
        };
-       controller = $controller(GROUP_CTRL, {$scope: $scope});
+       controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
     });
     it('should remove group from active list when leaving group', function() {
       var data = {
@@ -193,7 +181,7 @@ describe('GroupListController', function() {
       $scope = {
         $on: function(a,b) {}
       };
-      controller = $controller(GROUP_CTRL, {$scope: $scope});
+      controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
     });
     it('should setup data and friends', function() {
       $scope.showCreateGroup();
@@ -209,7 +197,7 @@ describe('GroupListController', function() {
       $scope = {
         $on: function(a,b) {}
       };
-      controller = $controller(GROUP_CTRL, {$scope: $scope});
+      controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
       sinon.stub(_$msgBox_, 'show', function(){});
     }));
     it('should not create group without name', function() {

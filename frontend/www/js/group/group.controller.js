@@ -10,25 +10,97 @@ angular.module('starter.controllers')
         groupId: groupId
       };
 
-  $scope.data = {
-    name: groupName
+  $scope.showAddFriend = function() {
+    Friend.getFriends(config)
+      .then(setupFriends, handleError);
+    displayFriendModal();
   };
 
-  $ionicLoading.show({
-      template: 'Loading...'
+  $scope.addFriendToGroup = function(e) {
+    var friendsToInvite = getFriendsToInvite();
+    angular.merge(config, {
+      "emails" : friendsToInvite
+    });
+    Group.inviteFriends(config)
+      .then(inviteSucess, handleError);
+  };
+
+  $scope.showPreWutuduOptions = function (preWutudu) {
+    $scope.activePreWutudu = preWutudu;
+    $scope.modal.show();
+  };
+
+  $scope.displayStatus = function (preWutudu) {
+    var status = preWutudu?
+    preWutudu.completed_answers + ' / ' +
+          preWutudu.total_possible + ' answered' : '';
+    return status;
+  };
+
+  $scope.userAnswered = function (preWutudu) {
+    var answer = preWutudu && preWutudu.user_answer;
+    return answer? true: false;
+  };
+
+  $scope.answeredStateString = function (preWutudu) {
+    var user_answer = preWutudu && preWutudu.user_answer;
+    return !user_answer? 'Unanswered':
+      preWutudu.user_answer.declined? 'Declined' : 'Answered';
+  };
+
+  $scope.showWutuduQuestion = function(preWutudu) {
+    config.preWutudu = preWutudu;
+    config.wutuduId = preWutudu.pre_wutudu_id.toString();
+    $state.go('app.answerWutudu', config);
+  };
+
+  $scope.finishPreWutudu = function(preWutudu) {
+    config.wutuduId = preWutudu.pre_wutudu_id.toString();
+    Wutudu.finishWutudu(config).then(preWutuduSuccess, handleError);
+  };
+
+  $scope.canEndPreWutudu = function(preWutudu) {
+    var result = preWutudu && preWutudu.completed_answers > 0;
+    return result? true: false;
+  };
+
+  $scope.showWutuduDetail = function(wutudu) {
+    config.wutudu = wutudu;
+    config.wutuduId = wutudu.id;
+    $state.go('app.wutuduDetails', config);
+  };
+
+  $scope.showCreateWutudu = function() {
+    $state.go('app.createWutudu', config);
+  };
+
+  //Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
   });
 
-  $scope.group = Group.getGroup(config)
-    .then(setupGroup, handleError);
+  $scope.cancelPreWutuduOptions = function() {
+    $scope.modal.hide();
+  };
 
-  var optionsTplUrl = 'templates/wutudu/optionsPopup.html',
-    modelConfig = {
-        scope: $scope,
-        animation: 'slide-in-up'
+  function initModal() {
+    var optionsTplUrl = 'templates/wutudu/optionsPopup.html',
+        modelConfig = {
+            scope: $scope,
+            animation: 'slide-in-up'
+        };
+
+    $ionicModal
+      .fromTemplateUrl(optionsTplUrl, modelConfig)
+      .then(setupModal);
+  }
+
+  function initData() {
+    $scope.data = {
+      name: groupName
     };
-  $ionicModal
-    .fromTemplateUrl(optionsTplUrl, modelConfig)
-    .then(setupModal);
+    $scope.activePreWutudu = null;
+  }
 
   function setupGroup(response) {
     var data = response.data,
@@ -47,7 +119,58 @@ angular.module('starter.controllers')
 
   function setupModal(modal) {
     $scope.modal = modal;
-    $scope.activePreWutudu = null;
+  }
+
+  function setupFriends(response) {
+    var mapFriendId = function(member) {
+          return member.id;
+        },
+        friends = response.data.friendships.friends,
+        activeIds = $scope.activeMembers.map(mapFriendId),
+        pendingIds = $scope.pendingMembers.map(mapFriendId),
+        memberIds = activeIds.concat(pendingIds),
+        potentialMembers = function(friend) {
+          return memberIds.indexOf(friend.id) === -1;
+        };
+
+    $scope.data.friends = friends.filter(potentialMembers);
+  }
+
+  function displayFriendModal() {
+    var tplConfig = {
+      templateUrl: 'templates/friend/addFriend.html',
+      title: 'Add Friend to Group',
+      subTitle: 'Please choose your friend to add',
+      scope: $scope,
+      buttons: [
+         { text: 'Add',
+           type: 'button-balanced',
+           onTap: $scope.handleAddFriend
+         },
+       { text: 'Cancel', type: 'button-assertive'}
+      ]
+    };
+    $ionicPopup.show(tplConfig);
+  }
+
+  function getFriendsToInvite() {
+    var friendsToInvite = $scope.data.friends,
+        isFriendInvited = function(friend) {
+          return friend.invited;
+        },
+        mapFriendEmails = function(friend) {
+          return friend.email;
+        },
+        updatePendingList = function(friend) {
+            if(friend.invited) {
+              $scope.pendingMembers.push(friend);
+            }
+        };
+
+    friendsToInvite = friendsToInvite.filter(isFriendInvited);
+    friendsToInvite.forEach(updatePendingList);
+    friendsToInvite = friendsToInvite.map(mapFriendEmails);
+    return friendsToInvite;
   }
 
   function formatPrewutudu(preWutudus) {
@@ -63,6 +186,20 @@ angular.module('starter.controllers')
     return returnWutudus;
   }
 
+  function handleError(response) {
+    response.config.headers = JSON.stringify(response.config.headers);
+    response.config.data = JSON.stringify(response.config.data);
+    $scope.response = response;
+    var data = {
+      title: 'Group Controller error',
+      templateUrl: 'templates/errorPopup.html',
+      scope: $scope,
+      buttons: [{ text: 'OK' }]
+    };
+    $ionicLoading.hide();
+    $ionicPopup.show(data);
+  }
+
   function formatWutudu(wutudus) {
     var returnWutudus = [];
     angular.forEach(wutudus, function(wutudu, key) {
@@ -76,169 +213,37 @@ angular.module('starter.controllers')
     return returnWutudus;
   }
 
-  function setupFriends(response) {
-    var mapIdFn = function(member) {
-          return member.id;
-        },
-        friends = response.data.friendships.friends,
-        activeIds = $scope.activeMembers.map(mapIdFn),
-        pendingIds = $scope.pendingMembers.map(mapIdFn),
-        memberIds = activeIds.concat(pendingIds),
-        isGroupMembers = function(friend) {
-          return memberIds.indexOf(friend.id) === -1;
-        };
-
-    $scope.data.friends = friends.filter(isGroupMembers);
-  }
-
-  function handleError(response) {
-    response.config.headers = JSON.stringify(response.config.headers);
-    response.config.data = JSON.stringify(response.config.data);
-    $scope.response = response;
-    var data = {
-      title: 'Get Group error',
-      templateUrl: 'templates/errorPopup.html',
-      scope: $scope,
-      buttons: [{ text: 'OK' }]
-    };
-    $ionicLoading.hide();
-    $ionicPopup.show(data);
-  }
-
   function filterCompletedWutudu(pre_wutudu_id) {
     $scope.inProgressWutudus = $scope.inProgressWutudus.filter(function (w) {
       return w.pre_wutudu_id !== pre_wutudu_id;
     });
   }
 
-  $scope.addFriendToGroup = function() {
-    Friend.getFriends(config)
-      .then(setupFriends, handleError);
-    var isFriendInvited = function(friend) {
-          return friend.invited;
-        },
-        mapFriendEmails = function(friend) {
-          return friend.email;
-        },
-        updatePendingList = function(friend) {
-          if(friend.invited) {
-            $scope.pendingMembers.push(friend);
-          }
-        },
-        inviteSucess = function(response) {
-            var data = response.data,
-                msg = {
-                  title: 'Invite to group',
-                  template: '<span>' + JSON.stringify(data) + '</span>'
-                };
-            $msgBox.show($scope, msg);
-        },
-        handleAddFriend = function(e) {
-          var friendsToInvite = $scope.data.friends;
-
-          friendsToInvite = friendsToInvite.filter(isFriendInvited);
-          friendsToInvite.forEach(updatePendingList);
-          friendsToInvite = friendsToInvite.map(mapFriendEmails);
-          data = {
-            "emails" : friendsToInvite
+  function inviteSucess(response) {
+      var data = response.data,
+          msg = {
+            title: 'Invite to group',
+            template: '<span>' + JSON.stringify(data) + '</span>'
           };
-          // TODO change to angular merge
-          Object.assign(config, data);
-          Group.inviteFriends(config)
-            .then(inviteSucess, handleError);
-          console.debug('Adding friend to group');
-        },
-        addFriendTplConfig = Friend.addFriendTplConfig($scope, handleAddFriend);
+      $msgBox.show($scope, msg);
+  }
 
-    $ionicPopup.show(addFriendTplConfig);
-  };
+  function preWutuduSuccess(response) {
+    var newWutudu = response.data.wutudu_event;
+    filterCompletedWutudu(newWutudu.pre_wutudu_id);
+    $scope.wutuduEvents.push(formatWutudu([newWutudu])[0]);
+    $scope.cancelPreWutuduOptions();
+  }
 
-  $scope.showPreWutuduOptions = function (preWutudu) {
-    $scope.activePreWutudu = preWutudu;
-    $scope.modal.show();
-  };
+  (function() {
+    initModal();
+    initData();
+    Group.getGroup(config)
+      .then(setupGroup, handleError);
 
-  //Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.modal.remove();
-  });
-
-  $scope.cancelPreWutuduOptions = function() {
-    $scope.modal.hide();
-  };
-
-  $scope.displayStatus = function (preWutudu) {
-    if (!preWutudu) {
-      return '';
-    }
-    return preWutudu.completed_answers + ' / ' +
-          preWutudu.total_possible + ' answered';
-  };
-
-  $scope.userAnswered = function (preWutudu) {
-    if (!preWutudu) {
-      return false;
-    }
-    return (preWutudu.user_answer !== null);
-  };
-
-  $scope.answeredStateString = function (preWutudu) {
-    var state = 'Unanswered';
-    if (!preWutudu) {
-      return state;
-    }
-    var user_answer = preWutudu.user_answer;
-    if (user_answer) {
-      if (user_answer.declined) {
-        state = 'Declined';
-      } else {
-        state = 'Answered';
-      }
-    }
-    return state;
-  };
-
-  $scope.showWutuduQuestion = function(preWutudu) {
-    config.preWutudu = preWutudu;
-    config.wutuduId = preWutudu.pre_wutudu_id.toString();
-    $state.go('app.answerWutudu', config);
-  };
-
-  $scope.finishPreWutudu = function(preWutudu) {
-    config.wutuduId = preWutudu.pre_wutudu_id.toString();
-    Wutudu.finishWutudu(config).then(function (response) {
-      var newWutudu = response.data.wutudu_event;
-      $scope.cancelPreWutuduOptions();
-      filterCompletedWutudu(newWutudu.pre_wutudu_id);
-      $scope.wutuduEvents.push(formatWutudu([newWutudu])[0]);
-    }, function (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
-      $scope.response = response;
-      $ionicPopup.show({
-        title: 'Finish Wutudu error',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
+    $ionicLoading.show({
+        template: 'Loading...'
     });
-  };
-
-  $scope.canEndPreWutudu = function(preWutudu) {
-    if (!preWutudu) {
-      return false;
-    }
-    return preWutudu.completed_answers > 0;
-  };
-
-  $scope.showWutuduDetail = function(wutudu) {
-    config.wutudu = wutudu;
-    config.wutuduId = wutudu.id;
-    $state.go('app.wutuduDetails', config);
-  };
-
-  $scope.showCreateWutudu = function() {
-    $state.go('app.createWutudu', config);
-  };
+  })();
 
 });
