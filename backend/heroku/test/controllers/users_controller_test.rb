@@ -80,7 +80,7 @@ class UsersControllerTest < ActionController::TestCase
       post :create, @request_body
     end
     assert response.status == 400
-    assert error_message(response.body) == 'Failed To Create User'
+    assert error_message(response.body) == "Failed To Create User - [\"Email is not a valid email\"]"
   end
 
   private
