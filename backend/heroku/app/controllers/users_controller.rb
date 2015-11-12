@@ -9,7 +9,7 @@ class UsersController < ApiController
 
     @user = User.new(user_params)
     @user.device_token = request.headers["Device-Token"]
-    return send_errors('Failed To Create User', 400) unless @user.save
+    return send_errors("Failed To Create User - #{user.errors.full_messages}", 400) unless @user.save
     return send_success({token: @user.api_key, user: @user.basic_info})
   end
 

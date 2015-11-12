@@ -15,7 +15,7 @@ class SessionsController < ApiController
 
     @user.renew_api_key
     @user.device_token = request.headers["Device-Token"]
-    return send_errors("Failed To Log In", 400) unless @user.save
+    return send_errors("Failed To Log In - #{@user.errors.full_messages}", 400) unless @user.save
     return send_success({token: @user.api_key, user: @user.basic_info})
   end
 
