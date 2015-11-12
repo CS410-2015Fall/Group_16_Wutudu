@@ -12,14 +12,6 @@ angular.module('starter.services')
         url: '/groups/' + options.groupId + '/pre_wutudu/' + options.wutuduId
       };
       return $httpService.makeRequest(payload);
-
-    },
-    getUpcomingWutudus: function(options) {
-      if(options.groupId) {
-        // return upcoming wutudus for this group
-      } else if(options.friendId) {
-        // return upcoming wutudus for all the group that contains friendId
-      }
     },
     createWutudu: function(options) {
       var payload = {

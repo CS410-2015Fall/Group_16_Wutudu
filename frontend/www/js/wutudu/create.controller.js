@@ -1,13 +1,11 @@
 angular.module('starter.controllers')
 
-.controller('WutuduCreateCtrl', function($scope, $stateParams, $state,
-         $ionicPopup, $ionicModal, $msgBox, $ionicPlatform, $cordovaGeolocation, Friend, Group, Wutudu) {
+.controller('WutuduCreateCtrl', function($scope, $stateParams, $state, $ionicPopup,
+        $ionicModal, $msgBox, $ionicPlatform, $cordovaGeolocation, Friend, Group, Wutudu, GoogleMap) {
   var groupId = $stateParams.groupId,
       config = {
         groupId: groupId
-      },
-      map,
-      marker;
+      };
 
   var DEFAULT_LAT = 49.2827,
       DEFAULT_LNG = -123.1207;
@@ -19,7 +17,8 @@ angular.module('starter.controllers')
 
   (function init () {
     initDatePicker();
-    if (initMap()) {
+    var mapEl = document.getElementById('createWutuduMap');
+    if (GoogleMap.initMap(mapEl, DEFAULT_LAT, DEFAULT_LNG, {clickHandler: setLocation})) {
       $ionicPlatform.ready(function () {
         initLocation();
       });
@@ -27,11 +26,9 @@ angular.module('starter.controllers')
   })();
 
   $scope.locationChange = function (wutudu) {
-    marker.setPosition({
-      lat: parseFloat(wutudu.latitude),
-      lng: parseFloat(wutudu.longitude)
-    });
-    map.panTo(marker.getPosition());
+    var lat = parseFloat(wutudu.latitude);
+    var lng = parseFloat(wutudu.longitude);
+    GoogleMap.setMarkerPosition(lat, lng, {pan: true});
   };
 
   $scope.cancelClick = function () {
@@ -84,30 +81,12 @@ angular.module('starter.controllers')
   }
 
   function setLocation (event) {
-    marker.setPosition(event.latLng);
-    $scope.wutudu.latitude = event.latLng.lat();
-    $scope.wutudu.longitude = event.latLng.lng();
+    var lat = event.latLng.lat();
+    var lng = event.latLng.lng();
+    GoogleMap.setMarkerPosition(lat, lng);
+    $scope.wutudu.latitude = lat;
+    $scope.wutudu.longitude = lng;
     $scope.$apply();
-  }
-
-  function initMap () {
-    if (!google.maps.Map) {
-      console.log('MAP NOT LOADED');
-      setTimeout(initMap, 1000);
-      return false;
-    } else {
-      map = new google.maps.Map(document.getElementById('createWutuduMap'), {
-        center: {lat: DEFAULT_LAT, lng: DEFAULT_LNG},
-        zoom: 15
-      });
-      map.addListener('click', setLocation);
-      marker = new google.maps.Marker({
-        position: {lat: DEFAULT_LAT, lng: DEFAULT_LNG},
-        map: map,
-        title: 'This location'
-      });
-      return true;
-    }
   }
 
   function onDatePick (val) {
@@ -149,11 +128,7 @@ angular.module('starter.controllers')
       .then(function (position) {
         var lat  = position.coords.latitude;
         var lng = position.coords.longitude;
-        marker.setPosition({
-          lat: lat,
-          lng: lng
-        });
-        map.panTo(marker.getPosition());
+        GoogleMap.setMarkerPosition(lat, lng, {pan: true});
         $scope.wutudu.latitude = lat;
         $scope.wutudu.longitude = lng;
     }, function (err) {

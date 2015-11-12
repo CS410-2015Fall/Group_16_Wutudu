@@ -188,5 +188,41 @@ angular.module('starter.services', [])
       return $httpService.makeRequest(payload);
     }
   };
-});
+})
 
+.factory('GoogleMap', function() {
+  var map, marker;
+
+  return {
+    initMap: function(el, lat, lng, config) {
+      config = config || {};
+      if (!google.maps.Map) {
+        return false;
+      } else {
+        map = new google.maps.Map(el, {
+          center: {lat: lat, lng: lng},
+          zoom: 15
+        });
+        marker = new google.maps.Marker({
+          position: {lat: lat, lng: lng},
+          map: map,
+          title: 'This location'
+        });
+        if (config.clickHandler) {
+          map.addListener('click', config.clickHandler);
+        }
+        return true;
+      }
+    },
+    setMarkerPosition: function (lat, lng, config) {
+      config = config || {};
+      marker.setPosition({
+        lat: lat,
+        lng: lng
+      });
+      if (config.pan) {
+        map.panTo(marker.getPosition());
+      }
+    }
+  };
+});

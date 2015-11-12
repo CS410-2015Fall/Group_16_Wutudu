@@ -12,7 +12,6 @@ angular.module('starter.controllers')
   });
   // Gets called each time tab is open
   Friend.getFriends().then(function successCallback (response) {
-    console.log('Get friends success');
     $scope.friends = response.data.friendships.friends;
     $scope.sentRequests = response.data.friendships.sent_requests;
     $scope.receivedRequests = response.data.friendships.received_requests;
@@ -68,7 +67,6 @@ angular.module('starter.controllers')
   };
 
   $scope.acceptFriend = function (friend) {
-    console.log('acceptFriend');
     Friend.acceptFriendRequest({
       'email': friend.email
     }).then(function successCallback (response) {
@@ -117,7 +115,6 @@ angular.module('starter.controllers')
   };
 
   $scope.doRemoveFriend = function (friend, type) {
-    console.log('removeFriend');
     Friend.removeFriend({
       'email': friend.email
     }).then(function successCallback (response) {
