@@ -1,7 +1,7 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function ($scope, $ionicPopup,
-  $httpService, $state, User) {
+  $httpService, $state, User, Auth) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -13,31 +13,32 @@ angular.module('starter.controllers', [])
   $scope.user = User.getUserInfo();
 
   $scope.logout = function () {
-    console.log('logout token = ' + this.$root.TOKEN);
-    var payload = {
-      method: 'DELETE',
-      url: '/logout'
-    };
-    $httpService.makeRequest(payload).then(function successCallback (response) {
-      User.removeSession();
-      $state.go('login');
-      var alertPopup = $ionicPopup.alert({
-        title: 'Successfully logged out'
-      });
-    }, function errorCallback (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
-      $scope.response = response;
-      $ionicPopup.show({
-        title: 'Logout Error',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
-    });
+    Auth.logout()
+      .then(logoutSuccess, handleError);
   };
+
+  function logoutSuccess(response) {
+    User.removeSession();
+    $state.go('login');
+    $ionicPopup.alert({
+      title: 'Successfully logged out'
+    });
+  }
+
+  function handleError(response) {
+    response.config.headers = JSON.stringify(response.config.headers);
+    response.config.data = JSON.stringify(response.config.data);
+    $scope.response = response;
+    $ionicPopup.show({
+      title: 'Logout Error',
+      templateUrl: 'templates/errorPopup.html',
+      scope: $scope,
+      buttons: [{ text: 'OK' }]
+    });
+  }
 })
 
-.controller('MainCtrl', function ($scope) {
+.controller('MainCtrl', function () {
 });
+
 

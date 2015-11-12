@@ -13,7 +13,7 @@ describe('GroupServices', function() {
       createFn;
 
   beforeEach(function() {
-    module('starter.services');
+    module('starter');
     inject(function(_Group_, _$httpService_) {
       group = _Group_;
       groupFn = group.getGroup;

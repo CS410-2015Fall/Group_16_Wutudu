@@ -182,5 +182,17 @@ angular.module('starter.services', [])
     }
   };
 
+})
+
+.factory('Auth', function($httpService) {
+  return {
+    logout: function() {
+      var payload = {
+        method: 'DELETE',
+        url: '/logout'
+      };
+      return $httpService.makeRequest(payload);
+    }
+  };
 });
 
