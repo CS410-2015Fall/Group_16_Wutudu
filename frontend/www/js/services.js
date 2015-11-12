@@ -1,9 +1,5 @@
 angular.module('starter.services', [])
 
-.factory('AppFactory', function() {
-
-})
-
 .factory('$localstorage', function($window) {
   return {
     set: function(key, value) {
@@ -129,19 +125,22 @@ angular.module('starter.services', [])
                     notification.message +
                   '</div>' +
                 '</div>',
-      buttons: [{
+      buttons: [
+        {
           text: 'Cancel',
           type: 'button-default',
           onTap: function(e) {
             popup.close();
           }
-        }, {
+        },
+        {
           text: 'OK',
           type: 'button-positive',
           onTap: function(e) {
             switchState(notification.payload);
           }
-        }]
+        }
+      ]
     });
   }
 
@@ -150,15 +149,12 @@ angular.module('starter.services', [])
       case 'registered':
         onRegistered(notification);
         break;
-
       case 'message':
         onMessage(notification);
         break;
-
       case 'error':
         console.debug('GCM error = ' + notification.msg);
         break;
-
       default:
         console.debug('An unknown GCM event has occurred');
         break;
@@ -171,11 +167,9 @@ angular.module('starter.services', [])
       $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
       $ionicPlatform.ready(function() {
         $cordovaPush.register(config).then(function(result) {
-          // Success
           console.debug(result);
         }, function(err) {
-          // Error
-          console.error(result);
+          console.error(err);
         });
       });
       return deferred.promise;

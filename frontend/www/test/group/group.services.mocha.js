@@ -1,6 +1,6 @@
 describe('GroupServices', function() {
   /*jshint expr: true*/ // for chai syntax, testing only
-  var group,
+  var Group,
       $httpService,
       groupIdErr = /groupId/,
       groupEmailErr = /email/,
@@ -15,13 +15,13 @@ describe('GroupServices', function() {
   beforeEach(function() {
     module('starter');
     inject(function(_Group_, _$httpService_) {
-      group = _Group_;
-      groupFn = group.getGroup;
-      inviteFn = group.inviteFriends;
-      addFn = group.addGroup;
-      removeFn = group.removeGroup;
-      getAllFn = group.getAllGroups;
-      createFn = group.createGroup;
+      Group = _Group_;
+      groupFn = Group.getGroup;
+      inviteFn = Group.inviteFriends;
+      addFn = Group.addGroup;
+      removeFn = Group.removeGroup;
+      getAllFn = Group.getAllGroups;
+      createFn = Group.createGroup;
       $httpService = _$httpService_;
       sinon.stub($httpService, 'makeRequest', function() { return true;});
     });

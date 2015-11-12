@@ -38,7 +38,6 @@ describe('GroupListController', function() {
         };
         return returnPromise(response);
       });
-      sinon.stub(Friend, 'addFriendTplConfig', function() {});
       sinon.stub($ionicModal, 'fromTemplateUrl', function() {
         var mockModal = {
           show: function() {},

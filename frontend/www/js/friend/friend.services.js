@@ -3,22 +3,6 @@ angular.module('starter.services')
 .factory('Friend', function ($httpService) {
 
   return {
-    addFriendTplConfig: function($scope, handleAddFriendFn) {
-      // remove this
-      return {
-        templateUrl: 'templates/friend/addFriend.html',
-        title: 'Add Friend to Group',
-        subTitle: 'Please choose your friend to add',
-        scope: $scope,
-        buttons: [
-           { text: 'Add',
-             type: 'button-balanced',
-             onTap: handleAddFriendFn
-           },
-         { text: 'Cancel', type: 'button-assertive'}
-        ]
-      };
-    },
     getFriends: function () {
       var payload = {
         method: 'GET',

@@ -48,7 +48,6 @@ describe('GroupController', function() {
         };
         return returnPromise(response);
       });
-      sinon.stub(Friend, 'addFriendTplConfig', function() {});
       sinon.stub(Group, 'getGroup', function(config) {
         var response = {
           data: {
