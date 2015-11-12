@@ -180,6 +180,28 @@ angular.module('starter.services', [])
 
 .factory('Auth', function($httpService) {
   return {
+    login: function (config) {
+      var payload = {
+        method: 'POST',
+        data: {
+          'login' : config.loginCreds
+        },
+        url: '/login',
+        deviceToken: config.deviceToken
+      };
+      return $httpService.makeRequest(payload);
+    },
+    signup: function (config) {
+      var payload = {
+        method: 'POST',
+        data: {
+          'user' : config.user
+        },
+        url: '/users',
+        deviceToken: config.deviceToken
+      };
+      return $httpService.makeRequest(payload);
+    },
     logout: function() {
       var payload = {
         method: 'DELETE',

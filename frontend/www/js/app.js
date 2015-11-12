@@ -69,16 +69,6 @@ angular.module('starter', ['ionic', 'ngCordova',
     }
   })
 
-  .state('app.friend', {
-    url: '/friend/:friendId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/friend/friend.html',
-        controller: 'FriendCtrl'
-      }
-    }
-  })
-
   .state('app.groupList', {
     url: '/group' ,
     cache: false,

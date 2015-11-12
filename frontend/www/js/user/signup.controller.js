@@ -1,15 +1,15 @@
 angular.module('starter.controllers')
 
 .controller('SignupCtrl', function ($scope, $state,
-  $httpService, $ionicPopup, User, $wutuduNotification) {
+  $httpService, $ionicPopup, User, $wutuduNotification, Auth) {
   $scope.signupData = {};
 
   $scope.validateSignup = function () {
-    var requestData = {'user' : angular.copy($scope.signupData) };
+    var userData = angular.copy($scope.signupData);
     var errors = '';
     var fields = ['name', 'email', 'password'];
     for (var i = 0; i < fields.length; i++) {
-      if (!requestData.user[fields[i]]) {
+      if (!userData[fields[i]]) {
         errors = errors.concat('<p>The ' + fields[i] + ' field cannot be blank.</p>');
       }
     }
@@ -19,15 +19,15 @@ angular.module('starter.controllers')
         template: errors
       });
     } else {
-      requestData.user.password = requestData.user.password.hashString();
-      prepareLogin(requestData);
+      userData.password = userData.password.hashString();
+      prepareLogin(userData);
     }
   };
 
-  function prepareLogin(requestData) {
+  function prepareLogin(userData) {
     $wutuduNotification.register().then(function(deviceToken) {
       var config = {
-        data: requestData,
+        user: userData,
         deviceToken: deviceToken
       };
       $scope.doSignup(config);
@@ -35,13 +35,7 @@ angular.module('starter.controllers')
   }
 
   $scope.doSignup = function (config) {
-    var payload = {
-      method: 'POST',
-      data: config.data,
-      url: '/users',
-      deviceToken: config.deviceToken
-    };
-    $httpService.makeRequest(payload).then(function successCallback (response) {
+    Auth.signup(config).then(function successCallback (response) {
       console.log('Create user success: auth token=' + response.data.token);
       $scope.signupData = {}; // Clear form data
       User.setSession(response.data.token, response.data.user);

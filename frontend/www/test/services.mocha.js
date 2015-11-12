@@ -48,6 +48,32 @@ describe('AppServices', function() {
       $httpService = _$httpService_;
       sinon.stub($httpService, 'makeRequest', function() {});
     }));
+
+    it('should login correctly', function() {
+      var config = {
+        deviceToken: 1,
+        loginCreds: {
+          email: 'f1@gmail.com',
+          password: '97'
+        }
+      };
+      Auth.login(config);
+      expect($httpService.makeRequest.callCount).to.be.equal(1);
+      var expectedArgs = {
+        method: 'POST',
+        url: '/login',
+        data: {
+          'login' : {
+            email: 'f1@gmail.com',
+            password: '97'
+          }
+        },
+        url: '/login',
+        deviceToken: 1
+      };
+      expect($httpService.makeRequest.args[0][0]).to.be.deep.equal(expectedArgs);
+    });
+
     it('should logout correctly', function() {
       Auth.logout();
       expect($httpService.makeRequest.callCount).to.be.equal(1);

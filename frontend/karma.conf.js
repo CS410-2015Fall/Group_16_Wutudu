@@ -19,7 +19,6 @@ module.exports = function(config) {
       'www/js/app.js',
       'www/js/controllers.js',
       'www/js/services.js',
-      'www/js/friend/friend.controller.js',
       'www/js/friend/list.controller.js',
       'www/js/friend/friend.services.js',
       'www/js/group/list.controller.js',

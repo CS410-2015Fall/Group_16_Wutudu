@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('LoginCtrl', function ($scope, $state, $httpService,
-  User, $wutuduNotification, $ionicPopup, $ionicLoading) {
+  User, $wutuduNotification, $ionicPopup, $ionicLoading, Auth) {
   if (User.getSession()) {
     // TODO check for token validity
     $ionicLoading.show({
@@ -17,11 +17,11 @@ angular.module('starter.controllers')
   $scope.loginData = {};
 
   $scope.validateLogin = function () {
-    var requestData = {'login' : angular.copy($scope.loginData) };
+    var loginCreds = angular.copy($scope.loginData);
     var errors = '';
     var fields = ['email', 'password'];
     for (var i = 0; i < fields.length; i++) {
-      if (!requestData.login[fields[i]]) {
+      if (!loginCreds[fields[i]]) {
         errors = errors.concat('<p>The ' + fields[i] + ' field cannot be blank.</p>');
       }
     }
@@ -31,32 +31,26 @@ angular.module('starter.controllers')
         template: errors
       });
     } else {
-      requestData.login.password = requestData.login.password.hashString();
-      prepareLogin(requestData);
+      loginCreds.password = loginCreds.password.hashString();
+      prepareLogin(loginCreds);
     }
   };
 
-  function prepareLogin(requestData) {
+  function prepareLogin(loginCreds) {
     $ionicLoading.show({
       template: 'Loading...'
     });
     $wutuduNotification.register().then(function(deviceToken) {
-      var config = {
-        data: requestData,
+      var loginConfig = {
+        loginCreds: loginCreds,
         deviceToken: deviceToken
       };
-      $scope.doLogin(config);
+      doLogin(loginConfig);
     });
   }
 
-  $scope.doLogin = function (config) {
-    var payload = {
-      method: 'POST',
-      data: config.data,
-      url: '/login',
-      deviceToken: config.deviceToken
-    };
-    $httpService.makeRequest(payload).then(function successCallback (response) {
+  function doLogin(loginConfig) {
+    Auth.login(loginConfig).then(function successCallback (response) {
       console.log('Login success: auth token=' + response.data.token);
       $scope.loginData = {}; // Clear form data
       User.setSession(response.data.token, response.data.user);
@@ -73,9 +67,5 @@ angular.module('starter.controllers')
         buttons: [{ text: 'OK' }]
       });
     });
-  };
-
-  $scope.loginBackdoor = function() {
-    $state.go('app.search');
-  };
+  }
 });
