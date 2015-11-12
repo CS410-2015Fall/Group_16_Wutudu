@@ -1,15 +1,17 @@
 describe('UserLoginController', function() {
   var $controller,
       Auth,
-      $wutuduNotification;
+      $wutuduNotification,
+      User;
 
   beforeEach(function() {
     module('starter');
-    inject(function(_$controller_, _Auth_, _$wutuduNotification_){
+    inject(function(_$controller_, _Auth_, _$wutuduNotification_, _User_){
       // The injector unwraps the underscores (_) from around the parameter names when matching
       $controller = _$controller_;
       Auth = _Auth_;
       $wutuduNotification = _$wutuduNotification_;
+      User = _User_;
 
       var returnPromise = function(response) {
         return {
@@ -30,6 +32,9 @@ describe('UserLoginController', function() {
       sinon.stub($wutuduNotification, 'register', function () { 
         var deviceToken = 1;
         return returnPromise(deviceToken);
+      });
+      sinon.stub(User, 'getSession', function () { 
+        return false;
       });
     });
   });

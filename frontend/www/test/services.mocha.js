@@ -74,6 +74,32 @@ describe('AppServices', function() {
       expect($httpService.makeRequest.args[0][0]).to.be.deep.equal(expectedArgs);
     });
 
+    it('should signup correctly', function() {
+      var config = {
+        deviceToken: 1,
+        user: {
+          name: 'friend1',
+          email: 'f1@gmail.com',
+          password: '97'
+        }
+      };
+      Auth.signup(config);
+      expect($httpService.makeRequest.callCount).to.be.equal(1);
+      var expectedArgs = {
+        method: 'POST',
+        url: '/users',
+        data: {
+          'user' : {
+            name: 'friend1',
+            email: 'f1@gmail.com',
+            password: '97'
+          }
+        },
+        deviceToken: 1
+      };
+      expect($httpService.makeRequest.args[0][0]).to.be.deep.equal(expectedArgs);
+    });
+
     it('should logout correctly', function() {
       Auth.logout();
       expect($httpService.makeRequest.callCount).to.be.equal(1);
