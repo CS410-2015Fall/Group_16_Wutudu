@@ -16,44 +16,33 @@ class SessionsIntegrationTest < ActionController::TestCase
                         password: @correct_password
                       }
                     }
-  end
 
-  test 'should not log in if no device token in request header' do
-    request.headers['Device-Token'] = nil
-    post_request(:create, @request_body)
-    validate_error_response({errors: 'No Device Token'}, 400)
   end
-
-  test 'should not log in if email is not found' do
-    @request_body[:login][:email] = 'BadEmail@test.com'
-    post_request(:create, @request_body)
-    validate_error_response({errors: 'User With Email Not Found'}, 404)
-  end
-
-  test 'should not log in if password is incorrect' do
-    @request_body[:login][:password] = 'BadPassword'
-    post_request(:create, @request_body)
-    validate_error_response({errors: 'Incorrect Password'}, 400)
-  end
-
-  # Skip testing (not saved). Not producable via real data. Tested in controller tests
 
   test 'should log in successfully' do
     new_login_token = 'pYSjnnZt99kLslv2GiJtegtt'
     SecureRandom.stubs(:base64).returns(new_login_token)
     post_request(:create, @request_body)
+    @user_1.reload
     exp_msg = {
                 token: new_login_token,
                 user: @user_1.basic_info
               }
     validate_success_response(exp_msg)
+
+    assert @user_1.api_key == new_login_token
+    assert @user_1.device_token == @device_token
   end
 
-  # :destroy
   test 'should log out successfully' do
-    log_in_as(:user_1)
+    log_in_as(@user_1)
     delete_request(:destroy)
+    @user_1.reload
+
     validate_success_response({message: 'Logout Successful'})
+
+    assert @user_1.api_key == nil
+    assert @user_1.device_token == nil
   end
 
   private
@@ -80,8 +69,8 @@ class SessionsIntegrationTest < ActionController::TestCase
     assert act_response_body == exp_response_body
   end
 
- def log_in_as(uid)
+ def log_in_as(user)
     request.headers["Authorization"] = ActionController::HttpAuthentication::Token.
-                                         encode_credentials(users(uid).api_key)
+                                         encode_credentials(user.api_key)
   end
 end

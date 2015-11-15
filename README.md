@@ -148,12 +148,13 @@ NOTE: If requested email does not exist, then always returns ["User With Email N
                                     {"group": {"id" : group_id, "name" : name},
                                      "message": "Group Created"} 200,
                                     {"group": {"id" : group_id, "name" : name},
-                                     "message": "All Users Invited"} 200,
+                                     "message": "New Group Created And All Users Invited"} 200,
+                                    {"group": {"id" : group_id, "name" : name},
+                                     "message": "New Group Created And Only Some Users Were Invited"} 200,
+                                    {"group": {"id" : group_id, "name" : name},
+                                     "message": "New Group Created And No Users Were Invited"} 200,
                                     "Failed To Create Group" 400,
-                                    "Group Not Found" 404,
-                                    "No Users Were Invited" 400,
-                                    "Failed To Invite At Least One User" 400,
-                                    "Failed To Create Group and Add User" 400
+                                    "Failed To Create Group and Add User" 400,
                                    ]
   * NOTE: Used to initiate a group with client and/or selected users in it
 ```
@@ -270,10 +271,9 @@ NOTE: If requester not in group with :gid, then always returns ["Not In Group", 
   * BODY: {"group_user" : {"emails" : [emails]}}
   * RETURN: Request status. One of [
                                     {"group": {"id" : group_id, "name" : name},
-                                     "message": "All Users Invited"} 200,
+                                     "message": "All Users Invited" or "Only Some Users Were Invited"} 200,
                                     "Group Not Found" 404,
                                     "No Users Were Invited" 400,
-                                    "Failed To Invite At Least One User" 400
                                    ]
   * NOTE: Used to invite users to the group (assuming these users are friends)
 ```

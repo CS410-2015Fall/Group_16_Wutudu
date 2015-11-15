@@ -10,6 +10,8 @@ class Group < ActiveRecord::Base
   has_many :pre_wutudus, -> { order('event_date')}
   has_many :wutudu_events, -> { order('event_time')}
 
+  validates :name, presence: true, allow_blank: false, length: { maximum: 100 }
+
   def basic_info
     {id: self.id, name: self.name}
   end
@@ -43,5 +45,39 @@ class Group < ActiveRecord::Base
 
   def pending_users_device_tokens
     self.pending_users.collect {|u| u.device_token}.compact
+  end
+
+  def add_users_to_group(emails)
+    size_counter = emails.length
+    added_users = []
+    emails.each do |e|
+      user = User.find_by_email(e)
+      if !user
+        size_counter -= 1
+        next
+      end
+
+      g_users = self.group_users
+      user_in_group = g_users.where(user_id: user.id).first
+      if user_in_group
+        size_counter -= 1
+        next
+      else
+        g_user_new = g_users.build(user_id: user.id, approved: false)
+        if !g_user_new.save
+          size_counter -= 1
+          next
+        end
+        added_users.push(user)
+      end
+    end
+
+    if size_counter == 0
+      return "No Users Were Invited", 400, added_users
+    elsif size_counter < emails.length
+      return {group: self.basic_info, message: "Only Some Users Were Invited"}, 200, added_users
+    else
+      return {group: self.basic_info, message: "All Users Invited"}, 200, added_users
+    end
   end
 end
