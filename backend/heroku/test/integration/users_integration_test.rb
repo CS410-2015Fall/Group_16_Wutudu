@@ -20,75 +20,64 @@ class UsersIntegrationTest < ActionController::TestCase
   test "should restrict access without a proper token" do
     request.headers["Authorization"] = nil
     get :show
-    assert response.status == 401
+    assert_equal 401, response.status
   end
 
   test "user_email_exist? should work" do
     @controller = UsersController.new
-    assert @controller.send(:user_email_exist?, @user1.email) == true
+    assert @controller.send(:user_email_exist?, @user1.email)
     new_email = '' << generate_random_string(20) << '@test.com'
-    assert @controller.send(:user_email_exist?, new_email) == false
+    assert_not @controller.send(:user_email_exist?, new_email)
   end
 
   # :show
   test "should return user info" do
     get :show
-    exp_response_body = sanitize_hash({user: @user1.basic_info})
-    act_response_body = JSON.parse(response.body)
-    assert response.status == 200
-    assert act_response_body == exp_response_body
+    validate_success_response({user: @user1.basic_info})
   end
 
   # :create
   test "should create new user successfully" do
+    new_login_token = 'pYSjnnZt99kLslv2GiJtegtt'
+    SecureRandom.stubs(:base64).returns(new_login_token)
     request.headers["Authorization"] = nil
-    assert_difference('User.count', +1) do
-      post :create, @request_body
-    end
-    assert response.status == 200
-    response_body = JSON.parse(response.body)
-    assert !response_body["token"].nil? && !response_body["token"].empty?
-    assert !response_body["user"].nil? && \
-           !response_body["user"]["id"].nil? &&\
-           response_body["user"]["id"] != 0 &&\
-           response_body["user"]["email"] == @email &&\
-           response_body["user"]["name"] == @name
-
+    post_request_and_assert_diff_users(:create, @request_body, +1)
+    new_user = User.find_by_email(@email)
+    exp_body = {token: new_login_token, user: new_user.basic_info}
+    validate_success_response(exp_body)
   end
 
   test "should not create user when email exists in db" do
     request.headers["Authorization"] = nil
     @request_body[:user][:email] = @user1.email
-    assert_difference('User.count', 0) do
-      post :create, @request_body
-    end
-    assert response.status == 400
-    assert error_message(response.body) == 'Email Already Registered'
+    post_request_and_assert_no_difference(:create, @request_body)
+    validate_error_response({errors: 'Email Already Registered'}, 400)
   end
 
   test "should not create user when no device token passed" do
     request.headers["Authorization"] = nil
     request.headers["Device-Token"] = nil
-    assert_difference('User.count', 0) do
-      post :create, @request_body
-    end
-    assert response.status == 400
-    assert error_message(response.body) == 'No Device Token'
+    post_request_and_assert_no_difference(:create, @request_body)
+    validate_error_response({errors: 'No Device Token'}, 400)
   end
 
   test "should not create user when params do not pass validations" do
     request.headers["Authorization"] = nil
     @request_body[:user][:email] = 'bademail'
-    assert_difference('User.count', 0) do
-      post :create, @request_body
-    end
-    assert response.status == 400
-    assert error_message(response.body) == 'Failed To Create User - ["Email is not a valid email"]'
+    post_request_and_assert_no_difference(:create, @request_body)
+    validate_error_response({errors: 'Failed To Create User - ["Email is not a valid email"]'}, 400)
   end
 
   private
+  def post_request_and_assert_diff_users(action, request_body, diff)
+    assert_difference 'User.count', diff do
+      post action, request_body
+    end
+  end
 
-  def error_message(rbody)
-    JSON.parse(rbody)['errors']
+  def post_request_and_assert_no_difference(action, request_body)
+    assert_no_difference 'User.count', 'New User should not be created' do
+      post action, request_body
+    end
   end
 end

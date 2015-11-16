@@ -30,8 +30,8 @@ class SessionsIntegrationTest < ActionController::TestCase
               }
     validate_success_response(exp_msg)
 
-    assert @user_1.api_key == new_login_token
-    assert @user_1.device_token == @device_token
+    assert_equal new_login_token, @user_1.api_key 
+    assert_equal @device_token, @user_1.device_token
   end
 
   test 'should log out successfully' do
@@ -41,8 +41,8 @@ class SessionsIntegrationTest < ActionController::TestCase
 
     validate_success_response({message: 'Logout Successful'})
 
-    assert @user_1.api_key == nil
-    assert @user_1.device_token == nil
+    assert_nil @user_1.api_key
+    assert_nil @user_1.device_token
   end
 
   private
@@ -54,22 +54,7 @@ class SessionsIntegrationTest < ActionController::TestCase
     delete action
   end
 
-  def validate_error_response(err, code)
-    validate_response(err, code)
-  end
-
-  def validate_success_response(msg)
-    validate_response(msg, 200)
-  end
-
-  def validate_response(msg, code)
-    exp_response_body = sanitize_hash(msg)
-    act_response_body = JSON.parse(response.body)
-    assert response.status == code
-    assert act_response_body == exp_response_body
-  end
-
- def log_in_as(user)
+  def log_in_as(user)
     request.headers["Authorization"] = ActionController::HttpAuthentication::Token.
                                          encode_credentials(user.api_key)
   end

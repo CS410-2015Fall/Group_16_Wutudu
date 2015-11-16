@@ -18,4 +18,19 @@ class ActiveSupport::TestCase
   def sanitize_hash(h)
     JSON.parse(h.to_json)
   end
+
+  def validate_error_response(err, code)
+    validate_response(err, code)
+  end
+
+  def validate_success_response(msg)
+    validate_response(msg, 200)
+  end
+
+  def validate_response(msg, code)
+    exp_response_body = sanitize_hash(msg)
+    act_response_body = JSON.parse(response.body)
+    assert response.status == code
+    assert act_response_body == exp_response_body
+  end
 end

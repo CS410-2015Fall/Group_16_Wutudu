@@ -88,14 +88,6 @@ class GroupUsersControllerTest < ActionController::TestCase
     GroupUser.any_instance.stubs(:approved).returns(approved)
   end
 
-  def whatever
-    Group.any_instance.stubs(:save).returns(true)
-    Group.any_instance.stubs(:group_users).returns(stub(build: group_users(:group_1_user_1)))
-    GroupUser.any_instance.stubs(:save).returns(true)
-    GroupsController.any_instance.stubs(:add_user_to_group).returns(['Success', 200])
-    Group.any_instance.stubs(:destroy).returns(true)
-  end
-
   def group_users_controller_expects_errors_msg(msg, code)
     GroupUsersController.any_instance.expects(:errors_msg).
       with(msg, code).returns({json: ''})

@@ -43,8 +43,8 @@ class GroupsIntegrationTest < ActionController::TestCase
     assert new_group, 'New group should be created'
     if new_group
       validate_success_response({group: new_group.basic_info, message: 'Group Created'})
-      assert new_group.name == @group_name
-      assert new_group.active_users == [@users[:user_1]]
+      assert_equal @group_name, new_group.name
+      assert_equal [@users[:user_1]], new_group.active_users
     end
   end
 
@@ -55,9 +55,9 @@ class GroupsIntegrationTest < ActionController::TestCase
     assert new_group
     if new_group
       validate_success_response({group: new_group.basic_info, message: 'New Group Created And All Users Invited'})
-      assert new_group.name == @group_name
-      assert new_group.active_users == [@users[:user_1]]
-      assert new_group.pending_users == [@users[:user_2], @users[:user_3]]
+      assert_equal @group_name, new_group.name
+      assert_equal [@users[:user_1]], new_group.active_users
+      assert_equal [@users[:user_2], @users[:user_3]], new_group.pending_users
     end
   end
 
@@ -68,9 +68,9 @@ class GroupsIntegrationTest < ActionController::TestCase
     assert new_group
     if new_group
       validate_success_response({group: new_group.basic_info, message: 'New Group Created And Only Some Users Were Invited'})
-      assert new_group.name == @group_name
-      assert new_group.active_users == [@users[:user_1]]
-      assert new_group.pending_users == [@users[:user_2]]
+      assert_equal @group_name, new_group.name
+      assert_equal [@users[:user_1]], new_group.active_users
+      assert_equal [@users[:user_2]], new_group.pending_users
     end
   end
 
@@ -81,9 +81,9 @@ class GroupsIntegrationTest < ActionController::TestCase
     assert new_group
     if new_group
       validate_success_response({group: new_group.basic_info, message: 'New Group Created And No Users Were Invited'})
-      assert new_group.name == @group_name
-      assert new_group.active_users == [@users[:user_1]]
-      assert new_group.pending_users == []
+      assert_equal @group_name, new_group.name
+      assert_equal [@users[:user_1]], new_group.active_users
+      assert_equal [], new_group.pending_users
     end
   end
 
@@ -116,20 +116,5 @@ class GroupsIntegrationTest < ActionController::TestCase
     assert_difference 'Group.count', +1 do
       post action, request_body
     end
-  end
-
-  def validate_error_response(err, code)
-    validate_response(err, code)
-  end
-
-  def validate_success_response(msg)
-    validate_response(msg, 200)
-  end
-
-  def validate_response(msg, code)
-    exp_response_body = sanitize_hash(msg)
-    act_response_body = JSON.parse(response.body)
-    assert response.status == code
-    assert act_response_body == exp_response_body
   end
 end

@@ -7,7 +7,7 @@ class ApiIntegrationTest < ActionController::TestCase
     request.headers["Authorization"] = ActionController::HttpAuthentication::Token.
                                                      encode_credentials(users(:user_1).api_key)
     get :show
-    assert response.status == 200
+    assert_equal 200, response.status
     assert_not_nil response.body
   end
 
@@ -16,7 +16,7 @@ class ApiIntegrationTest < ActionController::TestCase
     request.headers["Authorization"] = ActionController::HttpAuthentication::Token.
                                                      encode_credentials("NotRealAPIKey")
     get :show
-    assert response.status == 401
-    assert response.body == "HTTP Token: Access denied.\n"
+    assert_equal 401, response.status
+    assert_equal "HTTP Token: Access denied.\n", response.body
   end
 end
