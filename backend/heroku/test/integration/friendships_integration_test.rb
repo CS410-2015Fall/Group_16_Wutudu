@@ -204,7 +204,8 @@ class FriendshipsIntegrationTest < ActionController::TestCase
               user_1: users(:user_1),
               user_2: users(:user_2),
               user_3: users(:user_3),
-              user_4: users(:user_4)
+              user_4: users(:user_4),
+              user_5: users(:user_5)
              }
   end
 

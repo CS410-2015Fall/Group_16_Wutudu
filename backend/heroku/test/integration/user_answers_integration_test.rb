@@ -111,19 +111,4 @@ class UserAnswersIntegrationTest < ActionController::TestCase
       post action, request_body
     end
   end
-
-  def validate_error_response(err, code)
-    validate_response(err, code)
-  end
-
-  def validate_success_response(msg)
-    validate_response(msg, 200)
-  end
-
-  def validate_response(msg, code)
-    exp_response_body = sanitize_hash(msg)
-    act_response_body = JSON.parse(response.body)
-    assert_equal exp_response_body, act_response_body
-    assert_equal code, response.status
-  end
 end

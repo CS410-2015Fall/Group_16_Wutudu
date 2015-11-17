@@ -10,7 +10,7 @@ class GroupUsersIntegrationTest < ActionController::TestCase
     create_user_list
     log_in_as(:user_1)
     @request_body = {
-                      gid: @group_1.id,
+                      gid: @group_2.id,
                       group_user: {
                         emails: []
                       }
@@ -19,30 +19,30 @@ class GroupUsersIntegrationTest < ActionController::TestCase
 
   # user not in group
   test 'should return error msg when user not in group' do
-    log_in_as(:user_3)
+    log_in_as(:user_4)
     post_request_and_assert_no_difference(:create, @request_body)
     validate_error_response({errors: 'Not In Group'}, 404)
   end
 
   # :create
   test 'should return error msg with :create and no users invited' do
-    @request_body[:group_user][:emails] = [@users[:user_1], @users[:user_2]]
+    @request_body[:group_user][:emails] = [@users[:user_1], @users[:user_2], @users[:user_3]]
     post_request_and_assert_no_difference(:create, @request_body)
     validate_error_response({errors: 'No Users Were Invited'}, 400)
   end
 
   test 'should return success msg with :create and all users invited' do
-    @request_body[:group_user][:emails] = [@users[:user_3].email, @users[:user_4].email]
+    @request_body[:group_user][:emails] = [@users[:user_4].email, @users[:user_5].email]
     count = @request_body[:group_user][:emails].length
     post_request_and_assert_diff_group_users(:create, @request_body, +count)
-    validate_success_response({group: @group_1.basic_info, message: 'All Users Invited'})
+    validate_success_response({group: @group_2.basic_info, message: 'All Users Invited'})
   end
 
   test 'should return success msg with :create and only some users invited' do
-    @request_body[:group_user][:emails] = [@users[:user_3].email, 'NotRealEmail']
+    @request_body[:group_user][:emails] = [@users[:user_4].email, 'NotRealEmail']
     count = @request_body[:group_user][:emails].length - 1
     post_request_and_assert_diff_group_users(:create, @request_body, +count)
-    validate_success_response({group: @group_1.basic_info, message: 'Only Some Users Were Invited'})
+    validate_success_response({group: @group_2.basic_info, message: 'Only Some Users Were Invited'})
   end
 
   # :update
@@ -53,18 +53,19 @@ class GroupUsersIntegrationTest < ActionController::TestCase
   end
 
   test 'should return success msg with :update and join group' do
-    g_2_u_1 = group_users(:group_2_user_1)
-    assert_not g_2_u_1.approved
+    log_in_as(:user_3)
+    g_2_u_3 = group_users(:group_2_user_3)
+    assert_not g_2_u_3.approved
     @request_body = {gid: @group_2.id}
     post_request_and_assert_no_difference(:update, @request_body)
     validate_success_response({group: @group_2.basic_info, message: 'Group Joined'})
-    g_2_u_1.reload
-    assert g_2_u_1.approved
+    g_2_u_3.reload
+    assert g_2_u_3.approved
   end
 
   # :destroy
-
   test 'should return success msg with :delete and declined request' do
+    log_in_as(:user_3)
     @request_body = {gid: @group_2.id}
     delete_request_and_assert_diff_group_users(:destroy, @request_body, -1)
     validate_success_response({group: @group_2.basic_info, message: 'Request Declined'})
@@ -82,7 +83,8 @@ class GroupUsersIntegrationTest < ActionController::TestCase
               user_1: users(:user_1),
               user_2: users(:user_2),
               user_3: users(:user_3),
-              user_4: users(:user_4)
+              user_4: users(:user_4),
+              user_5: users(:user_5)
              }
   end
 

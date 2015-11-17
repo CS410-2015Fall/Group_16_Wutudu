@@ -18,11 +18,11 @@ class QuestionTest < ActiveSupport::TestCase
   end
 
   test "should correctly validate valid question" do
-    assert @question1.question_text == "question?"
-    assert @question1.a0_text == "a0"
-    assert @question1.a1_text == "a1"
-    assert @question1.a2_text == "a2"
-    assert @question1.a3_text == "a3"
+    assert_equal "question?", @question1.question_text
+    assert_equal "a0", @question1.a0_text
+    assert_equal "a1", @question1.a1_text
+    assert_equal "a2", @question1.a2_text
+    assert_equal "a3", @question1.a3_text
     assert @question1.valid?
   end
 

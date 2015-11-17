@@ -30,7 +30,7 @@ class ActiveSupport::TestCase
   def validate_response(msg, code)
     exp_response_body = sanitize_hash(msg)
     act_response_body = JSON.parse(response.body)
-    assert response.status == code
-    assert act_response_body == exp_response_body
+    assert_equal code, response.status
+    assert_equal exp_response_body, act_response_body
   end
 end

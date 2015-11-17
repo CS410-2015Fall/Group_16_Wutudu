@@ -8,7 +8,7 @@ class GroupsIntegrationTest < ActionController::TestCase
     @group_1 = groups(:group_1)
     @group_2 = groups(:group_2)
     create_user_list
-    log_in_as(:user_1)
+    log_in_as(:user_3)
     @group_name = 'GroupThatWillNeverBeDuplicated'
     @request_body = {
                      group: {
@@ -37,27 +37,26 @@ class GroupsIntegrationTest < ActionController::TestCase
   end
 
   test 'should return success msg with :create with empty email' do
-
     post_request_and_assert_new_group(:create, @request_body)
     new_group = search_for_group_with_name(@group_name)
     assert new_group, 'New group should be created'
     if new_group
       validate_success_response({group: new_group.basic_info, message: 'Group Created'})
       assert_equal @group_name, new_group.name
-      assert_equal [@users[:user_1]], new_group.active_users
+      assert_equal [@users[:user_3]], new_group.active_users
     end
   end
 
   test 'should return success msg with :create and all users added to the group' do
-    @request_body[:group][:emails] = [@users[:user_2].email, @users[:user_3].email]
+    @request_body[:group][:emails] = [@users[:user_1].email, @users[:user_2].email]
     post_request_and_assert_new_group(:create, @request_body)
     new_group = Group.find_by_name(@group_name)
     assert new_group
     if new_group
       validate_success_response({group: new_group.basic_info, message: 'New Group Created And All Users Invited'})
       assert_equal @group_name, new_group.name
-      assert_equal [@users[:user_1]], new_group.active_users
-      assert_equal [@users[:user_2], @users[:user_3]], new_group.pending_users
+      assert_equal [@users[:user_3]], new_group.active_users
+      assert_equal [@users[:user_1], @users[:user_2]], new_group.pending_users
     end
   end
 
@@ -69,7 +68,7 @@ class GroupsIntegrationTest < ActionController::TestCase
     if new_group
       validate_success_response({group: new_group.basic_info, message: 'New Group Created And Only Some Users Were Invited'})
       assert_equal @group_name, new_group.name
-      assert_equal [@users[:user_1]], new_group.active_users
+      assert_equal [@users[:user_3]], new_group.active_users
       assert_equal [@users[:user_2]], new_group.pending_users
     end
   end
@@ -82,7 +81,7 @@ class GroupsIntegrationTest < ActionController::TestCase
     if new_group
       validate_success_response({group: new_group.basic_info, message: 'New Group Created And No Users Were Invited'})
       assert_equal @group_name, new_group.name
-      assert_equal [@users[:user_1]], new_group.active_users
+      assert_equal [@users[:user_3]], new_group.active_users
       assert_equal [], new_group.pending_users
     end
   end
@@ -93,7 +92,8 @@ class GroupsIntegrationTest < ActionController::TestCase
               user_1: users(:user_1),
               user_2: users(:user_2),
               user_3: users(:user_3),
-              user_4: users(:user_4)
+              user_4: users(:user_4),
+              user_5: users(:user_5)
              }
   end
 
