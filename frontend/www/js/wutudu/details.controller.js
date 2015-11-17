@@ -1,6 +1,8 @@
 angular.module('starter.controllers')
 
-.controller('WutuduDetailsCtrl', function($scope, $stateParams, $state, $ionicPopup, GoogleMap) {
+.controller('WutuduDetailsCtrl', function($scope, $stateParams, $state,
+  $ionicPopup, GoogleMap, $cordovaInAppBrowser) {
+
   var groupId = $stateParams.groupId,
       wutuduId = $stateParams.wutuduId,
       config = {
@@ -37,6 +39,14 @@ angular.module('starter.controllers')
     }
     var ratings = wut.event_details.rating || {rating: 0, count:0};
     return ratings.value + ' (' + ratings.count + ' votes)';
+  };
+
+  $scope.openLink = function(url) {
+    var options = {
+          location: 'no',
+          clearcache: 'yes'
+        };
+    $cordovaInAppBrowser.open(url, '_blank', options);
   };
 
 });
