@@ -245,6 +245,33 @@ angular.module('starter.services', [])
       if (config.pan) {
         map.panTo(marker.getPosition());
       }
+    },
+    mapSetZoom: function (zoom) {
+      map.setZoom(zoom);
+    }
+  };
+})
+
+.factory('MapAutocompleteBox', function(GoogleMap) {
+  var autocompleteBox
+  return {
+    initAutocompleteBox: function(el, setHandler) {
+      if (!google.maps.places.Autocomplete) {
+        return false;
+      } else {
+        autocompleteBox = new google.maps.places.Autocomplete(el);
+        autocompleteBox.addListener('place_changed', function() {
+          var place = autocompleteBox.getPlace();
+          if (!place.geometry) {
+            return false;
+          } else {
+            var loc = place.geometry.location;
+            setHandler(loc.lat(), loc.lng());
+            GoogleMap.mapSetZoom(15);
+          }
+        });
+        return true;
+      }
     }
   };
 });

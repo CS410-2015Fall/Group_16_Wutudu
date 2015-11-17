@@ -81,7 +81,7 @@ module ThirdPartyAPI
     end
 
     def search_by_bid(bid)
-      @client.business(bid).business
+      @client.business(bid.encode('utf-8')).business
     end
 
     def query_summary

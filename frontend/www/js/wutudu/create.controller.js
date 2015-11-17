@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('WutuduCreateCtrl', function($scope, $stateParams, $state, $ionicPopup,
-        $ionicModal, $msgBox, $ionicPlatform, $cordovaGeolocation, Friend, Group, Wutudu, GoogleMap) {
+        $ionicModal, $msgBox, $ionicPlatform, $cordovaGeolocation, Friend, Group, Wutudu, GoogleMap, MapAutocompleteBox) {
   var groupId = $stateParams.groupId,
       config = {
         groupId: groupId
@@ -18,11 +18,13 @@ angular.module('starter.controllers')
   (function init () {
     initDatePicker();
     var mapEl = document.getElementById('createWutuduMap');
-    if (GoogleMap.initMap(mapEl, DEFAULT_LAT, DEFAULT_LNG, {clickHandler: setLocation})) {
+    var mapSearchEl = document.getElementById('createWutuduPlacesAutoComplete');
+    if (GoogleMap.initMap(mapEl, DEFAULT_LAT, DEFAULT_LNG, {clickHandler: setLocationWithEvent})) {
       $ionicPlatform.ready(function () {
         initLocation();
       });
     }
+    MapAutocompleteBox.initAutocompleteBox(mapSearchEl, setLocation);
   })();
 
   $scope.locationChange = function (wutudu) {
@@ -80,13 +82,17 @@ angular.module('starter.controllers')
     return true;
   }
 
-  function setLocation (event) {
-    var lat = event.latLng.lat();
-    var lng = event.latLng.lng();
-    GoogleMap.setMarkerPosition(lat, lng);
+  function setLocation (lat, lng) {
+    GoogleMap.setMarkerPosition(lat, lng, {pan: true});
     $scope.wutudu.latitude = lat;
     $scope.wutudu.longitude = lng;
     $scope.$apply();
+  }
+
+  function setLocationWithEvent (event) {
+    var lat = event.latLng.lat();
+    var lng = event.latLng.lng();
+    setLocation(lat, lng);
   }
 
   function onDatePick (val) {
