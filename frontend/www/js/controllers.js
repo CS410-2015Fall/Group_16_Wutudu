@@ -3,19 +3,16 @@ angular.module('starter.controllers', [])
 .controller('AppCtrl', function ($scope, $ionicPopup,
   $httpService, $state, User, Auth) {
 
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  $scope.user = User.getUserInfo();
+  $scope.$on('$ionicView.enter', init);
 
   $scope.logout = function () {
     Auth.logout()
       .then(logoutSuccess, handleError);
   };
+
+  function init() {
+    $scope.user = User.getUserInfo();
+  }
 
   function logoutSuccess(response) {
     User.removeSession();

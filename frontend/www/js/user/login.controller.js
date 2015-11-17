@@ -2,17 +2,8 @@ angular.module('starter.controllers')
 
 .controller('LoginCtrl', function ($scope, $state, $httpService,
   User, $wutuduNotification, $ionicPopup, $ionicLoading, Auth) {
-  if (User.getSession()) {
-    // TODO check for token validity
-    $ionicLoading.show({
-      template: 'Loading...'
-    });
-    $wutuduNotification.register().then(function() {
-      $ionicLoading.hide();
-      $state.go('app.main');
-    });
-    return;
-  }
+
+  $scope.$on('$ionicView.enter', init);
 
   $scope.loginData = {};
 
@@ -35,6 +26,23 @@ angular.module('starter.controllers')
       prepareLogin(loginCreds);
     }
   };
+
+  function init(e) {
+    if (User.getSession()) {
+      resumeSession();
+    }
+  }
+
+  function resumeSession() {
+    // TODO check for token validity
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    $wutuduNotification.register().then(function() {
+      $ionicLoading.hide();
+      $state.go('app.main');
+    });
+  }
 
   function prepareLogin(loginCreds) {
     $ionicLoading.show({

@@ -7,27 +7,7 @@ angular.module('starter.controllers')
     friendToAdd: ''
   };
 
-  $ionicLoading.show({
-      template: 'Loading...'
-  });
-  // Gets called each time tab is open
-  Friend.getFriends().then(function successCallback (response) {
-    $scope.friends = response.data.friendships.friends;
-    $scope.sentRequests = response.data.friendships.sent_requests;
-    $scope.receivedRequests = response.data.friendships.received_requests;
-    $ionicLoading.hide();
-  }, function errorCallback (response) {
-    $ionicLoading.hide();
-    response.config.headers = JSON.stringify(response.config.headers);
-    response.config.data = JSON.stringify(response.config.data);
-    $scope.response = response;
-    $ionicPopup.show({
-      title: 'Get friend error',
-      templateUrl: 'templates/errorPopup.html',
-      scope: $scope,
-      buttons: [{ text: 'OK' }]
-    });
-  });
+  $scope.$on('$ionicView.enter', init);
 
   $scope.validateNewFriend = function () {
     if ($scope.data.friendToAdd === '') {
@@ -148,4 +128,31 @@ angular.module('starter.controllers')
       });
     });
   };
+
+  function init(e) {
+    $ionicLoading.show({
+        template: 'Loading...'
+    });
+    Friend.getFriends().then(getFriendsSuccess, getFriendsError);
+  }
+
+  function getFriendsSuccess(response) {
+    $scope.friends = response.data.friendships.friends;
+    $scope.sentRequests = response.data.friendships.sent_requests;
+    $scope.receivedRequests = response.data.friendships.received_requests;
+    $ionicLoading.hide();
+  }
+
+  function getFriendsError(response) {
+    response.config.headers = JSON.stringify(response.config.headers);
+    response.config.data = JSON.stringify(response.config.data);
+    $scope.response = response;
+    $ionicLoading.hide();
+    $ionicPopup.show({
+      title: 'Get friend error',
+      templateUrl: 'templates/errorPopup.html',
+      scope: $scope,
+      buttons: [{ text: 'OK' }]
+    });
+  }
 });

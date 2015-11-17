@@ -3,6 +3,7 @@ angular.module('starter.controllers')
 .controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal,
   $ionicLoading, $state, $msgBox, Friend, Group) {
 
+  $scope.$on('$ionicView.enter', init);
 
   //Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
@@ -179,7 +180,7 @@ angular.module('starter.controllers')
     $ionicPopup.show(tplConfig);
   }
 
-  (function() {
+  function init(e) {
     initData();
     initModal();
 
@@ -189,6 +190,6 @@ angular.module('starter.controllers')
     $ionicLoading.show({
       template: 'Loading...'
     });
-  })();
+  }
 
 });

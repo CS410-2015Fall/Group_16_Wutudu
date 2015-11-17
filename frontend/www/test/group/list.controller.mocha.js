@@ -2,18 +2,21 @@ describe('GroupListController', function() {
   /*jshint expr: true*/ // for chai syntax, testing only
   var GROUPLIST_CTRL = 'GroupListCtrl',
       $controller,
-      controller,
+      $rootScope,
       Group,
       Friend,
       $ionicModal;
 
   beforeEach(function() {
     module('starter');
-    inject(function(_$controller_, _Group_, _Friend_, _$ionicModal_){
+    inject(function(_$controller_, _Group_, _Friend_, _$ionicModal_,
+      $httpBackend, _$rootScope_){
       $controller = _$controller_;
+      $rootScope = _$rootScope_;
       Group = _Group_;
       Friend = _Friend_;
       $ionicModal = _$ionicModal_;
+      $httpBackend.whenGET().respond({});
 
       var returnPromise = function(response) {
         return {
@@ -98,10 +101,10 @@ describe('GroupListController', function() {
   describe('On Group List Controller init', function() {
     var $scope;
     beforeEach(function() {
-      $scope = {
-        $on: function(a,b) {}
-      };
-      controller = $controller(GROUPLIST_CTRL,{ $scope: $scope });
+      $scope = $rootScope.$new();
+      $controller(GROUPLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
     it('should get all groups', function() {
       expect(Group.getAllGroups.callCount).to.equal(1);
@@ -117,10 +120,10 @@ describe('GroupListController', function() {
   describe('When accepted invitation', function() {
     var $scope;
     beforeEach(function() {
-       $scope = {
-         $on: function(a,b) {}
-       };
-       controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
+      $scope = $rootScope.$new();
+      $controller(GROUPLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
     it('should add user to group when invitation is accepted', function() {
       var data = {
@@ -137,10 +140,10 @@ describe('GroupListController', function() {
   describe('When declined invitation', function() {
     var $scope;
     beforeEach(function() {
-       $scope = {
-         $on: function(a,b) {}
-       };
-       controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
+      $scope = $rootScope.$new();
+      $controller(GROUPLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
     it('should remove group from pending list when invitation is declined', function() {
       var data = {
@@ -157,10 +160,10 @@ describe('GroupListController', function() {
   describe('When leave group', function() {
     var $scope;
     beforeEach(function() {
-       $scope = {
-         $on: function(a,b) {}
-       };
-       controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
+      $scope = $rootScope.$new();
+      $controller(GROUPLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
     it('should remove group from active list when leaving group', function() {
       var data = {
@@ -177,10 +180,10 @@ describe('GroupListController', function() {
   describe('When showing create group modal', function(){
     var $scope;
     beforeEach(function() {
-      $scope = {
-        $on: function(a,b) {}
-      };
-      controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
+      $scope = $rootScope.$new();
+      $controller(GROUPLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
     it('should setup data and friends', function() {
       $scope.showCreateGroup();
@@ -193,10 +196,10 @@ describe('GroupListController', function() {
   describe('When creating group', function() {
     var $scope;
     beforeEach(inject(function(_$msgBox_) {
-      $scope = {
-        $on: function(a,b) {}
-      };
-      controller = $controller(GROUPLIST_CTRL, {$scope: $scope});
+      $scope = $rootScope.$new();
+      $controller(GROUPLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
       sinon.stub(_$msgBox_, 'show', function(){});
     }));
     it('should not create group without name', function() {

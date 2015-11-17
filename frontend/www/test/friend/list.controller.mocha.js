@@ -1,13 +1,17 @@
 describe('FriendListController', function() {
-  var $controller,
+  var FRIENDLIST_CTRL = 'FriendListCtrl',
+      $controller,
+      $rootScope,
       Friend;
 
   beforeEach(function() {
     module('starter');
-    inject(function(_$controller_, _Friend_){
+    inject(function(_$controller_, _Friend_, $httpBackend, _$rootScope_){
       // The injector unwraps the underscores (_) from around the parameter names when matching
       $controller = _$controller_;
+      $rootScope = _$rootScope_;
       Friend = _Friend_;
+      $httpBackend.whenGET().respond({});
 
       var returnPromise = function(response) {
         return {
@@ -17,7 +21,7 @@ describe('FriendListController', function() {
         };
       };
 
-      sinon.stub(Friend, 'getFriends', function () { 
+      sinon.stub(Friend, 'getFriends', function () {
         var response = {
           'data' : {
             'friendships' : {
@@ -42,13 +46,13 @@ describe('FriendListController', function() {
         };
         return returnPromise(response);
       });
-      sinon.stub(Friend, 'acceptFriendRequest', function () { 
+      sinon.stub(Friend, 'acceptFriendRequest', function () {
         var response = {
           'data' : 'Friend Accepted'
         };
         return returnPromise(response);
       });
-      sinon.stub(Friend, 'removeFriend', function () { 
+      sinon.stub(Friend, 'removeFriend', function () {
         var response = {
           'data' : 'Unfriended'
         };
@@ -58,11 +62,13 @@ describe('FriendListController', function() {
   });
 
   describe('On friend init', function() {
-    var $scope, controller;
+    var $scope;
 
     beforeEach(function() {
-      $scope = {};
-      controller = $controller('FriendListCtrl', { $scope: $scope });
+      $scope = $rootScope.$new();
+      $controller(FRIENDLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
 
     it('should get friends list', function() {
@@ -74,11 +80,13 @@ describe('FriendListController', function() {
   });
 
   describe('When adding friends', function() {
-    var $scope, controller;
+    var $scope;
 
     beforeEach(function() {
-      $scope = {};
-      controller = $controller('FriendListCtrl', { $scope: $scope });
+      $scope = $rootScope.$new();
+      $controller(FRIENDLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
 
     it('should successfully send a friend request with valid email', function() {
@@ -105,11 +113,13 @@ describe('FriendListController', function() {
   });
 
   describe('When accepting friend requests', function() {
-    var $scope, controller;
+    var $scope;
 
     beforeEach(function() {
-      $scope = {};
-      controller = $controller('FriendListCtrl', { $scope: $scope });
+      $scope = $rootScope.$new();
+      $controller(FRIENDLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
 
     it('should successfully send an accept friend request with valid email', function() {
@@ -126,11 +136,13 @@ describe('FriendListController', function() {
   });
 
   describe('When declining/removing requests', function() {
-    var $scope, controller;
+    var $scope;
 
     beforeEach(function() {
-      $scope = {};
-      controller = $controller('FriendListCtrl', { $scope: $scope });
+      $scope = $rootScope.$new();
+      $controller(FRIENDLIST_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
 
     it('should successfully remove a friend with valid email', function() {

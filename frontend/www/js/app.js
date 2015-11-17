@@ -40,14 +40,12 @@ angular.module('starter', ['ionic', 'ngCordova',
   .state('app', {
     url: '/app',
     abstract: true,
-    cache: false,
     templateUrl: 'templates/menu.html',
     controller: 'AppCtrl'
   })
 
   .state('login', {
     url: '/login',
-    cache: false,
     templateUrl: 'templates/user/login.html',
     controller: 'LoginCtrl'
   })
@@ -60,7 +58,6 @@ angular.module('starter', ['ionic', 'ngCordova',
 
   .state('app.friendList', {
     url: '/friend',
-    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/friend/list.html',
@@ -71,7 +68,6 @@ angular.module('starter', ['ionic', 'ngCordova',
 
   .state('app.groupList', {
     url: '/group' ,
-    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/group/list.html',
@@ -82,7 +78,6 @@ angular.module('starter', ['ionic', 'ngCordova',
 
   .state('app.group', {
     url: '/group/:groupId/:groupName',
-    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/group/group.html',

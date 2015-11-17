@@ -10,6 +10,8 @@ angular.module('starter.controllers')
         groupId: groupId
       };
 
+  $scope.$on('$ionicView.enter', init);
+
   $scope.showAddFriend = function() {
     Friend.getFriends(config)
       .then(setupFriends, handleError);
@@ -235,7 +237,7 @@ angular.module('starter.controllers')
     $scope.cancelPreWutuduOptions();
   }
 
-  (function() {
+  function init(e) {
     initModal();
     initData();
     Group.getGroup(config)
@@ -244,6 +246,6 @@ angular.module('starter.controllers')
     $ionicLoading.show({
         template: 'Loading...'
     });
-  })();
+  }
 
 });

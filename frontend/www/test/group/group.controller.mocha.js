@@ -2,7 +2,7 @@ describe('GroupController', function() {
   /*jshint expr: true*/ // for chai syntax, testing only
   var GROUP_CTRL = 'GroupCtrl',
       $controller,
-      controller,
+      $rootScope,
       Group,
       Friend,
       Wutudu,
@@ -10,13 +10,15 @@ describe('GroupController', function() {
 
   beforeEach(function() {
     module('starter');
-    inject(function(_$controller_, _Group_, _Friend_,
-      _Wutudu_, _$ionicModal_){
+    inject(function(_$controller_, _Group_, _Friend_, _Wutudu_, _$ionicModal_,
+     $httpBackend, _$rootScope_){
       $controller = _$controller_;
+      $rootScope = _$rootScope_;
       Friend = _Friend_;
       Group = _Group_;
       Wutudu = _Wutudu_;
       $ionicModal = _$ionicModal_;
+      $httpBackend.whenGET().respond({});
 
       var returnPromise = function(response) {
         return {
@@ -81,10 +83,10 @@ describe('GroupController', function() {
   describe('On Group Controller init', function() {
     var $scope;
     beforeEach(function() {
-      $scope = {
-        $on: function(a,b){}
-      };
-      controller = $controller(GROUP_CTRL, { $scope: $scope });
+      $scope = $rootScope.$new();
+      $controller(GROUP_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
     it('should get the group info', function() {
       expect(Group.getGroup.callCount).to.equal(1);
@@ -102,10 +104,10 @@ describe('GroupController', function() {
   describe('When adding friend to group', function() {
     var $scope;
     beforeEach(inject(function(_$msgBox_, _$ionicPopup_) {
-      $scope = {
-        $on: function(a,b) {}
-      };
-      controller = $controller(GROUP_CTRL, {$scope: $scope});
+      $scope = $rootScope.$new();
+      $controller(GROUP_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
       sinon.stub(_$msgBox_, 'show', function(){});
       sinon.stub(_$ionicPopup_, 'show', function() {});
     }));
@@ -133,10 +135,10 @@ describe('GroupController', function() {
   describe('When showing current prewutudu', function() {
     var $scope;
     beforeEach(function() {
-      $scope = {
-        $on: function(a,b){}
-      };
-      controller = $controller(GROUP_CTRL, { $scope: $scope });
+      $scope = $rootScope.$new();
+      $controller(GROUP_CTRL, { $scope: $scope });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
     it('should get the current prewutudu', function() {
       expect($scope.activePreWutudu).to.not.exist;
