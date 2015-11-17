@@ -432,7 +432,7 @@ NOTE: If group not found, it will always return ["Group Not Found", 404] for any
 1. POST:
 
   * AUTHENTICATION: Header: "Authorization Token token=auth-token"
-  * BODY: {"answers" : [(Ten elements, 0 to 3)] or (Ten -1s, if declined)}
+  * BODY: {user_answer: {"answers" : [(Ten elements, 0 to 3)] or (Ten -1s, if declined)}}
   * RETURN: Request status. One of [
                                     "PreWutudu Declined" 200,
                                     "User Answer Saved" 200,

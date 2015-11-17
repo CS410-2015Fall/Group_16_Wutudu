@@ -4,16 +4,16 @@
 #   question_id: 
 #   prewutudu_id: 
 
-<% (1..10).each do |n| %>
+<% (0..9).each do |n| %>
 pre_wutudu_1_question_<%= n %>:
   qnum: <%= n %>
-  question: <%= "question_#{n}" %>
+  question: <%= "question_#{n+1}" %>
   pre_wutudu: pre_wutudu_1
 <% end %>
 
-<% (1..10).each do |n| %>
+<% (0..9).each do |n| %>
 pre_wutudu_2_question_<%= n %>:
   qnum: <%= n %>
-  question: <%= "question_#{n}" %>
+  question: <%= "question_#{n+10}" %>
   pre_wutudu: pre_wutudu_2
 <% end %>

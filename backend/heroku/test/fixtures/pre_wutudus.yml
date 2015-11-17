@@ -6,14 +6,14 @@
 #
 pre_wutudu_1:
   group: group_1
-  event_date: 2015-11-21 00:00:00 #maybe have this set to tomorrow's date?
+  event_date: <%= 5.days.since.to_s(:db) %>
   latitude: 49.283552
   longitude: -123.119506
   finished: null
 
 pre_wutudu_2:
   group: group_2
-  event_date: 2015-11-21 00:00:00 #maybe have this set to tomorrow's date?
+  event_date: <%= 5.days.since.to_s(:db) %>
   latitude: 49.283552
   longitude: -123.119506
   finished: true

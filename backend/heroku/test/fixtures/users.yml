@@ -26,5 +26,5 @@ user_4:
   name: User Four
   email: user4@email.com
   password: $2a$10$YLryT6Q7797EdmJ2gh3deODsg06Z8bn3C2ZpakCevaPvAtTuRYKH6
-  api_key: HWqeFFNxPyLXLpvBVqpkKAtt
+  api_key: VOOoBclsznG18aiHHjIJ9wtt
   device_token: "4"

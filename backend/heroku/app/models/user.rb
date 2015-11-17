@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   has_many :active_groups, -> { where(group_users: { approved: true}) }, :through => :group_users, :source => :group
   has_many :pending_groups, -> { where(group_users: { approved: false}) }, :through => :group_users, :source => :group
 
-  # PreWutudu
+  # PreWutudu/Wutudu
   has_many :pre_wutudus, through: :group
   has_many :wudutu_events
 

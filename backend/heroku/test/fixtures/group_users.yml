@@ -10,12 +10,27 @@ group_1_user_2:
   user: user_2
   approved: true
 
+group_1_user_3:
+  group: group_1
+  user: user_3
+  approved: true
+
+group_1_user_4:
+  group: group_1
+  user: user_4
+  approved: true
+
 group_2_user_1:
   group: group_2
   user: user_1
-  approved: false
+  approved: true
 
 group_2_user_2:
   group: group_2
   user: user_2
+  approved: true
+
+group_2_user_3:
+  group: group_2
+  user: user_3
   approved: false

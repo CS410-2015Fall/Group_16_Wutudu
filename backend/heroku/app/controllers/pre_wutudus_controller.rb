@@ -3,31 +3,27 @@ class PreWutudusController < ApiController
   before_action :pre_wutudu_in_group, :pre_wutudu_not_finished, except: [:create]
 
   def show
-    message = { pre_wutudu: @pre_wutudu.basic_info_per_user(@user.id) }
+    message = {pre_wutudu: @pre_wutudu.basic_info_per_user(@user.id)}
     render success_msg(message) and return
   end
 
   def create
-    pre_wutudu = @group.pre_wutudus.build(create_params)
+    @pre_wutudu = @group.pre_wutudus.build(create_params)
 
     questions = Question.all.sample(10)
-    render internal_error_msg and return \
-      unless questions
-    render internal_error_msg and return \
-      if questions.empty?
-
+    render internal_error_msg and return unless (questions && questions.present?)
     (0..9).each do |qnum|
       render internal_error_msg and return \
-        if pre_wutudu.pre_wutudu_questions.exists?(qnum: qnum)
-      pre_wutudu.pre_wutudu_questions.build(question_id: questions[qnum].id, qnum: qnum)
+        if @pre_wutudu.pre_wutudu_questions.exists?(qnum: qnum)
+      @pre_wutudu.pre_wutudu_questions.build(question_id: questions[qnum].id, qnum: qnum)
     end
 
     render internal_error_msg and return \
-      if pre_wutudu.pre_wutudu_questions.size != 10
+      if @pre_wutudu.pre_wutudu_questions.size != 10
     render errors_msg("Failed To Create PreWutudu", 400) and return \
-      unless pre_wutudu.save
-    send_active_users_notifications(pre_wutudu)
-    render success_msg({pre_wutudu: pre_wutudu.basic_info_per_user(@user.id),
+      unless @pre_wutudu.save
+    send_active_users_notifications(@pre_wutudu)
+    render success_msg({pre_wutudu: @pre_wutudu.basic_info_per_user(@user.id),
                         message: "PreWutudu Created"}) and return
   end
 

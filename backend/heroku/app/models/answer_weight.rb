@@ -6,4 +6,5 @@ class AnswerWeight < ActiveRecord::Base
     greater_than_or_equal_to: 0,
     less_than_or_equal_to: 3,
   }
+  validates :anum, uniqueness: {scope: [:question_id, :category_id]}
 end

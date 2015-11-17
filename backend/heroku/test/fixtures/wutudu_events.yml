@@ -6,6 +6,6 @@ wutudu_event_1:
   event_time: 2015-11-21 00:00:00
   latitude: 49.283552
   longitude: -123.119506
-  group: group_1
-  pre_wutudu: pre_wutudu_1
-  event_details: MyString #KEVIN-TODO
+  group: group_2
+  pre_wutudu: pre_wutudu_2
+  event_details: '{:name=>"Medina Cafe", :location=>{:lat=>49.2806109737591, :long=>-123.117218660062, :address=>"780 Richards Street Downtown Vancouver, BC V6B 3A4 Canada"}, :categories=>"Breakfast & Brunch, Moroccan, Middle Eastern", :rating=>{:value=>4.0, :count=>1034}, :phone_number=>"+1-604-879-3114", :yelp_url=>"http://www.yelp.com/biz/medina-cafe-vancouver"}'

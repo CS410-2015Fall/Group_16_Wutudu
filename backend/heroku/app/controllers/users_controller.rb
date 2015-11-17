@@ -19,10 +19,6 @@ class UsersController < ApiController
     render success_msg({token: @user.api_key, user: @user.basic_info}) and return
   end
 
-  def show
-    render success_msg({user: @user.basic_info}) and return
-  end
-
   private
 
   def user_email_exist?(email)

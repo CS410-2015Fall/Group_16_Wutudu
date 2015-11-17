@@ -98,7 +98,6 @@ class FriendshipsControllerTest < ActionController::TestCase
     delete :destroy, {friendship: {email: '1'}}
   end
 
-  # prviate methods
   test "should have correct error msg when requested friend not found" do
     User.stubs(:find_by_email).returns(nil)
     friendships_controller_expects_errors_msg("User With Email Not Found", 404)
@@ -111,6 +110,7 @@ class FriendshipsControllerTest < ActionController::TestCase
     post :update, {friendship: {email: '1'}}
   end
 
+  # private methods
   private
   def create_user_list
     @users = {
@@ -132,6 +132,12 @@ class FriendshipsControllerTest < ActionController::TestCase
     Friendship.any_instance.stubs(:approved).returns(false)
   end
 
+  def test_destroy_setup(approved)
+    User.stubs(:find_by_email).returns(@users[:user_2])
+    Friendship.stubs(:where).returns(stub(where: stub(first: friendships(:friendship_1))))
+    Friendship.any_instance.stubs(:approved).returns(approved)
+  end
+
   def friendships_controller_expects_errors_msg(msg, code)
     FriendshipsController.any_instance.expects(:errors_msg).
       with(msg, code).returns({json: ''})
@@ -139,11 +145,5 @@ class FriendshipsControllerTest < ActionController::TestCase
 
   def friendships_controller_expects_success_msg
     FriendshipsController.any_instance.expects(:success_msg).returns({json: ''})
-  end
-
-  def test_destroy_setup(approved)
-    User.stubs(:find_by_email).returns(@users[:user_2])
-    Friendship.stubs(:where).returns(stub(where: stub(first: friendships(:friendship_1))))
-    Friendship.any_instance.stubs(:approved).returns(approved)
   end
 end

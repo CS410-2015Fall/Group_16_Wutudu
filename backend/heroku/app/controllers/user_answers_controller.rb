@@ -12,12 +12,8 @@ class UserAnswersController < ApiController
     render errors_msg("User Already Answered", 400) and return\
       if @pre_wutudu.user_answers.find_by_user_id(@user.id)
     user_answer = @pre_wutudu.user_answers.build(user_id: @user.id)
-    answers = create_user_answer_params[:answers]
-    if answers.count(-1) == answers.size
-      user_answer.declined = true
-    else
-      user_answer.answers = answers
-    end
+    answers = create_user_answer_params[:answers].map(&:to_i)
+    user_answer.handle_answers(answers)
     render errors_msg("User Answer Invalid", 400) and return \
       unless user_answer.valid?
     render errors_msg("Failed To Save Answers", 400) and return \

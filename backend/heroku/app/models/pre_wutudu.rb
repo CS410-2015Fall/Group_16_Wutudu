@@ -33,6 +33,10 @@ class PreWutudu < ActiveRecord::Base
     hash
   end
 
+  def get_question(qnum)
+    self.pre_wutudu_questions.find_by_qnum(qnum).question if (0..9).include?(qnum)
+  end
+
   def aggregate_category_weights
     aggregate_weights = {}
     self.completed_answers.each do |x|
@@ -43,7 +47,7 @@ class PreWutudu < ActiveRecord::Base
 
   def top_category
     weights = self.aggregate_category_weights
-    top_category = Category.find_by_id(weights.max_by{|k,v| v}[0])
+    top_category = Category.find_by_cat_id(weights.max_by{|k,v| v}[0])
   end
 
   def completed_answers
