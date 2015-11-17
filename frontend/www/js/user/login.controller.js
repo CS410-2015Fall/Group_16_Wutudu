@@ -50,22 +50,27 @@ angular.module('starter.controllers')
   }
 
   function doLogin(loginConfig) {
-    Auth.login(loginConfig).then(function successCallback (response) {
-      console.log('Login success: auth token=' + response.data.token);
-      $scope.loginData = {}; // Clear form data
-      User.setSession(response.data.token, response.data.user);
-      $ionicLoading.hide();
-      $state.go('app.main');
-    }, function errorCallback (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
-      $scope.response = response;
-      $ionicPopup.show({
-        title: 'Login Error',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
+    Auth.login(loginConfig).then(loginSuccess, loginError);
+  }
+
+  function loginSuccess(response) {
+    console.log('Login success: auth token=' + response.data.token);
+    $scope.loginData = {}; // Clear form data
+    User.setSession(response.data.token, response.data.user);
+    $ionicLoading.hide();
+    $state.go('app.main');
+  }
+
+  function loginError(response) {
+    response.config.headers = JSON.stringify(response.config.headers);
+    response.config.data = JSON.stringify(response.config.data);
+    $scope.response = response;
+    $ionicLoading.hide();
+    $ionicPopup.show({
+      title: 'Login Error',
+      templateUrl: 'templates/errorPopup.html',
+      scope: $scope,
+      buttons: [{ text: 'OK' }]
     });
   }
 });

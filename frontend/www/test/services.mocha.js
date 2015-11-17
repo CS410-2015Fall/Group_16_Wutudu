@@ -68,7 +68,6 @@ describe('AppServices', function() {
             password: '97'
           }
         },
-        url: '/login',
         deviceToken: 1
       };
       expect($httpService.makeRequest.args[0][0]).to.be.deep.equal(expectedArgs);

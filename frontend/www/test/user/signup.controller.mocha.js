@@ -18,7 +18,7 @@ describe('UserSignupController', function() {
           }
         };
       };
-      sinon.stub(Auth, 'signup', function () { 
+      sinon.stub(Auth, 'signup', function () {
         var response = {
           'data' : {
             'token' : 'f9l3nUGkks8CwOFFYNQfXgtt',
@@ -27,7 +27,7 @@ describe('UserSignupController', function() {
         };
         return returnPromise(response);
       });
-      sinon.stub($wutuduNotification, 'register', function () { 
+      sinon.stub($wutuduNotification, 'register', function () {
         var deviceToken = 1;
         return returnPromise(deviceToken);
       });
@@ -58,6 +58,44 @@ describe('UserSignupController', function() {
         name: '',
         email: '',
         password: ''
+      };
+      $scope.validateSignup();
+
+      expect(Auth.signup.callCount).to.equal(0);
+    });
+
+    it('should not send a signup request with invalid email', function() {
+      $scope.signupData = {
+        name: 'Friend1',
+        email: 'f1@gmail',
+        password: '97'
+      };
+      $scope.validateSignup();
+
+      expect(Auth.signup.callCount).to.equal(0);
+
+      $scope.signupData = {
+        name: 'Friend1',
+        email: 'f1@gmail.a',
+        password: '97'
+      };
+      $scope.validateSignup();
+
+      expect(Auth.signup.callCount).to.equal(0);
+
+      $scope.signupData = {
+        name: 'Friend1',
+        email: '@gmail.com',
+        password: '97'
+      };
+      $scope.validateSignup();
+
+      expect(Auth.signup.callCount).to.equal(0);
+
+      $scope.signupData = {
+        name: 'Friend1',
+        email: 'f1@.ca',
+        password: '97'
       };
       $scope.validateSignup();
 
