@@ -17,6 +17,7 @@ angular.module('starter.controllers')
 
   (function init () {
     initDatePicker();
+    initTimePicker();
     var mapEl = document.getElementById('createWutuduMap');
     var mapSearchEl = document.getElementById('createWutuduPlacesAutoComplete');
     if (GoogleMap.initMap(mapEl, DEFAULT_LAT, DEFAULT_LNG, {clickHandler: setLocationWithEvent})) {
@@ -41,11 +42,10 @@ angular.module('starter.controllers')
     // if (!validateCreate(wutudu)) {
     //   return;
     // }
-    wutudu.event_date = $scope.datepickerObject.inputDate.toJSON();
     var createConfig = {
       groupId: config.groupId,
       data: {'pre_wutudu' : {
-        'event_date' : wutudu.event_date,
+        'event_date' : getEventTime(),
         'latitude' : wutudu.latitude,
         'longitude' : wutudu.longitude
       }}
@@ -70,6 +70,29 @@ angular.module('starter.controllers')
       });
     });
   };
+
+  $scope.displayTime = function (val) {
+    if (!val) {
+      return '00:00 AM'
+    }
+    var meridian = ['AM', 'PM'];
+    var hours = parseInt(val / 3600);
+    var minutes = (val / 60) % 60;
+    var hoursRes = hours > 12 ? (hours - 12) : hours;
+    var currentMeridian = meridian[parseInt(hours / 12)];
+    var displayHours = ('00' + hoursRes).slice(-2);
+    var displayMinutes = ('00' + minutes).slice(-2);
+    return displayHours + ':' + displayMinutes + ' ' + currentMeridian;
+  };
+
+  function getEventTime () {
+    var date = $scope.datepickerObject.inputDate;
+    var time = $scope.timePickerObject.inputEpochTime;
+    var hours = parseInt(time / 3600);
+    var minutes = (time / 60) % 60;
+    date.setHours(hours, minutes);
+    return date.toJSON();
+  }
 
   function validateCreate (wutudu)  {
     if (!wutudu.name) {
@@ -127,6 +150,28 @@ angular.module('starter.controllers')
     };
   }
 
+  function onTimePick (val) {
+    if (typeof (val) === 'undefined') {
+      console.log('Time not selected');
+    } else {
+      $scope.timePickerObject.inputEpochTime = val;
+    }
+  }
+
+  function initTimePicker () {
+    $scope.timePickerObject = {
+      inputEpochTime: ((new Date()).getHours() * 60 * 60),  //Optional
+      step: 15,  //Optional
+      format: 12,  //Optional
+      titleLabel: 'Pick a Time',  //Optional
+      setLabel: 'Set',  //Optional
+      closeLabel: 'Close',  //Optional
+      setButtonType: 'button-positive',  //Optional
+      closeButtonType: 'button-stable',  //Optional
+      callback: onTimePick //Mandatory
+    };
+  }
+
   function initLocation () {
     var posOptions = {timeout: 10000, enableHighAccuracy: false};
     $cordovaGeolocation
@@ -144,5 +189,4 @@ angular.module('starter.controllers')
       });
     });
   }
-
 });

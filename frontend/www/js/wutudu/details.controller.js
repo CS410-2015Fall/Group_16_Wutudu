@@ -28,7 +28,16 @@ angular.module('starter.controllers')
       var eventDate = new Date(wutudu.event_time),
           stringDate = eventDate.toString();
       stringDate = stringDate.substring(0, stringDate.indexOf(eventDate.toTimeString()));
-      wutudu.display_date = stringDate;
+
+      // Extract the time from the date object
+      var meridian = ['AM', 'PM'];
+      var hours = eventDate.getHours();
+      var minutes = eventDate.getMinutes();
+      var hoursRes = hours > 12 ? (hours - 12) : hours;
+      var currentMeridian = meridian[parseInt(hours / 12)];
+      var displayHours = ('00' + hoursRes).slice(-2);
+      var displayMinutes = ('00' + minutes).slice(-2);
+      wutudu.display_time = stringDate + displayHours + ':' + displayMinutes + ' ' + currentMeridian;
     return wutudu;
   }
 

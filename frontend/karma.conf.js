@@ -31,6 +31,7 @@ module.exports = function(config) {
       'www/js/user/login.controller.js',
       'www/js/user/signup.controller.js',
       'www/js/user/user.services.js',
+      'www/lib/ionic-timepicker/dist/ionic-timepicker.bundle.min.js',
       'www/lib/ionic-datepicker/dist/ionic-datepicker.bundle.min.js',
       'www/lib/ngCordova/dist/ng-cordova.js',
       'node_modules/angular-mocks/angular-mocks.js',

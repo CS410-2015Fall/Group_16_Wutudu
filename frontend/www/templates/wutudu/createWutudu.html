@@ -10,6 +10,11 @@
         <ionic-datepicker input-obj="datepickerObject">
           <button class="button button-block button-positive"> {{datepickerObject.inputDate | date:'dd - MMMM - yyyy'}}</button>
         </ionic-datepicker>
+        <ionic-timepicker input-obj="timePickerObject">
+          <button class="button button-block button-positive overflowShow">
+            {{displayTime(timePickerObject.inputEpochTime)}}
+          </button>
+        </ionic-timepicker>
       </div>
       <div class="item item-input-inset">
         <span>Latitude</span>

@@ -11,6 +11,7 @@ angular.module('starter.controllers')
       };
 
   $scope.$on('$ionicView.enter', init);
+  $scope.$on('$ionicView.leave', onExit);
 
   $scope.showAddFriend = function() {
     Friend.getFriends(config)
@@ -75,11 +76,6 @@ angular.module('starter.controllers')
   $scope.showCreateWutudu = function() {
     $state.go('app.createWutudu', config);
   };
-
-  //Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.modal.remove();
-  });
 
   $scope.cancelPreWutuduOptions = function() {
     $scope.modal.hide();
@@ -235,6 +231,10 @@ angular.module('starter.controllers')
     filterCompletedWutudu(newWutudu.pre_wutudu_id);
     $scope.wutuduEvents.push(formatWutudu([newWutudu])[0]);
     $scope.cancelPreWutuduOptions();
+  }
+
+  function onExit(e) {
+    $scope.modal.remove();
   }
 
   function init(e) {
