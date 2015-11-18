@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   include BCrypt
 
   before_create :generate_new_api_key, :hash_password
+  before_save :down_case_email
 
   # Requirements:
   validates :name, :password, :email, presence: true, allow_blank: false
@@ -96,5 +97,9 @@ class User < ActiveRecord::Base
 
   def hash_password
     self.password = BCrypt::Password.create(self.password)
+  end
+
+  def down_case_email
+    self.email.downcase!
   end
 end

@@ -65,4 +65,11 @@ class UserTest < ActiveSupport::TestCase
     @user.email = 'test'
     assert_not @user.valid?
   end
+
+  # Uppercase email
+  test 'should not have uppercase emails' do
+    @user.email = 'TEsT@GmAiL.CoM'
+    assert @user.save
+    assert_equal 'test@gmail.com', @user.email
+  end
 end
