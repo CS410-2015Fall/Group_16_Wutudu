@@ -4,7 +4,7 @@ rvm:
 gemfile: backend/heroku/Gemfile
 script:
 - cd $TRAVIS_BUILD_DIR/frontend && npm install && npm test
-- cd $TRAVIS_BUILD_DIR/backend/heroku && bundle exec rake db:test:prepare db:migrate db:fixtures:load --trace RAILS_ENV=test && rake test && export BE_TESTS_PASSED = 1
+- cd $TRAVIS_BUILD_DIR/backend/heroku && bundle exec rake db:test:prepare db:migrate db:fixtures:load --trace RAILS_ENV=test && rake test && export BE_TESTS_PASSED=1
 
 before_deploy:
 - cd $TRAVIS_BUILD_DIR/backend/heroku && bundle exec rake db:drop db:create db:migrate db:seed --trace && echo "puts 10" | RACK_ENV=production bundle exec rails console
