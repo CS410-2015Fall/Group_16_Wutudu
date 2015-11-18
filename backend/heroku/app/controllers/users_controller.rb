@@ -28,6 +28,7 @@ class UsersController < ApiController
   def user_params
     u = params.require(:user).permit(:name, :email, :password)
     [:name, :email, :password].each {|p| u.require(p)}
+    u[:email].downcase!
     u
   end
 end

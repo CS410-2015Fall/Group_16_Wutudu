@@ -33,6 +33,7 @@ class SessionsController < ApiController
   def login_params
     l = params.require(:login).permit(:email, :password)
     [:email, :password].each {|p| l.require(p)}
+    l[:email].downcase!
     l
   end
 end
