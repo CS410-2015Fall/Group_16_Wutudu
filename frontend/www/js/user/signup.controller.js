@@ -13,6 +13,7 @@ angular.module('starter.controllers')
         template: errors
       });
     } else {
+      userData.email = userData.email.toLowerCase();
       userData.password = userData.password.hashString();
       prepareLogin(userData);
     }

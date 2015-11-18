@@ -2,7 +2,7 @@ describe('WutuduCreateController', function() {
   var $controller,
       Wutudu,
       GoogleMap,
-      MapAutocopmleteBox;
+      MapAutocompleteBox;
 
   beforeEach(function() {
     module('starter');
@@ -42,8 +42,8 @@ describe('WutuduCreateController', function() {
       sinon.stub(GoogleMap, 'initMap', function () { return false; });
       sinon.stub(GoogleMap, 'setMarkerPosition', function () { return false; });
 
-      MapAutocopmleteBox = _MapAutocompleteBox_;
-      sinon.stub(MapAutocopmleteBox, 'initAutocompleteBox', function () { return false; });
+      MapAutocompleteBox = _MapAutocompleteBox_;
+      sinon.stub(MapAutocompleteBox, 'initAutocompleteBox', function () { return false; });
     });
     $stateParams = {
       groupId: '2',

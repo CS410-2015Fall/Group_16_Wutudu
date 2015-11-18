@@ -22,6 +22,7 @@ angular.module('starter.controllers')
         template: errors
       });
     } else {
+      loginCreds.email = loginCreds.email.toLowerCase();
       loginCreds.password = loginCreds.password.hashString();
       prepareLogin(loginCreds);
     }
