@@ -11,3 +11,7 @@
 .inline {
 	display: inline;
 }
+
+.bar .back-text .previous-title {
+	display: none;
+}

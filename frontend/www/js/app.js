@@ -7,7 +7,7 @@
 angular.module('starter', ['ionic', 'ngCordova',
   'starter.controllers', 'starter.services', 'ionic-datepicker', 'ionic-timepicker'])
 
-.run(function ($ionicPlatform) {
+.run(function ($ionicPlatform, $ionicHistory) {
   $ionicPlatform.ready(function () {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,6 +20,33 @@ angular.module('starter', ['ionic', 'ngCordova',
       StatusBar.styleDefault();
     }
 
+    // Triggered when devices with a hardware back button (Android) is clicked by the user
+    // This is a Cordova/Phonegap platform specifc method
+    function onHardwareBackButton(e) {
+      var backView = $ionicHistory.backView();
+      if (!backView) {
+        // there is no back view, so close the app instead
+        ionic.Platform.exitApp();
+      } else {
+        var historyId = $ionicHistory.backView().historyId;
+        historyId = (historyId) ? historyId : 'ion1';
+        var viewHistory = $ionicHistory.viewHistory();
+        if (!viewHistory.histories[historyId]) {
+          // Default back button functionality
+          backView.go();
+        } else {
+          // Go back to the hamburger
+          $ionicHistory.goToHistoryRoot(historyId);
+        }
+      }
+      e.preventDefault();
+      return false;
+    }
+
+    $ionicPlatform.registerBackButtonAction(
+      onHardwareBackButton,
+      100 // Return to previous view priority
+    );
   });
 
   String.prototype.hashString = function() {
