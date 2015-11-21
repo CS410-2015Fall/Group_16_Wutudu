@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('WutuduDetailsCtrl', function($scope, $stateParams, $state,
-  $ionicPopup, GoogleMap, $cordovaInAppBrowser) {
+  $ionicPopup, $ionicModal, $ionicPlatform, $cordovaGeolocation, GoogleMap, $cordovaInAppBrowser) {
 
   var groupId = $stateParams.groupId,
       wutuduId = $stateParams.wutuduId,
@@ -17,11 +17,11 @@ angular.module('starter.controllers')
     }
     $scope.wutudu = formatWutudu($stateParams.wutudu);
     $scope.wutudu.event_details = $scope.wutudu.event_details || {};
-
     var wut = $scope.wutudu;
-    var lat = wut.event_details.location.lat || parseFloat(wut.latitude),
-        lng = wut.event_details.location.long || parseFloat(wut.longitude);
-    GoogleMap.initMap(document.getElementById('wutuduDetailMap'), lat, lng);
+    $scope.lat = wut.event_details.location.lat || parseFloat(wut.latitude),
+    $scope.lng = wut.event_details.location.long || parseFloat(wut.longitude);
+    GoogleMap.initMap(document.getElementById('wutuduDetailMap'), $scope.lat, $scope.lng);
+    initModal();
   })();
 
   function formatWutudu(wutudu) {
@@ -41,6 +41,56 @@ angular.module('starter.controllers')
     return wutudu;
   }
 
+  function initModal() {
+    var optionsTplUrl = 'templates/wutudu/directionsMapPopup.html',
+        modelConfig = {
+            scope: $scope,
+            animation: 'slide-in-up'
+        };
+    $ionicModal
+      .fromTemplateUrl(optionsTplUrl, modelConfig)
+      .then(setupModal);
+  }
+
+  function setupModal(modal) {
+    $scope.modal = modal;
+  }
+
+  function onExit(e) {
+    $scope.modal.remove();
+  }
+
+  function initLocation () {
+    var posOptions = {timeout: 10000, enableHighAccuracy: false};
+    $cordovaGeolocation
+      .getCurrentPosition(posOptions)
+      .then(function (position) {
+        var lat  = position.coords.latitude;
+        var lng = position.coords.longitude;
+        $scope.startLocation.lat = lat;
+        $scope.startLocation.lng = lng;
+        GoogleMap.setMarkerPosition(lat, lng, {pan: true});
+    }, function (err) {
+      console.log(err);
+      $ionicPopup.alert({
+        title: err.message
+      });
+    });
+  }
+
+  function setStartLocationWithEvent (event) {
+    var lat = event.latLng.lat();
+    var lng = event.latLng.lng();
+    setStartLocation(lat, lng);
+  }
+
+  $scope.setStartLocation = function (lat, lng) {
+    GoogleMap.setMarkerPosition(lat, lng, {pan: true});
+    $scope.startLocation.lat = lat;
+    $scope.startLocation.lng = lng;
+    $scope.$apply();
+  }
+
   $scope.displayRating = function () {
     var wut = $scope.wutudu;
     if (!wut) {
@@ -58,4 +108,29 @@ angular.module('starter.controllers')
     $cordovaInAppBrowser.open(url, '_blank', options);
   };
 
+  $scope.expandMap = function() {
+    $scope.modal.show();
+    var dirMap = document.getElementById('directionsMap');
+    var directionsMapSearch = document.getElementById('directionsAutoComplete');
+    if (GoogleMap.initMap(dirMap, $scope.lat, $scope.lng, {clickHandler: setStartLocationWithEvent})) {
+      $ionicPlatform.ready(function () {
+        initLocation();
+      });
+    }
+    $scope.startLocation = {
+      lat: $scope.lat,
+      lng: $scope.lng
+    };
+  };
+
+  $scope.getDirectionsFromLocation = function () {
+    console.log($scope.startLocation)
+    $scope.modal.hide();
+    GoogleMap.initMap(document.getElementById('wutuduDetailMap'), $scope.lat, $scope.lng);
+    GoogleMap.getDirections($scope.startLocation.lat, $scope.startLocation.lng, $scope.lat, $scope.lng); 
+  };
+
+  $scope.closeDirectionsPopup = function() {
+    $scope.modal.hide();
+  };
 });

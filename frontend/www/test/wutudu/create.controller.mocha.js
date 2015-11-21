@@ -6,7 +6,7 @@ describe('WutuduCreateController', function() {
 
   beforeEach(function() {
     module('starter');
-    inject(function(_$controller_, _Wutudu_, _GoogleMap_, _MapAutocompleteBox_){
+    inject(function(_$controller_, _Wutudu_, _GoogleMap_){
       // The injector unwraps the underscores (_) from around the parameter names when matching
       $controller = _$controller_;
       Wutudu = _Wutudu_;
@@ -41,9 +41,6 @@ describe('WutuduCreateController', function() {
       GoogleMap = _GoogleMap_;
       sinon.stub(GoogleMap, 'initMap', function () { return false; });
       sinon.stub(GoogleMap, 'setMarkerPosition', function () { return false; });
-
-      MapAutocompleteBox = _MapAutocompleteBox_;
-      sinon.stub(MapAutocompleteBox, 'initAutocompleteBox', function () { return false; });
     });
     $stateParams = {
       groupId: '2',

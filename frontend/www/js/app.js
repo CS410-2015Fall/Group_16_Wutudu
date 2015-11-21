@@ -158,20 +158,36 @@ angular.module('starter', ['ionic', 'ngCordova',
   $urlRouterProvider.otherwise('/login');
 })
 
-.directive('disabletap', function($timeout) {
+.directive('googleplace', function($timeout) {
   return {
-    link: function() {
-      $timeout(function() {
-        container = document.getElementsByClassName('pac-container');
-        // disable ionic data tab
-        angular.element(container).attr('data-tap-disabled', 'true');
-        // leave input field if google-address-entry is selected
-        angular.element(container).on("click", function(){
-            document.getElementById('createWutuduPlacesAutoComplete').blur();
+    scope: {
+      setLocation: "="
+    },
+    link: function(scope, element, attrs, model) {
+        var options = {
+            types: [],
+            componentRestrictions: {}
+        };
+        scope.gPlace = new google.maps.places.Autocomplete(element[0], options);
+
+        google.maps.event.addListener(scope.gPlace, 'place_changed', function() {
+            var place = scope.gPlace.getPlace();
+            if (place.geometry && place.geometry.location) {
+              lat = place.geometry.location.lat();
+              lng = place.geometry.location.lng();
+              scope.setLocation(lat, lng);
+            }
         });
 
-      },500);
-
-    }
+        $timeout(function(){
+            var predictionContainer = angular.element(document.getElementsByClassName('pac-container'));
+            predictionContainer.attr('data-tap-disabled', true);
+            predictionContainer.css('pointer-events', 'auto');
+            predictionContainer.bind('click', function(arg){
+                element[0].blur();
+            });
+            console.log('timeout', predictionContainer)
+        }, 500);
+      }
   };
 });

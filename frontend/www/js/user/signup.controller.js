@@ -24,13 +24,13 @@ angular.module('starter.controllers')
   };
 
   function prepareLogin(userData) {
-    $wutuduNotification.register().then(function(deviceToken) {
+    // $wutuduNotification.register().then(function(deviceToken) {
       var config = {
         user: userData,
-        deviceToken: deviceToken
+        deviceToken: 1// deviceToken
       };
       $scope.doSignup(config);
-    });
+    // });
   }
 
   function signUpSuccess(response) {
