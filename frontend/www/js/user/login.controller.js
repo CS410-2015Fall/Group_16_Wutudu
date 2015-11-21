@@ -29,9 +29,9 @@ angular.module('starter.controllers')
   };
 
   function init(e) {
-    if (User.getSession()) {
-      resumeSession();
-    }
+    // if (User.getSession()) {
+    //   resumeSession();
+    // }
   }
 
   function resumeSession() {
@@ -39,23 +39,23 @@ angular.module('starter.controllers')
     $ionicLoading.show({
       template: 'Loading...'
     });
-    $wutuduNotification.register().then(function() {
+    // $wutuduNotification.register().then(function() {
       $ionicLoading.hide();
       $state.go('app.main');
-    });
+    // });
   }
 
   function prepareLogin(loginCreds) {
     $ionicLoading.show({
       template: 'Loading...'
     });
-    $wutuduNotification.register().then(function(deviceToken) {
+    // $wutuduNotification.register().then(function(deviceToken) {
       var loginConfig = {
         loginCreds: loginCreds,
-        deviceToken: deviceToken
+        deviceToken: 1 //deviceToken
       };
       doLogin(loginConfig);
-    });
+    // });
   }
 
   function doLogin(loginConfig) {
