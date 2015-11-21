@@ -1,17 +1,14 @@
 angular.module('starter.controllers')
 
 .controller('SignupCtrl', function ($scope, $state, $ionicPopup,
-  User, $wutuduNotification, Auth) {
+  User, $wutuduNotification, Auth, ErrorPopup) {
   $scope.signupData = {};
 
   $scope.validateSignup = function () {
     var userData = angular.copy($scope.signupData);
     var errors = validateFields(userData);
     if (errors) {
-      $ionicPopup.alert({
-        title: 'Sign up errors',
-        template: errors
-      });
+      ErrorPopup.display('Signup Errors', errors);
     } else {
       userData.email = userData.email;
       userData.password = userData.password.hashString();
@@ -34,22 +31,17 @@ angular.module('starter.controllers')
   }
 
   function signUpSuccess(response) {
-    console.log('Create user success: auth token=' + response.data.token);
+    console.log('Create User Success: auth token=' + response.data.token);
     $scope.signupData = {}; // Clear form data
     User.setSession(response.data.token, response.data.user);
     $state.go('app.main');
   }
 
   function signUpError(response) {
-    response.config.headers = JSON.stringify(response.config.headers);
-    response.config.data = JSON.stringify(response.config.data);
     $scope.response = response;
-    $ionicPopup.show({
-      title: 'Sign up error',
-      templateUrl: 'templates/errorPopup.html',
-      scope: $scope,
-      buttons: [{ text: 'OK' }]
-    });
+    ErrorPopup.displayResponse(response.status,
+                               'Signup Error',
+                               response.data.errors);
   }
 
   function validateFields(userData) {
@@ -62,13 +54,13 @@ angular.module('starter.controllers')
 
     emptyFieldError += fields.reduce(function (error, field) {
       if (!field) {
-        error += '<p>The ' + field + ' field cannot be blank.</p>';
+        error += 'The ' + field + ' Field Cannot Be Blank.\n';
       }
       return error;
     }, '');
 
     if(!emailRegex.test(userData.email)) {
-      emailError += '<p>Please sign up with a valid email.</p>';
+      emailError += 'Please Sign Up With A Valid Email.\n';
     }
     return emptyFieldError + emailError;
   }

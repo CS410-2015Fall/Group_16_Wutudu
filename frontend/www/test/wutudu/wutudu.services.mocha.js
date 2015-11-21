@@ -8,7 +8,7 @@ describe('WutuduServices', function() {
       finishFn;
 
   beforeEach(function() {
-    module('starter.services');
+    module('starter');
     inject(function(_Wutudu_, _$httpService_) {
       wutudu = _Wutudu_;
       getFn = wutudu.getInProgressWutudu;

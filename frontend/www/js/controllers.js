@@ -1,7 +1,7 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function ($scope, $ionicPopup,
-  $httpService, $ionicHistory, $state, User, Auth) {
+  $httpService, $ionicHistory, $state, User, Auth, ErrorPopup) {
 
   $scope.$on('$ionicView.enter', init);
 
@@ -31,20 +31,17 @@ angular.module('starter.controllers', [])
     User.removeSession();
     $state.go('login');
     $ionicPopup.alert({
-      title: 'Successfully logged out'
+      title: 'Message',
+      template: 'Successfully Logged Out',
+      cssClass: 'alert-success'
     });
   }
 
   function handleError(response) {
-    response.config.headers = JSON.stringify(response.config.headers);
-    response.config.data = JSON.stringify(response.config.data);
     $scope.response = response;
-    $ionicPopup.show({
-      title: 'Logout Error',
-      templateUrl: 'templates/errorPopup.html',
-      scope: $scope,
-      buttons: [{ text: 'OK' }]
-    });
+    ErrorPopup.displayResponse(response.status,
+                               'Logout Error',
+                               response.data.errors);
   }
 })
 

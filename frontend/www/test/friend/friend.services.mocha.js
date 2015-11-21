@@ -8,7 +8,7 @@ describe('FriendServices', function() {
       removeFn;
 
   beforeEach(function() {
-    module('starter.services');
+    module('starter');
     inject(function(_Friend_, _$httpService_) {
       friend = _Friend_;
       getFn = friend.getFriends;

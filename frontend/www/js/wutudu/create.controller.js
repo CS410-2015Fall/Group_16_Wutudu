@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('WutuduCreateCtrl', function($scope, $stateParams, $state, $ionicPopup,
-        $ionicModal, $msgBox, $ionicPlatform, $cordovaGeolocation, Friend, Group, Wutudu, GoogleMap) {
+        $ionicModal, $ionicPlatform, $cordovaGeolocation, Friend, Group, Wutudu, GoogleMap, ErrorPopup) {
   var groupId = $stateParams.groupId,
       config = {
         groupId: groupId
@@ -59,21 +59,16 @@ angular.module('starter.controllers')
     Wutudu.createWutudu(createConfig)
     .then(function successCallback (response) {
       // $ionicPopup.alert({
-      //   title: 'Successfully create wutudu'
-      // }).then(function() {
-      //   $state.go('app.group', config);
+      //   title: 'Create Wutudu Success',
+      //   template: 'Successfully Created Wutudu',
+      //   cssClass: 'alert-success'
       // });
       $state.go('app.group', config);
     }, function errorCallback (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
       $scope.response = response;
-      $ionicPopup.show({
-        title: 'Create Wutudu',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
+      ErrorPopup.displayResponse(response.status,
+                                 'Create Wutudu Error',
+                                 response.data.errors);
     });
   };
 
@@ -102,10 +97,8 @@ angular.module('starter.controllers')
 
   function validateCreate (wutudu)  {
     if (!wutudu.name) {
-      $ionicPopup.alert({
-        title: 'Failed to create Wutudu',
-        template: 'The event name cannot be blank.'
-      });
+      ErrorPopup.display('Create Wutudu Error',
+                         'Event Name Cannot Be Blank');
       return false;
     }
     return true;
@@ -190,9 +183,7 @@ angular.module('starter.controllers')
         $scope.wutudu.longitude = lng;
     }, function (err) {
       console.log(err);
-      $ionicPopup.alert({
-        title: err.message
-      });
+      ErrorPopup.display('Map Location Error', err.message);
     });
   }
 });

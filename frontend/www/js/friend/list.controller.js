@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('FriendListCtrl', function ($scope, $ionicPopup,
-  $ionicLoading, Friend) {
+  $ionicLoading, Friend, ErrorPopup) {
 
   var data = $scope.data = {
     friendToAdd: ''
@@ -11,10 +11,8 @@ angular.module('starter.controllers')
 
   $scope.validateNewFriend = function () {
     if ($scope.data.friendToAdd === '') {
-      $ionicPopup.alert({
-        title: 'Failed to send friend request',
-        template: 'The email cannot be blank.'
-      });
+      ErrorPopup.display('Failed To Send Friend Request',
+                         'Email Cannot Be Blank');
       return false;
     }
     return true;
@@ -28,21 +26,18 @@ angular.module('starter.controllers')
       'email': data.friendToAdd
     }).then(function successCallback (response) {
       $ionicPopup.alert({
-        title: 'Friend Request Sent!'
+        title: 'Friend Request Success',
+        template: 'Friend Request Sent To ' + data.friendToAdd,
+        cssClass: 'alert-success'
       });
       $scope.sentRequests.push({ 'email' : $scope.data.friendToAdd });
       $scope.data.friendToAdd = '';
     }, function errorCallback (response) {
       $scope.data.friendToAdd = '';
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
       $scope.response = response;
-      $ionicPopup.show({
-        title: 'Add friend error',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
+      ErrorPopup.displayResponse(response.status,
+                                 'Add Friend Error',
+                                 response.data.errors);
     });
   };
 
@@ -55,25 +50,22 @@ angular.module('starter.controllers')
         return f.email !== friend.email;
       });
       $ionicPopup.alert({
-        title: 'You are now friends with ' + friend.email + '!'
+        title: 'Accept Friend Success',
+        template: 'You Are Now Friends With ' + friend.email + '!',
+        cssClass: 'alert-success'
       });
     }, function errorCallback (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
       $scope.response = response;
-      $ionicPopup.show({
-        title: 'Accept friend error',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
+      ErrorPopup.displayResponse(response.status,
+                                 'Accept Friend Error',
+                                 response.data.errors);
     });
   };
 
   $scope.removeFriend = function (friend, type) {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Remove Friend',
-      template: 'Are you sure you want to remove this friend?'
+      template: 'Are You Sure You Want To Remove This Friend?'
     });
     confirmPopup.then(function (response) {
       if (response) {
@@ -85,7 +77,7 @@ angular.module('starter.controllers')
   $scope.cancelInvite = function (friend) {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Cancel Friend Invite',
-      template: 'Are you sure you want to remove this friend invite?'
+      template: 'Are You Sure You Want To Remove This Friend Invite?'
     });
     confirmPopup.then(function (response) {
       if (response) {
@@ -106,26 +98,23 @@ angular.module('starter.controllers')
         $scope.receivedRequests = $scope.receivedRequests.filter(function (f) {
           return f.email !== friend.email;
         });
-        popupMsg = 'You are no longer friends with ' + friend.email + '!';
+        popupMsg = 'You Are No Longer Friends With ' + friend.email + '!';
       } else if (type == 'invite') {
         $scope.sentRequests = $scope.sentRequests.filter(function (f) {
           return f.email !== friend.email;
         });
-        popupMsg = 'Your friend invite to ' + friend.email + ' has been cancelled!';
+        popupMsg = 'Your Friend Invite To ' + friend.email + ' Has Been Cancelled!';
       }
       $ionicPopup.alert({
-        title: popupMsg
+        title: 'Remove Friend Success',
+        template: popupMsg,
+        cssClass: 'alert-success'
       });
     }, function errorCallback (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
       $scope.response = response;
-      $ionicPopup.show({
-        title: 'Remove friend error',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
+      ErrorPopup.displayResponse(response.status,
+                                 'Remove Friend Error',
+                                 response.data.errors);
     });
   };
 
@@ -144,15 +133,10 @@ angular.module('starter.controllers')
   }
 
   function getFriendsError(response) {
-    response.config.headers = JSON.stringify(response.config.headers);
-    response.config.data = JSON.stringify(response.config.data);
     $scope.response = response;
     $ionicLoading.hide();
-    $ionicPopup.show({
-      title: 'Get friend error',
-      templateUrl: 'templates/errorPopup.html',
-      scope: $scope,
-      buttons: [{ text: 'OK' }]
-    });
+    ErrorPopup.displayResponse(response.status,
+                               'Get Friend Error',
+                               response.data.errors);
   }
 });

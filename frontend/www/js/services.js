@@ -16,18 +16,22 @@ angular.module('starter.services', [])
     },
     getObject: function(key) {
       return JSON.parse($window.localStorage[key] || '{}');
+    },
+    clearAll: function() {
+      $window.localStorage.clear();
     }
   };
 })
 
-.factory('$httpService', function($http, User) {
-  // var urlRoot = "http://localhost:5000";
-  var urlRoot = "https://stormy-hollows-9187.herokuapp.com";
+.factory('$httpService', function($http, User, $localstorage, $q, $cordovaNetwork, $ionicPopup) {
+  // var urlRoot = "http://localhost:5000",
+  var urlRoot = "https://stormy-hollows-9187.herokuapp.com",
+      deferred;
 
   return {
     makeRequest: function(config) {
       if(!config) throw "No config for http";
-      if(!config.method || !config.url) throw "One or more config missing";
+      if(!config.method || !config.url) throw "One Or More Config Missing";
       var token = User.getSession(),
           headers = {
             'Content-Type': 'application/json',
@@ -40,7 +44,42 @@ angular.module('starter.services', [])
             headers: headers,
             url: urlRoot + config.url,
           };
-      return $http(httpConfig);
+        configUrl = config.url;
+        function successCache(response) {
+          $localstorage.setObject('GET ' + config.url, response);
+          console.log(JSON.stringify(response));
+          deferred.resolve(response);
+        }
+
+        function errorCache(response) {
+          deferred.reject(response);
+        }
+
+      if (config.method == 'GET') {
+        if ($cordovaNetwork.isOffline()) {
+        // if (false) {
+          return $q(function(success, error) {
+                      var response = $localstorage.getObject('GET ' + config.url);
+                      if (response) {
+                        success(response);
+                      } else {
+                        $ionicPopup.alert({
+                          title: 'Connection Error',
+                          template: 'Internet Connection Unavailable',
+                          cssClass: 'alert-error'
+                        });
+                      }
+                    }
+                   );
+        } else {
+          deferred = $q.defer();
+          var httpPromise = $http(httpConfig);
+          httpPromise.then(successCache, errorCache);
+          return deferred.promise;
+        }
+      } else {
+        return $http(httpConfig);
+      }
     }
   };
 })
@@ -95,7 +134,7 @@ angular.module('starter.services', [])
       case 'pre_wutudu':
         stateConfig = {
           groupId: payload.group.id,
-          preWutudu:  payload.pre_wutudu,
+          preWutudu: payload.pre_wutudu,
           wutuduId: payload.pre_wutudu.pre_wutudu_id
         };
         goToState('app.answerWutudu',stateConfig);
@@ -156,7 +195,7 @@ angular.module('starter.services', [])
         console.debug('GCM error = ' + notification.msg);
         break;
       default:
-        console.debug('An unknown GCM event has occurred');
+        console.debug('An Unknown GCM Event Has Occurred');
         break;
     }
   }
@@ -248,25 +287,69 @@ angular.module('starter.services', [])
     },
     mapSetZoom: function (zoom) {
       map.setZoom(zoom);
-    },
-    getDirections: function (startlat, startlng, lat, lng, config) {
-      var directionsDisplay = new google.maps.DirectionsRenderer;
-      var directionsService = new google.maps.DirectionsService;
-      directionsDisplay.setMap(map);
-      directionsService.route({
-        origin: {lat: startlat, lng: startlng},
-        destination: {lat: lat, lng: lng},
-        travelMode: google.maps.TravelMode.DRIVING
-        //   // Note that Javascript allows us to access the constant
-        //   // using square brackets and a string value as its
-        //   // "property."
-      }, function(response, status) {
-        if (status == google.maps.DirectionsStatus.OK) {
-          directionsDisplay.setDirections(response);
-        } else {
-          window.alert('Directions request failed due to ' + status);
-        }
+    }
+  };
+})
+
+.factory('MapAutocompleteBox', function(GoogleMap) {
+  var autocompleteBox
+  return {
+    initAutocompleteBox: function(el, setHandler) {
+      if (!google.maps.places.Autocomplete) {
+        return false;
+      } else {
+        autocompleteBox = new google.maps.places.Autocomplete(el);
+        autocompleteBox.addListener('place_changed', function() {
+          var place = autocompleteBox.getPlace();
+          if (!place.geometry) {
+            return false;
+          } else {
+            var loc = place.geometry.location;
+            setHandler(loc.lat(), loc.lng());
+            GoogleMap.mapSetZoom(15);
+          }
+        });
+        return true;
+      }
+    }
+  };
+})
+
+.factory('internalErrorPopup', function($ionicPopup) {
+  return {
+    display: function() {
+      $ionicPopup.alert({
+        title: 'Internal Server Error',
+        template: 'Services Unavailable',
+        cssClass: 'alert-error'
       });
+    }
+  };
+})
+
+.factory('ErrorPopup', function($ionicPopup) {
+  var internalErrors = [500, 102];
+
+  function isServerError(status) {
+    return internalErrors.indexOf(status) != -1;
+  }
+
+  function display(title, template) {
+    $ionicPopup.alert({
+      title: title,
+      template: template,
+      cssClass: 'alert-error'
+    });
+  }
+
+  return {
+    display: display,
+    displayResponse: function(status, title, template) {
+      if (isServerError(status)) {
+        display('Internal Server Error', 'Services Unavailable');
+      } else {
+        display(title, template);
+      }
     }
   };
 });

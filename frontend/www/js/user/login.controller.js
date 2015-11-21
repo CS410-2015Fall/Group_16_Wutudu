@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('LoginCtrl', function ($scope, $state, $httpService,
-  User, $wutuduNotification, $ionicPopup, $ionicLoading, Auth) {
+  User, $wutuduNotification, $ionicLoading, Auth, ErrorPopup) {
 
   $scope.$on('$ionicView.enter', init);
 
@@ -13,14 +13,11 @@ angular.module('starter.controllers')
     var fields = ['email', 'password'];
     for (var i = 0; i < fields.length; i++) {
       if (!loginCreds[fields[i]]) {
-        errors = errors.concat('<p>The ' + fields[i] + ' field cannot be blank.</p>');
+        errors = errors.concat('<p>The ' + fields[i] + ' Field Cannot Be Blank.</p>');
       }
     }
     if (errors !== '') {
-      $ionicPopup.alert({
-        title: 'Login errors',
-        template: errors
-      });
+      ErrorPopup.display('Login Errors', errors);
     } else {
       loginCreds.email = loginCreds.email;
       loginCreds.password = loginCreds.password.hashString();
@@ -63,7 +60,7 @@ angular.module('starter.controllers')
   }
 
   function loginSuccess(response) {
-    console.log('Login success: auth token=' + response.data.token);
+    console.log('Login Success: auth token=' + response.data.token);
     $scope.loginData = {}; // Clear form data
     User.setSession(response.data.token, response.data.user);
     $ionicLoading.hide();
@@ -71,15 +68,9 @@ angular.module('starter.controllers')
   }
 
   function loginError(response) {
-    response.config.headers = JSON.stringify(response.config.headers);
-    response.config.data = JSON.stringify(response.config.data);
-    $scope.response = response;
     $ionicLoading.hide();
-    $ionicPopup.show({
-      title: 'Login Error',
-      templateUrl: 'templates/errorPopup.html',
-      scope: $scope,
-      buttons: [{ text: 'OK' }]
-    });
+    ErrorPopup.displayResponse(response.status,
+                               'Login Error',
+                               response.data.errors);
   }
 });

@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
-.controller('WutuduDetailsCtrl', function($scope, $stateParams, $state,
-  $ionicPopup, $ionicModal, $ionicPlatform, $cordovaGeolocation, GoogleMap, $cordovaInAppBrowser) {
+.controller('WutuduDetailsCtrl', function($scope, $stateParams, $state, $ionicModal, $ionicPlatform,
+  $cordovaGeolocation, GoogleMap, $cordovaInAppBrowser, ErrorPopup) {
 
   var groupId = $stateParams.groupId,
       wutuduId = $stateParams.wutuduId,
@@ -72,9 +72,7 @@ angular.module('starter.controllers')
         GoogleMap.setMarkerPosition(lat, lng, {pan: true});
     }, function (err) {
       console.log(err);
-      $ionicPopup.alert({
-        title: err.message
-      });
+      ErrorPopup.display('Map Location Error', err.message);
     });
   }
 

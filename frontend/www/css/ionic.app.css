@@ -46,6 +46,55 @@ $dark:                            #444 !default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
+/* alert success css override*/
+.alert-success .popup-head {
+    /*background-color: 'red';*/
+    background-color: #37AE63;
+    height: 50px;
+    line-height: 50px;
+    color: white;
+}
+
+.alert-success .popup-head h3 {
+    color: white;
+    font-weight: bold;
+}
+
+.alert-success .popup-body {
+    text-align: center;
+}
+
+.alert-success .popup-buttons .button {
+    background-color: #37AE63;
+}
+
+.alert-success .popup-buttons .button.activated {
+    background-color: #0B7D35;
+}
+
+/* alert error css override*/
+.alert-error .popup-head {
+    background-color: #DD0043;
+    height: 50px;
+    line-height: 50px;
+}
+
+.alert-error .popup-head h3 {
+    color: white;
+    font-weight: bold;
+}
+.alert-error .popup-body {
+    text-align: center;
+}
+
+.alert-error .popup-buttons .button {
+    background-color: #DD0043;
+}
+
+.alert-error .popup-buttons .button.activated {
+    background-color: #750023;
+}
+
 .ion-alert:before {
   content: "\f101"; }
 
@@ -2566,7 +2615,8 @@ body, .ionic-body {
   color: #000;
   word-wrap: break-word;
   font-size: 14px;
-  font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+  font-family: "Segoe UI", "Helvetica Neue", "Roboto", sans-serif;
+  /*font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;*/
   line-height: 20px;
   text-rendering: optimizeLegibility;
   -webkit-backface-visibility: hidden;

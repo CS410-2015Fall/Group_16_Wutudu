@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal,
-  $ionicLoading, $state, $msgBox, Friend, Group) {
+  $ionicLoading, $state, Friend, Group, ErrorPopup) {
 
   $scope.$on('$ionicView.enter', init);
 
@@ -110,17 +110,11 @@ angular.module('starter.controllers')
   }
 
   function handleError(response) {
-    response.config.headers = JSON.stringify(response.config.headers);
-    response.config.data = JSON.stringify(response.config.data);
     $scope.response = response;
     $ionicLoading.hide();
-    var data = {
-      title: 'Get Group error',
-      templateUrl: 'templates/errorPopup.html',
-      scope: $scope,
-      buttons: [{ text: 'OK' }]
-    };
-    $ionicPopup.show(data);
+    ErrorPopup.displayResponse(response.status,
+                               'Group Error',
+                               response.data.errors);
   }
 
   function addGroupToView(response) {
@@ -139,35 +133,36 @@ angular.module('starter.controllers')
     };
     $scope.activeGroups = $scope.activeGroups.filter(groupLeft);
     $scope.pendingGroups = $scope.pendingGroups.filter(groupLeft);
+    $ionicPopup.alert({
+      title: 'Left Group Successfully',
+      cssClass: 'alert-success'
+    });
   }
 
   function validateCreateGroup(name) {
     if(!name) {
-      var msg = {
-        title: 'No group name',
-        template: '<span>Please specify a group name</span>'
-      };
-      $msgBox.show($scope, msg);
+      ErrorPopup.display('No Group Name',
+                         'Please Specify A Group Name');
       return false;
     }
     return true;
   }
 
   function groupCreated(response) {
-    var msg = {
-      title: 'Group successfully created',
-    };
-    $msgBox.show($scope, msg);
     // opportunisitc update
     $scope.activeGroups.push(response.data.group);
     $scope.modal.hide();
+    $ionicPopup.alert({
+      title: 'Group Successfully Created',
+      cssClass: 'alert-success'
+    });
   }
 
   function displayFriendModal() {
     var tplConfig = {
       templateUrl: 'templates/friend/addFriend.html',
       title: 'Add Friend to Group',
-      subTitle: 'Please choose your friend to add',
+      subTitle: 'Please Choose Your Friend To Add',
       scope: $scope,
       buttons: [
          { text: 'Add',

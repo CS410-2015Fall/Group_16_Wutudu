@@ -1,6 +1,6 @@
 angular.module('starter.controllers')
 
-.controller('WutuduQuestionCtrl', function ($scope, $stateParams, $ionicPopup, $timeout, $state, Wutudu) {
+.controller('WutuduQuestionCtrl', function ($scope, $stateParams, $ionicPopup, $timeout, $state, Wutudu, ErrorPopup) {
   var groupId = $stateParams.groupId,
       wutuduId = $stateParams.wutuduId,
       config = {
@@ -51,9 +51,8 @@ angular.module('starter.controllers')
 
   $scope.submitAnswers = function () {
     if ($scope.answers.indexOf(-1) !== -1) {
-      $ionicPopup.alert({
-        title: 'Some questions are not answered!',
-      });
+      ErrorPopup.display('Submit Answer Error',
+                         'Some Questions Are Not Answered!');
       return;
     }
     var options = angular.copy(config);
@@ -63,15 +62,10 @@ angular.module('starter.controllers')
     Wutudu.sendAnswers(options).then(function (response) {
       $state.go('app.group', config);
     }, function (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
       $scope.response = response;
-      $ionicPopup.show({
-        title: 'Failed to submit Wutudu answers.',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
+      ErrorPopup.displayResponse(response.status,
+                                 'Submit Answer Error',
+                                 response.data.errors);
     });
   };
 
@@ -116,15 +110,10 @@ angular.module('starter.controllers')
         $scope.$apply();
       });
     }, function (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
       $scope.response = response;
-      $ionicPopup.show({
-        title: 'Failed to reload questions',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
+      ErrorPopup.displayResponse(response.status,
+                                 'Reload Questions Error',
+                                 response.data.errors);
     });
   }
 });

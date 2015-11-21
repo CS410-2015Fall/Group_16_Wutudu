@@ -12,8 +12,7 @@ angular.module('starter.services')
       $localstorage.set('token', token);
     },
     removeSession: function() {
-      $localstorage.remove('user');
-      $localstorage.remove('token');
+      $localstorage.clearAll();
     },
     getSession: function() {
       return $localstorage.get('token');

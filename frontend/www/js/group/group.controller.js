@@ -2,7 +2,7 @@ angular.module('starter.controllers')
 
 .controller('GroupCtrl', function($scope, $stateParams, $state,
     $ionicPopup, $ionicModal, $ionicLoading, $msgBox, Friend,
-    Group, Wutudu) {
+    Group, Wutudu, ErrorPopup) {
 
   var groupId = $stateParams.groupId,
       groupName = $stateParams.groupName,
@@ -71,15 +71,10 @@ angular.module('starter.controllers')
       // });
       reload();
     }, function (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
       $scope.response = response;
-      $ionicPopup.show({
-        title: 'Failed to decline Wutudu',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
+      ErrorPopup.displayResponse(response.status,
+                                 'Decline Wutudu Error',
+                                 response.data.errors);
     });
     $scope.modal.hide();
   };
@@ -165,7 +160,7 @@ angular.module('starter.controllers')
     var tplConfig = {
       templateUrl: 'templates/friend/addFriend.html',
       title: 'Add Friend to Group',
-      subTitle: 'Please choose your friend to add',
+      subTitle: 'Please Choose Your Friend To Add',
       scope: $scope,
       buttons: [
          { text: 'Add',
@@ -212,17 +207,11 @@ angular.module('starter.controllers')
   }
 
   function handleError(response) {
-    response.config.headers = JSON.stringify(response.config.headers);
-    response.config.data = JSON.stringify(response.config.data);
     $scope.response = response;
-    var data = {
-      title: 'Group Controller error',
-      templateUrl: 'templates/errorPopup.html',
-      scope: $scope,
-      buttons: [{ text: 'OK' }]
-    };
     $ionicLoading.hide();
-    $ionicPopup.show(data);
+    ErrorPopup.displayResponse(response.status,
+                               'Group Error',
+                               response.data.errors);
   }
 
   function formatWutudu(wutudus) {
@@ -247,7 +236,7 @@ angular.module('starter.controllers')
   function inviteSucess(response) {
       var data = response.data,
           msg = {
-            title: 'Invite to group',
+            title: 'Invite To Group',
             template: '<span>' + JSON.stringify(data) + '</span>'
           };
       $msgBox.show($scope, msg);

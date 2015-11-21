@@ -6,11 +6,13 @@ describe('AppServices', function() {
   });
 
   describe('$httpService', function() {
-    var $httpService, User, $httpBackend;
-    beforeEach(inject(function(_$httpService_, _User_, _$httpBackend_) {
+    var $httpService, User, $httpBackend, $cordovaNetwork;
+    beforeEach(inject(function(_$httpService_, _User_, _$httpBackend_, _$cordovaNetwork_) {
       $httpService = _$httpService_;
       User = _User_;
       $httpBackend = _$httpBackend_;
+      $cordovaNetwork = _$cordovaNetwork_;
+      sinon.stub($cordovaNetwork, 'isOffline', function() { return false; });
       $httpBackend.when('GET').respond({});
     }));
     it('should not make a request without config', function() {
@@ -22,7 +24,7 @@ describe('AppServices', function() {
       };
       expect(function() {
         $httpService.makeRequest(config);
-      }).to.throw(/config missing/);
+      }).to.throw(/Config Missing/);
     });
     it('should not make a request without url', function() {
       var config = {
@@ -30,7 +32,7 @@ describe('AppServices', function() {
       };
       expect(function() {
         $httpService.makeRequest(config);
-      }).to.throw(/config missing/);
+      }).to.throw(/Config Missing/);
     });
     it('should make request correctly', function() {
       var config = {
