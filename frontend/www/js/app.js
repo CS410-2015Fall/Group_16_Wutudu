@@ -189,4 +189,17 @@ angular.module('starter', ['ionic', 'ngCordova',
         }, 500);
       }
   };
+})
+
+.directive('lowercase', function() {
+  return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        function parser(text) {
+          return (text || '').toLowerCase();
+        }
+        ngModel.$parsers.push(parser);
+      }
+    };
 });

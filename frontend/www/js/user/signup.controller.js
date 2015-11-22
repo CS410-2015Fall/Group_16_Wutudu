@@ -13,7 +13,7 @@ angular.module('starter.controllers')
         template: errors
       });
     } else {
-      userData.email = userData.email.toLowerCase();
+      userData.email = userData.email;
       userData.password = userData.password.hashString();
       prepareLogin(userData);
     }
@@ -24,13 +24,13 @@ angular.module('starter.controllers')
   };
 
   function prepareLogin(userData) {
-    // $wutuduNotification.register().then(function(deviceToken) {
+    $wutuduNotification.register().then(function(deviceToken) {
       var config = {
         user: userData,
-        deviceToken: 1// deviceToken
+        deviceToken: deviceToken
       };
       $scope.doSignup(config);
-    // });
+    });
   }
 
   function signUpSuccess(response) {

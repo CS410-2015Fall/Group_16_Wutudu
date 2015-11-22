@@ -22,16 +22,16 @@ angular.module('starter.controllers')
         template: errors
       });
     } else {
-      loginCreds.email = loginCreds.email.toLowerCase();
+      loginCreds.email = loginCreds.email;
       loginCreds.password = loginCreds.password.hashString();
       prepareLogin(loginCreds);
     }
   };
 
   function init(e) {
-    // if (User.getSession()) {
-    //   resumeSession();
-    // }
+    if (User.getSession()) {
+      resumeSession();
+    }
   }
 
   function resumeSession() {
@@ -39,23 +39,23 @@ angular.module('starter.controllers')
     $ionicLoading.show({
       template: 'Loading...'
     });
-    // $wutuduNotification.register().then(function() {
+    $wutuduNotification.register().then(function() {
       $ionicLoading.hide();
       $state.go('app.main');
-    // });
+    });
   }
 
   function prepareLogin(loginCreds) {
     $ionicLoading.show({
       template: 'Loading...'
     });
-    // $wutuduNotification.register().then(function(deviceToken) {
+    $wutuduNotification.register().then(function(deviceToken) {
       var loginConfig = {
         loginCreds: loginCreds,
-        deviceToken: 1 //deviceToken
+        deviceToken: deviceToken
       };
       doLogin(loginConfig);
-    // });
+    });
   }
 
   function doLogin(loginConfig) {
