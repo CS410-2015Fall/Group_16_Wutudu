@@ -75,29 +75,9 @@ angular.module('starter.controllers')
     });
   };
 
-  $scope.declineWutudu = function () {
-    $scope.answers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
-    var options = angular.copy(config);
-    options.data = {'user_answer' : {
-      'answers': $scope.answers
-    }};
-    Wutudu.sendAnswers(options).then(function (response) {
-      // $ionicPopup.alert({
-      //   title: 'You have declined this Wutudu',
-      // });
-      $state.go('app.group', config);
-    }, function (response) {
-      response.config.headers = JSON.stringify(response.config.headers);
-      response.config.data = JSON.stringify(response.config.data);
-      $scope.response = response;
-      $ionicPopup.show({
-        title: 'Failed to decline Wutudu',
-        templateUrl: 'templates/errorPopup.html',
-        scope: $scope,
-        buttons: [{ text: 'OK' }]
-      });
-    });
-  };
+  $scope.cancelAnswers = function () {
+    $state.go('app.group', config);
+  }
 
   function checkAllAnswered () {
     if ($scope.answers.indexOf(-1) === -1) {

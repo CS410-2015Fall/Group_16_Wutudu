@@ -48,13 +48,5 @@ describe('WutuduQuestionController', function() {
 
       expect(Wutudu.sendAnswers.callCount).to.equal(0);
     });
-
-    it('should send a decline request', function() {
-      $scope.answers = [0, 1, 2, 3, -1, 1, 2, 3, 0, 1];
-      $scope.declineWutudu();
-
-      expect(Wutudu.sendAnswers.callCount).to.equal(1);
-      expect($scope.answers).to.deep.equal([-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]);
-    });
   });
 });

@@ -77,6 +77,12 @@ describe('GroupController', function() {
         };
         return returnPromise(response);
       });
+      sinon.stub(Wutudu, 'sendAnswers', function () { 
+        var response = {
+          'data' : 'Wutudu Declined'
+        };
+        return returnPromise(response);
+      });
     });
   });
 
@@ -207,6 +213,16 @@ describe('GroupController', function() {
       result = $scope.canEndPreWutudu(mockPrewutudu);
       expect(result).to.be.true;
     });
+    it('should decline prewutudu correctly', function() {
+      var mockPrewutudu = {
+        pre_wutudu_id: 1
+      }
+      $scope.answers = [0, 1, 2, 3, -1, 1, 2, 3, 0, 1];
+      $scope.declineWutudu(mockPrewutudu);
+
+      expect(Wutudu.sendAnswers.callCount).to.equal(1);
+      expect($scope.answers).to.deep.equal([-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]);
+    })
   });
 
 });

@@ -33,7 +33,7 @@ angular.module('starter.controllers')
     GoogleMap.setMarkerPosition(lat, lng, {pan: true});
   };
 
-  $scope.setLocation = function (lat, lng) {
+  $scope.setWutuduLocation = function (lat, lng) {
     GoogleMap.setMarkerPosition(lat, lng, {pan: true});
     $scope.wutudu.latitude = lat;
     $scope.wutudu.longitude = lng;
@@ -115,6 +115,13 @@ angular.module('starter.controllers')
     var lat = event.latLng.lat();
     var lng = event.latLng.lng();
     setLocation(lat, lng);
+  }
+
+  function setLocation (lat, lng) {
+    GoogleMap.setMarkerPosition(lat, lng, {pan: true});
+    $scope.wutudu.latitude = lat;
+    $scope.wutudu.longitude = lng;
+    $scope.$apply();
   }
 
   function onDatePick (val) {

@@ -57,6 +57,33 @@ angular.module('starter.controllers')
     $state.go('app.answerWutudu', config);
   };
 
+  $scope.declineWutudu = function(preWutudu) {
+    config.preWutudu = preWutudu;
+    config.wutuduId = preWutudu.pre_wutudu_id.toString(); 
+    $scope.answers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+    var options = angular.copy(config);
+    options.data = {'user_answer' : {
+      'answers': $scope.answers
+    }};
+    Wutudu.sendAnswers(options).then(function (response) {
+      // $ionicPopup.alert({
+      //   title: 'You have declined this Wutudu',
+      // });
+      reload();
+    }, function (response) {
+      response.config.headers = JSON.stringify(response.config.headers);
+      response.config.data = JSON.stringify(response.config.data);
+      $scope.response = response;
+      $ionicPopup.show({
+        title: 'Failed to decline Wutudu',
+        templateUrl: 'templates/errorPopup.html',
+        scope: $scope,
+        buttons: [{ text: 'OK' }]
+      });
+    });
+    $scope.modal.hide();
+  };
+
   $scope.finishPreWutudu = function(preWutudu) {
     config.wutuduId = preWutudu.pre_wutudu_id.toString();
     Wutudu.finishWutudu(config).then(preWutuduSuccess, handleError);
@@ -248,4 +275,12 @@ angular.module('starter.controllers')
     });
   }
 
+  function reload(e) {
+    Group.getGroup(config)
+      .then(setupGroup, handleError);
+
+    $ionicLoading.show({
+        template: 'Loading...'
+    });
+  }
 });
