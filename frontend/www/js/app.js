@@ -161,7 +161,7 @@ angular.module('starter', ['ionic', 'ngCordova',
 .directive('googleplace', function($timeout) {
   return {
     scope: {
-      setLocation: "="
+      setLocation: "&"
     },
     link: function(scope, element, attrs, model) {
         var options = {
@@ -175,7 +175,7 @@ angular.module('starter', ['ionic', 'ngCordova',
             if (place.geometry && place.geometry.location) {
               lat = place.geometry.location.lat();
               lng = place.geometry.location.lng();
-              scope.setLocation(lat, lng);
+              scope.setLocation({lat: lat, lng: lng});
             }
         });
 
@@ -186,7 +186,6 @@ angular.module('starter', ['ionic', 'ngCordova',
             predictionContainer.bind('click', function(arg){
                 element[0].blur();
             });
-            console.log('timeout', predictionContainer)
         }, 500);
       }
   };
