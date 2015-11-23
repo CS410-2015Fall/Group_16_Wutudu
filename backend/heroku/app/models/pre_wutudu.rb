@@ -93,26 +93,29 @@ class PreWutudu < ActiveRecord::Base
       p "All users declined. pre_wutudu #{wid} destroyed" if self.destroyed?
     elsif self.completed_answers_count == self.total_possible_count
 
-      Thread.new do
-        success, error = self.generate_wutudu_event
-        p "There was a #{error} error with wutudu event creation" unless error == 200
-        p "All possible users answered. wutudu event created" if error == 200
-        group = self.group
-        tokens = group.active_users_device_tokens
-        unless tokens.empty?
-          payload = {
-            group: group.basic_info,
-            wutudu_event: self.wutudu_event.basic_info,
-            state: 'wutudu'
-          }
-          send_notification(tokens, \
-                            "A Wutudu has been generated for Group #{group.name}", \
-                            payload)
+      # Thread.new do
+        msg, status = self.generate_wutudu_event
+        if status == 200
+          p "All possible users answered. wutudu event created"
+          group = self.group
+          tokens = group.active_users_device_tokens
+          unless tokens.empty?
+            payload = {
+              group: group.basic_info,
+              wutudu_event: self.wutudu_event.basic_info,
+              state: 'wutudu'
+            }
+            send_notification(tokens, \
+                              "A Wutudu has been generated for Group #{group.name}", \
+                              payload)
+          end
+        else
+          p "There was a #{status} error with wutudu event creation"
         end
-        exit
-        ActiveRecord::Base.connection.close
-        Thread.exit
-      end
+        # exit
+        # ActiveRecord::Base.connection.close
+        # Thread.exit
+      # end
     end
   end
 end
