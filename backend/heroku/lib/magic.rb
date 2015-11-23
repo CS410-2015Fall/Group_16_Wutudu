@@ -1,9 +1,9 @@
 module Magic
   DATA_VARIABLES = [:distance, :rating, :review_count]
-  WEIGHTS = {distance: 0.40, rating: 0.4, review_count: 0.2}
+  WEIGHTS = {distance: 0.3, rating: 0.5, review_count: 0.2}
 
   class BestLocation
-    attr_reader :location, :scores, :data, :categories
+    attr_reader :location, :scores, :data, :categories, :api
     # Params:
     # lat: latitude (Float)
     # long: longitude (Float)
@@ -17,13 +17,15 @@ module Magic
         @sums = {}
         @avgs = {}
         @scores = []
-        @api = ThirdPartyAPI::YelpSearch.new(lat, long, cats)
+        @api = ThirdPartyAPI::MagicAPI.new(lat, long, cats)
       rescue
         @api = nil
       end
     end
 
-    # Outputs (and saves to @location) the formatted yelp result with the maximum score
+    # Outputs (and saves to @location) the formatted result
+    # with the maximum score that is currently open
+    #
     # Params:
     # cat: optional category (String)
     #
@@ -33,17 +35,38 @@ module Magic
     # OR
     # Call bl.location since it stores the result
     def find_best_location(*cat)
+      @location = nil
       if @api
-        c = (cat.empty? ? @categories[0] : cat[0])
-        if @categories.include?(c)
-          transform_data(c)
-          id = @data[:id][@scores.index(@scores.max)]
-          @location = @api.business_summary(id)
+        best_loc = nil
+        cats = (cat.empty? ? @categories.dup : cat.dup)
+        until best_loc || cats.length == 0 do
+          c = cats.shift
+          if @categories.include?(c)
+            transform_data(c)
+            scores = @scores.dup
+            until best_loc || scores.length == 0 do
+              max_index = scores.index(scores.max)
+              id = @data[:id][max_index]
+              name = @data[:name][max_index]
+              result = @api.business_summary({
+                id: id, name: name
+              })
+              if result[:is_open]
+                best_loc = result
+              end
+              scores.delete_at(max_index)
+            end
+          end
         end
-      else
-        @location = nil
       end
-      @location
+      @location  = {
+        distances: @data[:distance],
+        ratings: @data[:rating],
+        max_index: max_index,
+        id: @data[:id],
+        score: @scores,
+        loc: best_loc
+      }
     end
 
     private
@@ -71,9 +94,15 @@ module Magic
     def calculate_score
       @data[:id].each_index do |i|
         @scores[i] = 0
-        DATA_VARIABLES.each do |v|
-          @scores[i] += @data[v][i] * WEIGHTS[v]
-        end
+        distance_key = :distance
+        rating_key = :rating
+        # distance score should be weighted more for nearer ones
+        distance_score = 1/ @data[distance_key][i]  * WEIGHTS[distance_key]
+        rating_score = @data[rating_key][i] * WEIGHTS[rating_key]
+        @scores[i] = distance_score + rating_score
+        # DATA_VARIABLES.each do |v|
+        #   @scores[i] += @data[v][i] * WEIGHTS[v]
+        # end
       end
     end
 
@@ -81,7 +110,7 @@ module Magic
       @data = @api.summary[cat].dup
       unless @data.empty?
         eliminate_closed
-        normalize_data
+        normalize_data # what is this used for?
         calculate_score
       end
     end
