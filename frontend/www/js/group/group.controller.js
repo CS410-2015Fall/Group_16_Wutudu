@@ -69,7 +69,7 @@ angular.module('starter.controllers')
       // $ionicPopup.alert({
       //   title: 'You have declined this Wutudu',
       // });
-      reload();
+      $state.reload();
     }, function (response) {
       $scope.response = response;
       ErrorPopup.displayResponse(response.status,
@@ -258,16 +258,6 @@ angular.module('starter.controllers')
     initData();
     Group.getGroup(config)
       .then(setupGroup, handleError);
-
-    $ionicLoading.show({
-        template: 'Loading...'
-    });
-  }
-
-  function reload(e) {
-    Group.getGroup(config)
-      .then(setupGroup, handleError);
-
     $ionicLoading.show({
         template: 'Loading...'
     });
