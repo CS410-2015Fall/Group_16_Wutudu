@@ -55,8 +55,8 @@ angular.module('starter.services', [])
         }
 
       if (config.method == 'GET') {
-        if ($cordovaNetwork.isOffline()) {
-        // if (false) {
+        // if ($cordovaNetwork.isOffline()) {
+        if (false) {
           return $q(function(success, error) {
                       var response = $localstorage.getObject('GET ' + config.url);
                       if (response) {
@@ -286,33 +286,29 @@ angular.module('starter.services', [])
     },
     mapSetZoom: function (zoom) {
       map.setZoom(zoom);
+    },
+    getDirections: function (startlat, startlng, lat, lng, config) {
+      var directionsDisplay = new google.maps.DirectionsRenderer;
+      var directionsService = new google.maps.DirectionsService;
+      directionsDisplay.setMap(map);
+      directionsService.route({
+        origin: {lat: startlat, lng: startlng},
+        destination: {lat: lat, lng: lng},
+        travelMode: google.maps.TravelMode.DRIVING
+        //   // Note that Javascript allows us to access the constant
+        //   // using square brackets and a string value as its
+        //   // "property."
+      }, function(response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
     }
   };
 })
 
-.factory('MapAutocompleteBox', function(GoogleMap) {
-  var autocompleteBox
-  return {
-    initAutocompleteBox: function(el, setHandler) {
-      if (!google.maps.places.Autocomplete) {
-        return false;
-      } else {
-        autocompleteBox = new google.maps.places.Autocomplete(el);
-        autocompleteBox.addListener('place_changed', function() {
-          var place = autocompleteBox.getPlace();
-          if (!place.geometry) {
-            return false;
-          } else {
-            var loc = place.geometry.location;
-            setHandler(loc.lat(), loc.lng());
-            GoogleMap.mapSetZoom(15);
-          }
-        });
-        return true;
-      }
-    }
-  };
-})
 
 .factory('internalErrorPopup', function($ionicPopup) {
   return {
