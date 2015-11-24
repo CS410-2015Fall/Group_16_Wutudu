@@ -77,7 +77,7 @@ describe('GroupController', function() {
         };
         return returnPromise(response);
       });
-      sinon.stub(Wutudu, 'sendAnswers', function () { 
+      sinon.stub(Wutudu, 'sendAnswers', function() { 
         var response = {
           'data' : 'Wutudu Declined'
         };
@@ -140,12 +140,13 @@ describe('GroupController', function() {
 
   describe('When showing current prewutudu', function() {
     var $scope;
-    beforeEach(function() {
+    beforeEach(inject(function(_$state_) {
       $scope = $rootScope.$new();
-      $controller(GROUP_CTRL, { $scope: $scope });
+      $controller(GROUP_CTRL, { $scope: $scope});
       $scope.$emit('$ionicView.enter');
       $scope.$digest();
-    });
+      sinon.stub(_$state_, 'reload', function(){});
+    }));
     it('should get the current prewutudu', function() {
       expect($scope.activePreWutudu).to.not.exist;
       var mockPrewutudu = {};
