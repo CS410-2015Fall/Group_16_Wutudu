@@ -247,6 +247,7 @@ angular.module('starter.controllers')
     filterCompletedWutudu(newWutudu.pre_wutudu_id);
     $scope.wutuduEvents.push(formatWutudu([newWutudu])[0]);
     $scope.cancelPreWutuduOptions();
+    $state.reload();
   }
 
   function onExit(e) {
