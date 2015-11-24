@@ -47,7 +47,6 @@ angular.module('starter.services', [])
         configUrl = config.url;
         function successCache(response) {
           $localstorage.setObject('GET ' + config.url, response);
-          console.log(JSON.stringify(response));
           deferred.resolve(response);
         }
 
