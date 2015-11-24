@@ -46,6 +46,55 @@ $dark:                            #444 !default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
+/* alert success css override*/
+.alert-success .popup-head {
+    /*background-color: 'red';*/
+    background-color: #37AE63;
+    height: 50px;
+    line-height: 50px;
+    color: white;
+}
+
+.alert-success .popup-head h3 {
+    color: white;
+    font-weight: bold;
+}
+
+.alert-success .popup-body {
+    text-align: center;
+}
+
+.alert-success .popup-buttons .button {
+    background-color: #37AE63;
+}
+
+.alert-success .popup-buttons .button.activated {
+    background-color: #0B7D35;
+}
+
+/* alert error css override*/
+.alert-error .popup-head {
+    background-color: #DD0043;
+    height: 50px;
+    line-height: 50px;
+}
+
+.alert-error .popup-head h3 {
+    color: white;
+    font-weight: bold;
+}
+.alert-error .popup-body {
+    text-align: center;
+}
+
+.alert-error .popup-buttons .button {
+    background-color: #DD0043;
+}
+
+.alert-error .popup-buttons .button.activated {
+    background-color: #750023;
+}
+
 .ion-alert:before {
   content: "\f101"; }
 
@@ -2566,7 +2615,8 @@ body, .ionic-body {
   color: #000;
   word-wrap: break-word;
   font-size: 14px;
-  font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+  font-family: "Segoe UI", "Helvetica Neue", "Roboto", sans-serif;
+  /*font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;*/
   line-height: 20px;
   text-rendering: optimizeLegibility;
   -webkit-backface-visibility: hidden;
@@ -4238,6 +4288,12 @@ ion-tabs.tabs-color-active-dark .tab-item {
   cursor: default;
   pointer-events: none; }
 
+.nav-bar-tabs-top.hide ~ .view-container .tabs-top .tabs {
+  top: 0; }
+
+.pane[hide-nav-bar="true"] .has-tabs-top {
+  top: 49px; }
+
 /**
  * Menus
  * --------------------------------------------------
@@ -4264,7 +4320,8 @@ ion-tabs.tabs-color-active-dark .tab-item {
   box-shadow: -1px 0px 2px rgba(0, 0, 0, 0.2), 1px 0px 2px rgba(0, 0, 0, 0.2); }
 
 .menu-open .menu-content .pane, .menu-open .menu-content .scroll-content {
-  pointer-events: none; }
+  pointer-events: none;
+  overflow: hidden; }
 
 .grade-b .menu-content, .grade-c .menu-content {
   -webkit-box-sizing: content-box;
@@ -6449,7 +6506,7 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
     top: 0;
     bottom: 0;
     right: 0;
-    padding: 14px 48px 16px 16px;
+    padding: 0 48px 0 16px;
     max-width: 65%;
     border: none;
     background: #fff;
