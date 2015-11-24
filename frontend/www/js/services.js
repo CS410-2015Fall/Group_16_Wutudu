@@ -23,7 +23,8 @@ angular.module('starter.services', [])
   };
 })
 
-.factory('$httpService', function($http, User, $localstorage, $q, $cordovaNetwork, $ionicPopup) {
+.factory('$httpService', function($http, User, $localstorage,
+  $q, $cordovaNetwork, $ionicPopup, $device) {
   // var urlRoot = "http://localhost:5000",
   var urlRoot = "https://stormy-hollows-9187.herokuapp.com",
       deferred;
@@ -55,8 +56,7 @@ angular.module('starter.services', [])
         }
 
       if (config.method == 'GET') {
-        // if ($cordovaNetwork.isOffline()) {
-        if (false) {
+        if (!$device.isBrowser() && $cordovaNetwork.isOffline()) {
           return $q(function(success, error) {
                       var response = $localstorage.getObject('GET ' + config.url);
                       if (response) {
@@ -99,7 +99,7 @@ angular.module('starter.services', [])
 })
 
 .factory('$wutuduNotification', function($ionicPlatform, $cordovaPush,
-    $rootScope, $q, $state, $ionicPopup, $msgBox) {
+    $rootScope, $q, $state, $ionicPopup, $msgBox, $device) {
 
   var config = {
     "senderID": "185225418332",
@@ -199,18 +199,27 @@ angular.module('starter.services', [])
     }
   }
 
+  function webRegister() {
+    var mockDeviceId = 1;
+    return $q.resolve(mockDeviceId);
+  }
+
+  function mobileRegister() {
+    deferred = $q.defer();
+    $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
+    $ionicPlatform.ready(function() {
+      $cordovaPush.register(config).then(function(result) {
+        console.debug(result);
+      }, function(err) {
+        console.error(err);
+      });
+    });
+    return deferred.promise;
+  }
+
   return {
     register: function() {
-      deferred = $q.defer();
-      $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
-      $ionicPlatform.ready(function() {
-        $cordovaPush.register(config).then(function(result) {
-          console.debug(result);
-        }, function(err) {
-          console.error(err);
-        });
-      });
-      return deferred.promise;
+      return $device.isBrowser()? webRegister(): mobileRegister();
     }
   };
 
@@ -346,5 +355,15 @@ angular.module('starter.services', [])
         display(title, template);
       }
     }
+  };
+})
+
+.factory('$device', function() {
+  function isBrowser() {
+    return window.navigator.userAgent.indexOf('Chrome') > -1;
+  }
+
+  return {
+    isBrowser: isBrowser
   };
 });
