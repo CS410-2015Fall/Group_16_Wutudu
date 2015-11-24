@@ -15,3 +15,57 @@
 .bar .back-text .previous-title {
 	display: none;
 }
+
+.style {
+  color: #fff;
+  margin-left: 5px;
+}
+
+.item {
+  border-style: dotted;
+}
+
+.has-header {
+  top: 60px;
+}
+
+.bar {
+  background-color: #c62b53;
+  color: #ffffff;
+  height: 60px;
+}
+
+.bar .title {
+  background-color: #c62b53;
+  color: #ffffff;
+  margin-top: 14px;
+}
+
+.bar .button {
+  background-color: transparent;
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.bar.bar-stable {
+  background-color: #c62b53;
+  color: #ffffff;
+  height: 60px;
+}
+
+.bar.bar-stable .title {
+  background-color: #c62b53;
+  color: #ffffff;
+  margin-top: 14px;
+}
+
+.bar.bar-stable .button {
+  color: #ffffff;
+  margin-top: 14px;
+}
+
+.bar.bar-stable .button.button-clear {
+  border-color: transparent;
+  color: #ffffff;
+  font-size: 17px;
+}
