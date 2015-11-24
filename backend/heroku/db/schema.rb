@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118001841) do
+ActiveRecord::Schema.define(version: 20151124092431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,6 +136,7 @@ ActiveRecord::Schema.define(version: 20151118001841) do
     t.integer  "group_id"
     t.integer  "pre_wutudu_id"
     t.text     "event_details"
+    t.boolean  "reminders_sent"
   end
 
   add_index "wutudu_events", ["category_id"], name: "index_wutudu_events_on_category_id", using: :btree
