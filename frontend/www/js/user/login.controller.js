@@ -46,13 +46,14 @@ angular.module('starter.controllers')
     $ionicLoading.show({
       template: 'Loading...'
     });
-    $wutuduNotification.register().then(function(deviceToken) {
+    // $wutuduNotification.register().then(function(deviceToken) {
       var loginConfig = {
         loginCreds: loginCreds,
-        deviceToken: deviceToken
+        // deviceToken: deviceToken
+        deviceToken: 1
       };
       doLogin(loginConfig);
-    });
+    // });
   }
 
   function doLogin(loginConfig) {
