@@ -26,19 +26,19 @@
 }
 
 .has-header {
-  top: 60px;
+  top: 50px;
 }
 
 .bar {
   background-color: #c62b53;
   color: #ffffff;
-  height: 60px;
+  height: 51px;
 }
 
 .bar .title {
   background-color: #c62b53;
   color: #ffffff;
-  margin-top: 14px;
+  margin-top: 5px;
 }
 
 .bar .button {
@@ -50,18 +50,18 @@
 .bar.bar-stable {
   background-color: #c62b53;
   color: #ffffff;
-  height: 60px;
+  height: 51px;
 }
 
 .bar.bar-stable .title {
   background-color: #c62b53;
   color: #ffffff;
-  margin-top: 14px;
+  margin-top: 5px;
 }
 
 .bar.bar-stable .button {
   color: #ffffff;
-  margin-top: 14px;
+  margin-top: 5px;
 }
 
 .bar.bar-stable .button.button-clear {
