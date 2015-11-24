@@ -90,25 +90,4 @@ describe('WutuduCreateController', function() {
       expect(Wutudu.createWutudu.callCount).to.equal(1);
     });
   });
-
-  describe('On Google Map location change', function() {
-    var $scope, controller;
-
-    beforeEach(function() {
-      $scope = {};
-      controller = $controller('WutuduCreateCtrl', {
-        $scope: $scope, 
-        $stateParams: $stateParams,
-        GoogleMap: GoogleMap
-      });
-    });
-
-    it('should update the map marker', function() {
-      $scope.locationChange({
-        latitude: '49.2827',
-        longitude: '-123.1207'
-      });
-      expect(GoogleMap.setMarkerPosition.callCount).to.equal(1);
-    });
-  });
 });

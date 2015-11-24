@@ -27,12 +27,6 @@ angular.module('starter.controllers')
     }
   })();
 
-  $scope.locationChange = function (wutudu) {
-    var lat = parseFloat(wutudu.latitude);
-    var lng = parseFloat(wutudu.longitude);
-    GoogleMap.setMarkerPosition(lat, lng, {pan: true});
-  };
-
   $scope.setWutuduLocation = function (lat, lng) {
     GoogleMap.setMarkerPosition(lat, lng, {pan: true});
     $scope.wutudu.latitude = lat;
