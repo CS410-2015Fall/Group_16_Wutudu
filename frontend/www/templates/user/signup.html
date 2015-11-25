@@ -1,4 +1,4 @@
-<ion-view view-title="Sign up">
+<ion-view class="signup" view-title="Create Your Wutudu Account">
   <ion-nav-bar class="bar-positive">
     <ion-nav-back-button class="button-icon ion-arrow-left-c"></ion-nav-back-button>
   </ion-nav-bar>
@@ -6,20 +6,22 @@
   <ion-content>
     <form ng-submit="validateSignup()">
       <div class="list">
-        <label class="item item-input">
-          <span class="input-label">Username</span>
-          <input type="text" lowercase ng-model="signupData.name">
+        <label class="item item-input ">
+          <i class="icon ion-person padding-right-double"></i>
+          <input class="input-wutudu" placeholder="USERNAME" type="text" lowercase ng-model="signupData.name">
         </label>
         <label class="item item-input">
-          <span class="input-label">Email</span>
-          <input type="text" ng-model="signupData.email">
+          <i class="icon ion-email padding-right-double"></i>
+          <input class="input-wutudu" placeholder="EMAIL" type="text" ng-model="signupData.email">
         </label>
         <label class="item item-input">
-          <span class="input-label">Password</span>
-          <input type="password" ng-model="signupData.password">
+          <i class="icon ion-android-unlock padding-right-double"></i>
+          <input class="input-wutudu" placeholder="PASSWORD" type="password" ng-model="signupData.password">
         </label>
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Sign up now!</button>
+          <button class="button ion-forward button-block button-wutudu" type="submit">
+            <span class="padding-horizontal">SIGN UP</span>
+          </button>
         </label>
       </div>
     </form>

@@ -13,7 +13,7 @@ angular.module('starter.controllers')
     var fields = ['email', 'password'];
     for (var i = 0; i < fields.length; i++) {
       if (!loginCreds[fields[i]]) {
-        errors = errors.concat('<p>The ' + fields[i] + ' Field Cannot Be Blank.</p>');
+        errors = errors.concat('<p>The ' + fields[i] + ' field cannot be blank.</p>');
       }
     }
     if (errors !== '') {

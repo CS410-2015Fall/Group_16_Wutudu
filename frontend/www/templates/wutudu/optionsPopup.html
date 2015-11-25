@@ -12,9 +12,9 @@
       {{activePreWutudu.declined_answers}} declined
     </h3>
     <button class="button button-block button-outline button-positive" ng-hide="userAnswered(activePreWutudu)" ng-click="showWutuduQuestion(activePreWutudu)">Answer Questions</button>
-    <button class="button button-block button-outline button-positive" ng-hide="userAnswered(activePreWutudu)" ng-click="declineWutudu(activePreWutudu)">Decline Wutudu</button>
+    <button class="button button-block button-outline button-assertive" ng-hide="userAnswered(activePreWutudu)" ng-click="declineWutudu(activePreWutudu)">Decline Wutudu</button>
     <button class="button button-block button-outline button-balanced" ng-show="canEndPreWutudu(activePreWutudu)" ng-click="finishPreWutudu(activePreWutudu)">Decide Wutudu!</button>
-    <button class="button button-block button-outline button-assertive" ng-click="cancelPreWutuduOptions()">Cancel</button>
+    <button class="button button-block button-outline button-dark" ng-click="cancelPreWutuduOptions()">Cancel</button>
   </ion-content>
 </ion-modal-view>
 

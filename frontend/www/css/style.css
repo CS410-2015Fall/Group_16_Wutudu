@@ -1,42 +1,63 @@
-/*  Add your own CSS if you like */
-.button.button-inline {
-    float: right;
-    padding: 2px 4px 1px;
-    min-width: 28px;
-    min-height: 21px;
-    font-size: 12px;
-    line-height: 21px;
-}
+/* Wutudu Colour Guide:
+
+Wutudu Red: #C62B53; / rgb(198, 43, 83);
+Wutudu Green: #37AE63; / rgb(55, 174, 99);
+Badass Green: #BADA55; / rgb(186, 218, 85);
+
+*/
+
+
+/* General purpose styles
+======================================================
+*/
 
 .inline {
-	display: inline;
-}
-
-.bar .back-text .previous-title {
-	display: none;
-}
-
-.style {
-  color: #fff;
-  margin-left: 5px;
-}
-
-.item {
-  border-style: dotted;
+  display: inline;
 }
 
 .has-header {
   top: 50px;
 }
 
+.padding-right-double {
+  padding-right: 20px;
+}
+
+.padding-left-double {
+  padding-left: 20px;
+}
+
+
+/* Ionic Overrides
+======================================================
+*/
+
+.item {
+  border-style: dotted;
+}
+
+.alert-error .popup-buttons .button {
+  background-color: #C62B53;
+  border: none;
+}
+
+.alert-success .popup-buttons .button {
+  background-color: #37AE63;
+  border: none;
+}
+
 .bar {
-  background-color: #c62b53;
+  background-color: #C62B53;
   color: #ffffff;
   height: 51px;
 }
 
+.bar .back-text .previous-title, .bar .back-text .default-title {
+  display: none;
+}
+
 .bar .title {
-  background-color: #c62b53;
+  background-color: #C62B53;
   color: #ffffff;
   margin-top: 5px;
 }
@@ -48,13 +69,13 @@
 }
 
 .bar.bar-stable {
-  background-color: #c62b53;
+  background-color: #C62B53;
   color: #ffffff;
   height: 51px;
 }
 
 .bar.bar-stable .title {
-  background-color: #c62b53;
+  background-color: #C62B53;
   color: #ffffff;
   margin-top: 5px;
 }
@@ -68,4 +89,60 @@
   border-color: transparent;
   color: #ffffff;
   font-size: 17px;
+}
+
+.bar.bar-positive {
+  border-color: #C62B53;
+  background-color: #C62B53;
+  color: #fff;
+}
+
+
+/* Custom Button styles
+======================================================
+*/
+
+.button.button-wutudu {
+    border-color: #C62B53;
+    background-color: #C62B53;
+    color: #fff;
+}
+
+.button.button-inline {
+  float: right;
+  padding: 2px 4px 1px;
+  min-width: 28px;
+  min-height: 21px;
+  font-size: 12px;
+  line-height: 21px;
+}
+
+/* Login / Signup Page styles
+======================================================
+*/
+
+.icon-wutudu {
+  background-color: #fff;
+  background: url('../img/logo.png') center;
+  background-size: cover;
+  border-radius: 50%;
+  height: 125px;
+  margin: 30px auto;
+  width: 125px;
+}
+
+.item-input .input-wutudu {
+  letter-spacing: 0.25rem;
+  padding-left: 10px;
+  box-sizing: border-box;
+  margin-right: 20px;
+  background-color: rgba(198, 43, 83, 0.10);
+}
+
+.item-input .input-wutudu:focus {
+  border: 1px solid #C62B53;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(198,43,83,.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(198,43,83,.6);
+  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }

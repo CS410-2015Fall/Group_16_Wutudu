@@ -45,16 +45,17 @@ angular.module('starter.controllers')
   }
 
   function validateFields(userData) {
-    var fields = ['name', 'email', 'password'].map(function(field) {
+    var fieldNames = ['name', 'email', 'password'],
+        fields = fieldNames.map(function(field) {
           return userData[field];
         }),
         emailRegex = /[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])/i,
         emptyFieldError = '',
         emailError = '';
 
-    emptyFieldError += fields.reduce(function (error, field) {
+    emptyFieldError += fields.reduce(function (error, field, i) {
       if (!field) {
-        error += 'The ' + field + ' Field Cannot Be Blank.\n';
+        error += 'The ' + fieldNames[i] + ' field cannot be blank.<br>';
       }
       return error;
     }, '');
