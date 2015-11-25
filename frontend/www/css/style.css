@@ -16,7 +16,7 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 }
 
 .has-header {
-  top: 50px;
+  top: 57px;
 }
 
 .padding-right-double {
@@ -26,7 +26,6 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 .padding-left-double {
   padding-left: 20px;
 }
-
 
 /* Ionic Overrides
 ======================================================
@@ -48,8 +47,9 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 
 .bar {
   background-color: #C62B53;
-  color: #ffffff;
-  height: 51px;
+  color: #fff;
+  height: 57px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .bar .back-text .previous-title, .bar .back-text .default-title {
@@ -59,7 +59,7 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 .bar .title {
   background-color: #C62B53;
   color: #ffffff;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .bar .button {
@@ -71,23 +71,23 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 .bar.bar-stable {
   background-color: #C62B53;
   color: #ffffff;
-  height: 51px;
+  height: 57px;
 }
 
 .bar.bar-stable .title {
   background-color: #C62B53;
-  color: #ffffff;
-  margin-top: 5px;
+  color: #fff;
+  margin-top: 8px;
 }
 
 .bar.bar-stable .button {
-  color: #ffffff;
+  color: #fff;
   margin-top: 5px;
 }
 
 .bar.bar-stable .button.button-clear {
   border-color: transparent;
-  color: #ffffff;
+  color: #fff;
   font-size: 17px;
 }
 
@@ -97,6 +97,13 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
   color: #fff;
 }
 
+.bar .buttons-left span {
+    margin-left: 6px;
+}
+
+.bar .button.back-button {
+    margin-left: 6px;
+}
 
 /* Custom Button styles
 ======================================================
