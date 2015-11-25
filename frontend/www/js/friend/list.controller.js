@@ -9,6 +9,10 @@ angular.module('starter.controllers')
 
   $scope.$on('$ionicView.enter', init);
 
+  $scope.doRefresh = function () {
+    init();
+  };
+
   $scope.validateNewFriend = function () {
     if ($scope.data.friendToAdd === '') {
       ErrorPopup.display('Failed To Send Friend Request',
@@ -130,6 +134,7 @@ angular.module('starter.controllers')
     $scope.sentRequests = response.data.friendships.sent_requests;
     $scope.receivedRequests = response.data.friendships.received_requests;
     $ionicLoading.hide();
+    $scope.$broadcast('scroll.refreshComplete');
   }
 
   function getFriendsError(response) {

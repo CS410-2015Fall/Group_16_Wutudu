@@ -13,6 +13,10 @@ angular.module('starter.controllers')
   $scope.$on('$ionicView.enter', init);
   $scope.$on('$ionicView.leave', onExit);
 
+  $scope.doRefresh = function () {
+    init();
+  };
+
   $scope.showAddFriend = function() {
     Friend.getFriends(config)
       .then(setupFriends, handleError);
@@ -135,6 +139,7 @@ angular.module('starter.controllers')
     $scope.inProgressWutudus = formatPrewutudu(preWutudus);
     $scope.wutuduEvents = formatWutudu(wutuduEvents);
     $ionicLoading.hide();
+    $scope.$broadcast('scroll.refreshComplete');
   }
 
   function setupModal(modal) {

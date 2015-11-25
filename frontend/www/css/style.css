@@ -7,7 +7,7 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 */
 
 
-/* General purpose styles
+/* General Purpose styles
 ======================================================
 */
 
@@ -31,7 +31,7 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 ======================================================
 */
 
-.item {
+.menu-left .item {
   border-style: dotted;
 }
 
@@ -124,7 +124,7 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
   line-height: 21px;
 }
 
-/* Login / Signup Page styles
+/* Logo styles
 ======================================================
 */
 
@@ -138,6 +138,25 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
   width: 125px;
 }
 
+.icon-wutudu.background {
+  position: absolute;
+  opacity: 0.1;
+  left: 0;
+  right: 0;
+  top: 10px;
+  margin: 0 auto;
+}
+
+.icon-wutudu.mini {
+  height: 30px;
+  width: 30px;
+  margin: -5px auto;
+}
+
+/* Login / Signup styles
+======================================================
+*/
+
 .item-input .input-wutudu {
   letter-spacing: 0.25rem;
   padding-left: 10px;
@@ -148,8 +167,30 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 
 .item-input .input-wutudu:focus {
   border: 1px solid #C62B53;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(198,43,83,.6);
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(198,43,83,.6);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(198, 43, 83, .6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(198, 43, 83, .6);
   -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+
+/* Main Page styles
+======================================================
+*/
+
+.main .logo-title {
+  padding: 50px 20px;
+  max-height: 200px;
+}
+
+.main .card .item-divider {
+  background-color: rgb(198, 43, 83);
+}
+
+.main .card .item-divider h3 {
+  color: #fff;
+}
+
+.main .card h5 {
+  padding: 10px;
 }

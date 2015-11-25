@@ -10,6 +10,10 @@ angular.module('starter.controllers')
     $scope.modal.remove();
   });
 
+  $scope.doRefresh = function () {
+    init();
+  };
+
   $scope.acceptInvitation = function(groupId) {
     var config = {
       groupId: groupId
@@ -107,6 +111,7 @@ angular.module('starter.controllers')
     $scope.activeGroups = groups.active_groups;
     $scope.pendingGroups = groups.pending_groups;
     $ionicLoading.hide();
+    $scope.$broadcast('scroll.refreshComplete');
   }
 
   function handleError(response) {

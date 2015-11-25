@@ -1,5 +1,9 @@
 <ion-view hide-nav-bar="false" view-title="Friends">
   <ion-content>
+  <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
 
     <div class="list">
       <div class="item item-input-inset">
