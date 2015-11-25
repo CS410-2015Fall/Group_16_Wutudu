@@ -67,7 +67,7 @@ class PreWutudu < ActiveRecord::Base
   end
 
   def generate_wutudu_event
-    bl = Magic::BestLocation.new(self.latitude, self.longitude, [self.top_category.yelp_id])
+    bl = Magic::BestLocation.new(self.latitude, self.longitude, [self.top_category.yelp_id], self.event_date)
     event_details = bl.find_best_location # use top category
     return "Unable To Create Wutudu Event", 500 unless event_details
     self.wutudu_event = WutuduEvent.create(

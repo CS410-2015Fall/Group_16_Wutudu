@@ -11,8 +11,9 @@ module Magic
     #
     # Example:
     # bl = Magic::BestLocation.new(49.283552, -123.119506, ["food", "nightlife", "shopping"])
-    def initialize(lat, long, cats)
+    def initialize(lat, long, cats, event_date)
       begin
+        @event_date = event_date
         @categories = cats
         @sums = {}
         @avgs = {}
@@ -38,8 +39,9 @@ module Magic
       @location = nil
       if @api
         best_loc = nil
+        debug = []
         cats = (cat.empty? ? @categories.dup : cat.dup)
-        until best_loc || cats.length == 0 do
+        # until best_loc || cats.length == 0 do
           c = cats.shift
           if @categories.include?(c)
             transform_data(c)
@@ -49,23 +51,25 @@ module Magic
               id = @data[:id][max_index]
               name = @data[:name][max_index]
               result = @api.business_summary({
-                id: id, name: name
+                id: id, name: name, event_day: @event_date.cwday
               })
-              if result[:is_open]
+              if result[:will_be_open]
                 best_loc = result
               end
+              # debug.push(result)
               scores.delete_at(max_index)
             end
           end
-        end
+        # end
       end
       @location  = {
-        distances: @data[:distance],
-        ratings: @data[:rating],
-        max_index: max_index,
-        id: @data[:id],
-        score: @scores,
-        loc: best_loc
+        # distances: @data[:distance],
+        # ratings: @data[:rating],
+        # max_index: max_index,
+        # id: @data[:id],
+        # score: @scores,
+        loc: best_loc,
+        all: debug
       }
     end
 

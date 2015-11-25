@@ -41,10 +41,10 @@ module ThirdPartyAPI
     # ys.business_summary("moms-grilled-cheese-truck-vancouver")
     def business_summary(bid, *cat)
       if cat.empty?
-        b = search_by_bid(bid)
+        search_by_bid(bid)
       else
         b_index = @response[cat.first].businesses.find_index{|b| b.id == bid}
-        b = @response[cat.first].businesses[b_index]
+        @response[cat.first].businesses[b_index]
       end
     end
 
@@ -105,20 +105,18 @@ module ThirdPartyAPI
                                         api_version: ENV['FOUR-SQUARE-API-VERSION'])
     end
 
-    def business_summary(bname)
-      b = search_by_name(bname)
-    end
-
-    private
-
-    # search list of venue using name,
+    # search list of venue using name, lat, lon
     # and grab the top of result(most relevant)
-    def search_by_name(bname)
-      latlng = @lat.to_s + ',' + @long.to_s
-      response = @client.search_venues(ll: latlng, query: bname)
+    def business_summary(lat, lon, bname)
+      radius = 100 # improve result to get the correct one
+      latlng = lat.to_s + ',' + lon.to_s
+      response = @client.search_venues(ll: latlng, radius: radius,  query: bname)
+      # p "#{bname} #{lat} #{lon}"
+      if response.venues.length == 0
+        response = @client.search_venues(ll: latlng, radius: SEARCH_RADIUS,  query: bname)
+      end
       @client.venue(response.venues[0].id)
     end
-
   end
 
   class MagicAPI
@@ -129,8 +127,13 @@ module ThirdPartyAPI
     end
 
     def business_summary(b)
+      event_day = b[:event_day]
       yelp_sum = @yelp.business_summary(b[:id]).dup
-      four_square_sum = @four_square.business_summary(b[:name]).dup
+      lat = yelp_sum.location.coordinate.latitude
+      lon = yelp_sum.location.coordinate.longitude
+      four_square_sum = @four_square.business_summary(lat, lon, b[:name]).dup
+
+      # i think we should return a flat json instead of nested (location, rating)
       sum = {
         name: yelp_sum.name,
         img_url: yelp_sum.image_url,
@@ -139,7 +142,7 @@ module ThirdPartyAPI
           lat: yelp_sum.location.coordinate.latitude,
           long: yelp_sum.location.coordinate.longitude,
           address: four_square_sum.location.formattedAddress \
-          ||  yelp_sum.location.display_address.join(' ')
+          ||  yelp_sum.location.display_address.join(' '),
         },
         categories: yelp_sum.categories.collect{|c| c[0]}.join(', '),
         rating: {
@@ -151,8 +154,9 @@ module ThirdPartyAPI
         four_square_url: four_square_sum.canonicalUrl,
         user_checkins: "#{four_square_sum.stats.checkinsCount} checkins  (#{four_square_sum.stats.usersCount} users)",
         users_here_now: four_square_sum.hereNow.count,
-        hours_status: four_square_sum.hours && four_square_sum.hours.status,
-        is_open: four_square_sum.hours && four_square_sum.hours.isOpen,
+        hours: four_square_sum.hours,
+        hours_status_now: four_square_sum.hours && four_square_sum.hours.status,
+        will_be_open: four_square_sum.hours && isOpen(four_square_sum.hours.timeframes, event_day),
         opening_hours: four_square_sum.hours && four_square_sum.hours.timeframes.map{|time|
             "#{time.days} : #{time.open[0].renderedTime}"
         }
@@ -169,6 +173,36 @@ module ThirdPartyAPI
 
     def query_summary
       @summary = @yelp.summary
+    end
+
+    def isOpen(times, event_day)
+      isOpen = false
+      unless times.nil?
+        times.each do |time|
+          days = transformDays(time.days)
+          if days.length == 2
+            # range of days
+            lower = days[0]
+            upper = days[1]
+            isOpen ||= event_day >= lower && event_day <= upper
+            p "#{event_day} is #{isOpen}"
+          else
+            # single day
+            isOpen ||= event_day == days[0]
+          end
+        end
+      end
+      isOpen
+    end
+
+    def transformDays(days)
+      # "Fri–Sat"
+      # the '–' is not a proper ascii so we can't split string with that ....
+      result = [].push(days[0..2])
+      if days.length > 3
+        result.push(days[4..-1])
+      end
+      result.map{|day| Date.parse(day).cwday}
     end
 
   end
