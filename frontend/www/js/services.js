@@ -360,7 +360,7 @@ angular.module('starter.services', [])
 
 .factory('$device', function() {
   function isBrowser() {
-    return !cordova;
+    return !window.cordova;
   }
 
   return {
