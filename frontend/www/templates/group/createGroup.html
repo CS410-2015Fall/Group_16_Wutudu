@@ -6,20 +6,20 @@
 
   <ion-content>
     <div class="item item-input-inset">
-      <span>Name: </span>
-          <label class="item-input-wrapper">
-            <input type="text" placeholder="Group Name" ng-model="data.createGroup.name">
-          </label>
+        <label class="item-input-wrapper">
+          <input type="text" placeholder="New Group Name" ng-model="data.createGroup.name">
+        </label>
+        <button class="button button-small" ng-click="createGroup()">Create</button>
     </div>
-    <button class="button icon-right ion-plus-circled" ng-click="addFriendToGroup()">Friends</button>
-
+    <div class="item item-divider">
+      Select Friends To Invite
+    </div>
     <ion-list>
-      <ion-item ng-repeat="friend in data.friendsInvited" ng-click="goToFriend(friend.id)">
-        <span class="circle-border">{{$index + 1}}</span> {{friend.name}}
-      </ion-item>
+      <ion-checkbox ng-repeat="friend in data.friends" ng-model="friend.invited">
+        {{friend.name}} <span class="item-note">{{friend.email}}</span>
+      </ion-checkbox>
     </ion-list>
 
-    <button class="button button-outline button-balanced icon-right ion-checkmark-round" ng-click="createGroup()">Create Group</button>
   </ion-content>
 </ion-modal-view>
 

@@ -14,27 +14,35 @@
     <div class="list">
 
       <div class="item item-divider">
-        Active groups
+        Active
       </div>
 
-      <ion-list>
-        <ion-item ng-repeat="group in activeGroups">
-          <span class="circle-border">{{$index + 1}}</span>
-          <a href="#/app/group/{{group.id}}/{{group.name}}">{{group.name}}</a>
-          <button class="button button-inline button-assertive" ng-click="leaveGroup(group.id)">Leave</button>
+      <ion-list can-swipe="true">
+        <ion-item ng-repeat="group in activeGroups" href="#/app/group/{{group.id}}/{{group.name}}">
+          <span class="padding-left padding-right">
+            {{group.name}}
+          </span>
+          <ion-option-button class="button-assertive" ng-click="leaveGroup(group.id)">
+            Leave
+          </ion-option-button>
         </ion-item>
       </ion-list>
 
       <div class="item item-divider">
-        Pending groups
+        Group Invitations
       </div>
 
-      <ion-list>
-        <ion-item ng-repeat="group in pendingGroups">
-          <span class="circle-border">{{$index + 1}}</span>
-          <a href="#/app/group/{{group.id}}/{{group.name}}">{{group.name}}</a>
-          <button class="button button-inline button-assertive" ng-click="declineInvitation(group.id)">Decline</button>
-          <button class="button button-inline button-balanced" ng-click="acceptInvitation(group.id)">Accept</button>
+      <ion-list can-swipe="true">
+        <ion-item ng-repeat="group in pendingGroups" href="#/app/group/{{group.id}}/{{group.name}}">
+          <span class="padding-left padding-right">
+            {{group.name}}
+          </span>
+          <ion-option-button class="button-balanced" ng-click="acceptInvitation(group.id)">
+            Accept
+          </ion-option-button>
+          <ion-option-button class="button-assertive" ng-click="declineInvitation(group.id)">
+            Decline
+          </ion-option-button>
         </ion-item>
       </ion-list>
 

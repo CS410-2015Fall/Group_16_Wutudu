@@ -50,6 +50,7 @@ angular.module('starter.controllers')
 
     if(!validateCreateGroup(name)) return;
 
+    $scope.handleAddFriend();
     emails = $scope.data.friendsInvited.map(friendEmails);
     config = {
       name: name,

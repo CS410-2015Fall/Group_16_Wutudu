@@ -160,7 +160,6 @@ angular.module('starter.controllers')
 
     $scope.data.friends = friends.filter(potentialMembers);
   }
-
   function displayFriendModal() {
     var tplConfig = {
       templateUrl: 'templates/friend/addFriend.html',

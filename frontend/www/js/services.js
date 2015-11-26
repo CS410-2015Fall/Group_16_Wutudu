@@ -220,10 +220,8 @@ angular.module('starter.services', [])
     $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
     $ionicPlatform.ready(function() {
       $cordovaPush.register(config).then(function(result) {
-        debugger;
         console.debug(result);
       }, function(err) {
-        debugger;
         console.error(err);
       });
     });
@@ -232,7 +230,7 @@ angular.module('starter.services', [])
 
   return {
     register: function() {
-      if ($device.isBrowser()) {
+      if ($device.isBrowser() || !$device.isAndroid()) {
         return webRegister();
       } else {
         if ($cordovaNetwork.isOnline()) {
@@ -384,7 +382,12 @@ angular.module('starter.services', [])
     return !window.cordova;
   }
 
+  function isAndroid() {
+    return (navigator.userAgent.match(/Android/i)) == "Android"
+  }
+
   return {
-    isBrowser: isBrowser
+    isBrowser: isBrowser,
+    isAndroid: isAndroid
   };
 });

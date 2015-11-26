@@ -20,45 +20,51 @@
       Friends
     </div>
 
-    <ion-list>
+    <ion-list can-swipe="true">
       <ion-item ng-repeat="friend in friends">
         <span class="ion-person"></span>
-        <span class="padding-left padding-right">{{friend.email}}</span>
-        <button class="button button-inline button-assertive" ng-click="removeFriend(friend)">
-          Remove Friend
-        </button>
+        <span class="padding-left padding-right">{{friend.name}}
+          <span class="item-note">{{friend.email}}</span>
+        </span>
+         <ion-option-button class="button-assertive" ng-click="removeFriend(friend)">
+            Unfriend
+         </ion-option-button>
       </ion-item>
     </ion-list>
 
     <div class="item item-divider">
-      Pending Received Friend Invitations
+      Received Invitations
     </div>
 
-    <ion-list>
+    <ion-list can-swipe="true">
       <ion-item ng-repeat="receivedRequest in receivedRequests">
         <span class="ion-android-send ">
+        <span class="padding-left padding-right">
+          {{receivedRequest.name}}
+          <span class="item-note">{{receivedRequest.email}}</span>
         </span>
-        <span class="padding-left padding-right">{{receivedRequest.email}}</span>
-        <button class="button button-inline button-assertive" ng-click="removeFriend(receivedRequest)">
-          Decline
-        </button>
-        <button class="button button-inline button-balanced" ng-click="acceptFriend(receivedRequest)">
-          Accept
-        </button>
+         <ion-option-button class="button-balanced" ng-click="acceptFriend(receivedRequest)">
+            Accept
+         </ion-option-button>
+         <ion-option-button class="button-assertive" ng-click="removeFriend(receivedRequest)">
+            Decline
+         </ion-option-button>
       </ion-item>
     </ion-list>
 
     <div class="item item-divider">
-      Pending Sent Friend Invitations
+      Sent Invitations
     </div>
 
-    <ion-list>
+    <ion-list can-swipe="true">
       <ion-item ng-repeat="sentRequest in sentRequests">
-        <span class="ion-android-send"></span>
-        <span class="padding-left padding-right">{{sentRequest.email}}</span>
-        <button class="button button-inline button-assertive" ng-click="cancelInvite(sentRequest)">
-          Cancel Invite
-        </button>
+        <span class="padding-left padding-right">
+          {{sentRequest.name}}
+          <span class="item-note">{{sentRequest.email}}</span>
+        </span>
+        <ion-option-button class="button-assertive" ng-click="cancelInvite(sentRequest)">
+          Cancel
+        </ion-option-button>
       </ion-item>
     </ion-list>
 
