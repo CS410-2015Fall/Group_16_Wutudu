@@ -22,7 +22,7 @@ namespace :event_reminders do
         we.reminders_sent = true
         we.save
         send_notification(device_tokens,
-                          'Reminder: You have an upcoming event in less than #{hours_until_event(e_time) + 1} hours',
+                          "Reminder: You have an upcoming event in less than #{hours_until_event(e_time) + 1} hours",
                           payload)
       end
     end
@@ -30,11 +30,12 @@ namespace :event_reminders do
   end
 
   def hours_until_event(et)
-    ((Time.now - et)/1.hour).truncate
+    ((et - Time.now)/1.hour).truncate
   end
 
   def event_soon?(et)
-    hours_until_event(et) <= HOUR_TOL
+    hue = hours_until_event(et)
+    0 <= hue && hue <= HOUR_TOL
   end
 
 end
