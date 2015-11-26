@@ -360,7 +360,7 @@ angular.module('starter.services', [])
 
 .factory('$device', function() {
   function isBrowser() {
-    return window.navigator.userAgent.indexOf('Chrome') > -1;
+    return !cordova;
   }
 
   return {
