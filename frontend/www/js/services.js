@@ -55,8 +55,8 @@ angular.module('starter.services', [])
           deferred.reject(response);
         }
 
-      if (config.method == 'GET') {
-        if (!$device.isBrowser() && $cordovaNetwork.isOffline()) {
+      if (!$device.isBrowser() && $cordovaNetwork.isOffline()) {
+        if (config.method == 'GET') {
           return $q(function(success, error) {
                       var response = $localstorage.getObject('GET ' + config.url);
                       if (response) {
@@ -68,16 +68,25 @@ angular.module('starter.services', [])
                           cssClass: 'alert-error'
                         });
                       }
-                    }
-                   );
+                    });
         } else {
+          var response = {
+                           status: 400,
+                           data: {
+                            errors: 'Internet Connection Unavailable'
+                           }
+                         };
+          return $q.reject(response);
+        }
+      } else {
+        if (config.method == 'GET') {
           deferred = $q.defer();
           var httpPromise = $http(httpConfig);
           httpPromise.then(successCache, errorCache);
           return deferred.promise;
+        } else {
+          return $http(httpConfig);
         }
-      } else {
-        return $http(httpConfig);
       }
     }
   };
@@ -99,7 +108,7 @@ angular.module('starter.services', [])
 })
 
 .factory('$wutuduNotification', function($ionicPlatform, $cordovaPush,
-    $rootScope, $q, $state, $ionicPopup, $msgBox, $device) {
+    $rootScope, $q, $state, $ionicPopup, $msgBox, $device, $cordovaNetwork) {
 
   var config = {
     "senderID": "185225418332",
@@ -110,6 +119,8 @@ angular.module('starter.services', [])
     if (notification.regid.length > 0 ) {
       console.debug('registration ID = ' + JSON.stringify(notification));
       deferred.resolve(notification.regid);
+    } else {
+      console.debug('can\'t register');
     }
   }
 
@@ -209,8 +220,10 @@ angular.module('starter.services', [])
     $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
     $ionicPlatform.ready(function() {
       $cordovaPush.register(config).then(function(result) {
+        debugger;
         console.debug(result);
       }, function(err) {
+        debugger;
         console.error(err);
       });
     });
@@ -219,7 +232,15 @@ angular.module('starter.services', [])
 
   return {
     register: function() {
-      return $device.isBrowser()? webRegister(): mobileRegister();
+      if ($device.isBrowser()) {
+        return webRegister();
+      } else {
+        if ($cordovaNetwork.isOnline()) {
+          return mobileRegister();
+        } else {
+          return $q.resolve(1);
+        }
+      }
     }
   };
 
