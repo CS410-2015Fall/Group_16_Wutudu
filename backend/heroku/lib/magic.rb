@@ -1,6 +1,6 @@
 module Magic
   DATA_VARIABLES = [:distance, :rating, :review_count]
-  WEIGHTS = {distance: 0.3, rating: 0.5, review_count: 0.2}
+  WEIGHTS = {distance: 0.3, rating: 0.6, review_count: 0.1}
 
   class BestLocation
     attr_reader :location, :scores, :data, :categories, :api
@@ -38,39 +38,30 @@ module Magic
     def find_best_location(*cat)
       @location = nil
       if @api
-        best_loc = nil
+        @location = nil
         debug = []
         cats = (cat.empty? ? @categories.dup : cat.dup)
-        # until best_loc || cats.length == 0 do
+        until @location || cats.length == 0 do
           c = cats.shift
           if @categories.include?(c)
             transform_data(c)
             scores = @scores.dup
-            until best_loc || scores.length == 0 do
+            until @location || scores.length == 0 do
               max_index = scores.index(scores.max)
               id = @data[:id][max_index]
               name = @data[:name][max_index]
               result = @api.business_summary({
-                id: id, name: name, event_day: @event_date.cwday
+                id: id, name: name, event_date: @event_date
               })
               if result[:will_be_open]
-                best_loc = result
+                @location = result
               end
-              # debug.push(result)
               scores.delete_at(max_index)
             end
           end
-        # end
+        end
       end
-      @location  = {
-        # distances: @data[:distance],
-        # ratings: @data[:rating],
-        # max_index: max_index,
-        # id: @data[:id],
-        # score: @scores,
-        loc: best_loc,
-        all: debug
-      }
+      @location
     end
 
     private
@@ -100,13 +91,12 @@ module Magic
         @scores[i] = 0
         distance_key = :distance
         rating_key = :rating
+        review_key = :review_count
         # distance score should be weighted more for nearer ones
         distance_score = 1/ @data[distance_key][i]  * WEIGHTS[distance_key]
         rating_score = @data[rating_key][i] * WEIGHTS[rating_key]
-        @scores[i] = distance_score + rating_score
-        # DATA_VARIABLES.each do |v|
-        #   @scores[i] += @data[v][i] * WEIGHTS[v]
-        # end
+        review_score = @data[review_key][i] * WEIGHTS[review_key]
+        @scores[i] = distance_score + rating_score + review_score
       end
     end
 
@@ -114,7 +104,7 @@ module Magic
       @data = @api.summary[cat].dup
       unless @data.empty?
         eliminate_closed
-        normalize_data # what is this used for?
+        normalize_data
         calculate_score
       end
     end

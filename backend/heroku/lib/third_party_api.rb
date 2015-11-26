@@ -111,11 +111,15 @@ module ThirdPartyAPI
       radius = 100 # improve result to get the correct one
       latlng = lat.to_s + ',' + lon.to_s
       response = @client.search_venues(ll: latlng, radius: radius,  query: bname)
-      # p "#{bname} #{lat} #{lon}"
       if response.venues.length == 0
         response = @client.search_venues(ll: latlng, radius: SEARCH_RADIUS,  query: bname)
       end
-      @client.venue(response.venues[0].id)
+      hours = @client.venue_hours(response.venues[0].id)
+      sum = @client.venue(response.venues[0].id)
+      {
+        hours: hours.hours,
+        formatted_hours: sum.hours
+      }
     end
   end
 
@@ -127,22 +131,21 @@ module ThirdPartyAPI
     end
 
     def business_summary(b)
-      event_day = b[:event_day]
+      event_date = b[:event_date]
       yelp_sum = @yelp.business_summary(b[:id]).dup
       lat = yelp_sum.location.coordinate.latitude
       lon = yelp_sum.location.coordinate.longitude
       four_square_sum = @four_square.business_summary(lat, lon, b[:name]).dup
 
-      # i think we should return a flat json instead of nested (location, rating)
       sum = {
+        event_date: event_date,
         name: yelp_sum.name,
         img_url: yelp_sum.image_url,
         distance: yelp_sum.distance,
         location: {
           lat: yelp_sum.location.coordinate.latitude,
           long: yelp_sum.location.coordinate.longitude,
-          address: four_square_sum.location.formattedAddress \
-          ||  yelp_sum.location.display_address.join(' '),
+          address: yelp_sum.location.display_address.join(' '),
         },
         categories: yelp_sum.categories.collect{|c| c[0]}.join(', '),
         rating: {
@@ -151,13 +154,10 @@ module ThirdPartyAPI
         },
         phone_number: yelp_sum.display_phone,
         yelp_url: yelp_sum.mobile_url,
-        four_square_url: four_square_sum.canonicalUrl,
-        user_checkins: "#{four_square_sum.stats.checkinsCount} checkins  (#{four_square_sum.stats.usersCount} users)",
-        users_here_now: four_square_sum.hereNow.count,
-        hours: four_square_sum.hours,
-        hours_status_now: four_square_sum.hours && four_square_sum.hours.status,
-        will_be_open: four_square_sum.hours && isOpen(four_square_sum.hours.timeframes, event_day),
-        opening_hours: four_square_sum.hours && four_square_sum.hours.timeframes.map{|time|
+        hours_status_now: four_square_sum[:hours] && four_square_sum[:hours].status,
+        will_be_open: four_square_sum[:hours] && isOpen(four_square_sum[:hours].timeframes, event_date),
+        opening_hours: four_square_sum[:formatted_hours] &&
+        four_square_sum[:formatted_hours].timeframes.map{|time|
             "#{time.days} : #{time.open[0].renderedTime}"
         }
       }
@@ -175,34 +175,31 @@ module ThirdPartyAPI
       @summary = @yelp.summary
     end
 
-    def isOpen(times, event_day)
+    def isOpen(times, event_date)
       isOpen = false
+      event_day = event_date.cwday
+      event_time = event_date.strftime("%H:%M")
       unless times.nil?
         times.each do |time|
-          days = transformDays(time.days)
-          if days.length == 2
-            # range of days
-            lower = days[0]
-            upper = days[1]
-            isOpen ||= event_day >= lower && event_day <= upper
-            p "#{event_day} is #{isOpen}"
-          else
-            # single day
-            isOpen ||= event_day == days[0]
+          unless time.days.index(event_day).nil?
+            time.open.each do |open|
+              isOpen |= betweenTime(open, event_time)
+              if isOpen
+                break
+              end
+            end
           end
         end
       end
       isOpen
     end
 
-    def transformDays(days)
-      # "Fri–Sat"
-      # the '–' is not a proper ascii so we can't split string with that ....
-      result = [].push(days[0..2])
-      if days.length > 3
-        result.push(days[4..-1])
-      end
-      result.map{|day| Date.parse(day).cwday}
+    def betweenTime(open, event_time)
+      start_hour = open.start[0..1]
+      end_hour = open.end[0..1]
+      event_hour = event_time[0..1]
+
+      event_hour >= start_hour && event_hour < end_hour
     end
 
   end
