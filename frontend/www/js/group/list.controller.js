@@ -61,10 +61,6 @@ angular.module('starter.controllers')
       .then(groupCreated, handleError);
   };
 
-  $scope.addFriendToGroup = function() {
-    displayFriendModal();
-  };
-
   $scope.handleAddFriend = function(e) {
     var isFriendInvited = function(friend) {
       return friend.invited;
@@ -162,23 +158,6 @@ angular.module('starter.controllers')
       title: 'Group Successfully Created',
       cssClass: 'alert-success'
     });
-  }
-
-  function displayFriendModal() {
-    var tplConfig = {
-      templateUrl: 'templates/friend/addFriend.html',
-      title: 'Add Friend to Group',
-      subTitle: 'Please Choose Your Friend To Add',
-      scope: $scope,
-      buttons: [
-         { text: 'Add',
-           type: 'button-balanced',
-           onTap: $scope.handleAddFriend
-         },
-       { text: 'Cancel', type: 'button-assertive'}
-      ]
-    };
-    $ionicPopup.show(tplConfig);
   }
 
   function init(e) {

@@ -31,7 +31,7 @@ describe('GroupListController', function() {
           data: {
             'friendships' : {
               'friends' : [
-                {'id' : 1, 'name' : 'a', 'email' : 'a@a.com'},
+                {'id' : 1, 'name' : 'a', 'email' : 'a@a.com', 'invited' : true},
                 {'id' : 2, 'name' : 'b', 'email' : 'b@b.com'}
               ],
               'sent_requests' : [],
@@ -221,11 +221,8 @@ describe('GroupListController', function() {
         createGroup: {
           name: 'Group 1'
         },
-        friendsInvited: [
-          {'id' : 1, 'name' : 'a', 'email' : 'a@a.com'},
-          {'id' : 2, 'name' : 'b', 'email' : 'b@b.com'}
-        ]
       };
+      $scope.showCreateGroup();
       $scope.createGroup();
       expect(Group.createGroup.callCount).to.equal(1);
     });
