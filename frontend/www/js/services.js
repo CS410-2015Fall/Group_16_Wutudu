@@ -29,6 +29,14 @@ angular.module('starter.services', [])
   var urlRoot = "https://stormy-hollows-9187.herokuapp.com",
       deferred;
 
+  function isNetworkOnline() {
+    var isOnline;
+    document.addEventListener("deviceready", function () {
+      isOnline = $cordovaNetwork.isOnline();
+    }, false);
+    return isOnline;
+  }
+
   return {
     makeRequest: function(config) {
       if(!config) throw "No config for http";
@@ -46,16 +54,17 @@ angular.module('starter.services', [])
             url: urlRoot + config.url,
           };
         configUrl = config.url;
-        function successCache(response) {
-          $localstorage.setObject('GET ' + config.url, response);
-          deferred.resolve(response);
-        }
+        
+      function successCache(response) {
+        $localstorage.setObject('GET ' + config.url, response);
+        deferred.resolve(response);
+      }
 
-        function errorCache(response) {
-          deferred.reject(response);
-        }
+      function errorCache(response) {
+        deferred.reject(response);
+      }
 
-      if (!$device.isBrowser() && $cordovaNetwork.isOffline()) {
+      if (!$device.isBrowser() && !isNetworkOnline()) {
         if (config.method == 'GET') {
           return $q(function(success, error) {
                       var response = $localstorage.getObject('GET ' + config.url);
@@ -228,12 +237,20 @@ angular.module('starter.services', [])
     return deferred.promise;
   }
 
+  function isNetworkOnline() {
+    var isOnline;
+    document.addEventListener("deviceready", function () {
+      isOnline = $cordovaNetwork.isOnline();
+    }, false);
+    return isOnline;
+  }
+
   return {
     register: function() {
       if ($device.isBrowser() || !$device.isAndroid()) {
         return webRegister();
       } else {
-        if ($cordovaNetwork.isOnline()) {
+        if (isNetworkOnline()) {
           return mobileRegister();
         } else {
           return $q.resolve(1);
