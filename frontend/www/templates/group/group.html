@@ -41,11 +41,11 @@
         In progress Wutudus
       </div>
 
-     <ion-list>
-       <ion-item class="item" ng-repeat="wutudu in inProgressWutudus" ng-click="showPreWutuduOptions(wutudu)">
-         {{wutudu.display_date}} ({{answeredStateString(wutudu)}})
-       </ion-item>
-     </ion-list>
+      <ion-list>
+        <ion-item class="item" ng-repeat="wutudu in inProgressWutudus" ng-click="showPreWutuduOptions(wutudu)">
+          <span class="icon-wutudu-reverse-bw inline-block"></span> {{wutudu.display_date}} ({{answeredStateString(wutudu)}})
+        </ion-item>
+      </ion-list>
 
       <div class="item item-divider">
         Upcoming Wutudus
@@ -53,7 +53,7 @@
 
       <ion-list>
         <ion-item class="item" ng-repeat="wutudu in wutuduEvents" ng-click="showWutuduDetail(wutudu)">
-          {{wutudu.display_date}}
+          <span class="icon-wutudu-bw mini inline-block"></span>  {{wutudu.display_date}}
         </ion-item>
       </ion-list>
 
