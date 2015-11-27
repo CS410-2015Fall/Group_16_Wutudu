@@ -38,7 +38,7 @@
 
     <ion-list can-swipe="true">
       <ion-item ng-repeat="receivedRequest in receivedRequests">
-        <span class="ion-android-send"></span>
+        <span class="ion-android-send rotate-180 inline-block"></span>
         <span class="padding-left padding-right">
           {{receivedRequest.name}}
           <span class="item-note">{{receivedRequest.email}}</span>
@@ -58,6 +58,7 @@
 
     <ion-list can-swipe="true">
       <ion-item ng-repeat="sentRequest in sentRequests">
+        <span class="ion-android-send"></span>
         <span class="padding-left padding-right">
           {{sentRequest.name}}
           <span class="item-note">{{sentRequest.email}}</span>

@@ -4,18 +4,19 @@
     <button class="button ion-close" ng-click="closeDirectionsPopup()"></button>
   </ion-header-bar>
   <ion-content>
-    <div>
+    <form>
       <div class="item item-input-inset">
         <span>Search</span>
         <label class="item-input-wrapper">
           <!-- pass in setStartLocation method, to update the lat long -->
           <input googleplace type="text" id="directionsAutoComplete" set-location="setStartLocation(lat, lng)" style="width: 100%;">
+          <button class="close-icon" type="reset"></button>
         </label>
       </div>
 
       <div id="directionsMap" data-tap-disabled="true" style="height: 300px; width: 100%; "></div>
       <button class="button button-block button-outline button-assertive" ng-click="getDirectionsFromLocation()">Get Directions</button>
-    </div>
+    </form>
   </ion-content>
 </ion-modal-view>
 
