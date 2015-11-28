@@ -1,6 +1,8 @@
 module Magic
   DATA_VARIABLES = [:distance, :rating, :review_count]
   WEIGHTS = {distance: 0.3, rating: 0.6, review_count: 0.1}
+  # DATA_VARIABLES = [:category, :distance, :rating]
+  # WEIGHTS = {category: 0.2, distance: 0.3, rating: 0.6}
 
   class BestLocation
     attr_reader :location, :scores, :data, :categories, :api
@@ -94,9 +96,8 @@ module Magic
         review_key = :review_count
         # distance score should be weighted more for nearer ones
         distance_score = 1/ @data[distance_key][i]  * WEIGHTS[distance_key]
-        rating_score = @data[rating_key][i] * WEIGHTS[rating_key]
-        review_score = @data[review_key][i] * WEIGHTS[review_key]
-        @scores[i] = distance_score + rating_score + review_score
+        rating_score = @data[rating_key][i] * WEIGHTS[rating_key] * @data[review_key][i] ** (1.0/10)
+        @scores[i] = distance_score + rating_score
       end
     end
 

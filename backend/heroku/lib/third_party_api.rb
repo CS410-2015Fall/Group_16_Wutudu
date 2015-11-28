@@ -113,7 +113,14 @@ module ThirdPartyAPI
       response = @client.search_venues(ll: latlng, radius: radius,  query: bname)
       if response.venues.length == 0
         response = @client.search_venues(ll: latlng, radius: SEARCH_RADIUS,  query: bname)
+        p "in if"
       end
+
+      return {
+        hours: nil,
+        formatted_hours: nil
+      } if response.venues.length == 0
+
       hours = @client.venue_hours(response.venues[0].id)
       sum = @client.venue(response.venues[0].id)
       {
