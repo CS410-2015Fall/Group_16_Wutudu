@@ -100,11 +100,22 @@ describe('FriendListController', function() {
       expect($scope.sentRequests.length).to.equal(2);
     });
 
-    it('should not send a friend request with invalid email', function() {
+    it('should not send a friend request with blank email', function() {
       expect($scope.sentRequests.length).to.equal(1);
 
       var invalidEmail = '';
       $scope.data.friendToAdd = invalidEmail;
+      $scope.addFriend();
+
+      expect(Friend.sendFriendRequest.callCount).to.equal(0);
+      expect($scope.sentRequests.length).to.equal(1);
+    });
+
+    it('should not send a friend request with invalid email', function() {
+      expect($scope.sentRequests.length).to.equal(1);
+
+      // An input of type email will resolve to undefined if an invalid email is entered
+      $scope.data.friendToAdd = undefined;
       $scope.addFriend();
 
       expect(Friend.sendFriendRequest.callCount).to.equal(0);

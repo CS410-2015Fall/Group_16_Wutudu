@@ -23,9 +23,13 @@ angular.module('starter.controllers')
   };
 
   $scope.validateNewFriend = function () {
-    if ($scope.data.friendToAdd === '') {
+    if (typeof $scope.data.friendToAdd === 'undefined') {
       ErrorPopup.display('Failed To Send Friend Request',
-                         'Email Cannot Be Blank');
+                   'Please enter a valid email.');
+      return false;
+    } else if ($scope.data.friendToAdd === '') {
+      ErrorPopup.display('Failed To Send Friend Request',
+                         'Email cannot be blank.');
       return false;
     }
     return true;
