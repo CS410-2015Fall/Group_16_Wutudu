@@ -5,7 +5,8 @@ class PreWutuduTest < ActiveSupport::TestCase
     user_answers_completed = [stub(category_weights: {1 => 10}, declined: nil),
                               stub(category_weights: {2 => 5, 1 => 5, 3 => 6}, declined: nil),
                               stub(category_weights: {2 => -5, 3 => -3}, declined: nil)]
-    user_answers_declined = [stub(declined: true), stub(declined: true)]                                  
+    user_answers_declined = [stub(declined: true), stub(declined: true)]
+    
     all_answers = user_answers_completed + user_answers_declined
     all_answers.stubs(:where).with(declined: nil).returns(user_answers_completed)
     all_answers.stubs(:where).with(declined: true).returns(user_answers_declined)
@@ -14,7 +15,7 @@ class PreWutuduTest < ActiveSupport::TestCase
     active_users = [stub(user_id: 1), stub(user_id: 2), stub(user_id: 3), stub(user_id: 4),
                     stub(user_id: 5), stub(user_id: 6), stub(user_id: 7), stub(user_id: 8)]
     group.stubs(:active_users).returns(active_users)
-    
+
     @pre_wutudu = PreWutudu.new(
                                 event_date: Time.now,
                                 latitude: 1.0,
@@ -51,7 +52,7 @@ class PreWutuduTest < ActiveSupport::TestCase
     Category.stubs(:find_by_cat_id).with(3).returns(cat3)
     all_cats = [cat1, cat3, cat2]
     assert_equal(all_cats, @pre_wutudu.all_sorted_categories)
-  end  
+  end
 
   test 'should correctly return answer counts' do
     assert_equal(3, @pre_wutudu.completed_answers_count, "Incorrectly calculated completed answer counts for stub data")

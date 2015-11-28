@@ -5,7 +5,7 @@ class UserAnswersIntegrationTest < ActionController::TestCase
     @controller = UserAnswersController.new
     request.headers["Content-Type"] = "application/json"
     log_in_as(:user_4)
-    @request_body = { 
+    @request_body = {
                       gid: groups(:group_1).id,
                       pid: pre_wutudus(:pre_wutudu_1).id,
                       user_answer: {
@@ -86,7 +86,7 @@ class UserAnswersIntegrationTest < ActionController::TestCase
     validate_success_response({message: 'PreWutudu Declined'})
   end
 
-  private 
+  private
 
   def log_in_as(uid)
     request.headers["Authorization"] = ActionController::HttpAuthentication::Token.

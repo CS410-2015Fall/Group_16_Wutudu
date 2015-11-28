@@ -43,7 +43,7 @@
 
       <ion-list>
         <ion-item class="item" ng-repeat="wutudu in inProgressWutudus" ng-click="showPreWutuduOptions(wutudu)">
-          <span class="icon-wutudu-reverse-bw inline-block"></span> {{wutudu.display_date}} ({{answeredStateString(wutudu)}})
+          <span class="icon-wutudu-bw rotate-90 inline-block"></span> {{wutudu.display_date}} ({{answeredStateString(wutudu)}})
         </ion-item>
       </ion-list>
 
@@ -53,7 +53,7 @@
 
       <ion-list>
         <ion-item class="item" ng-repeat="wutudu in wutuduEvents" ng-click="showWutuduDetail(wutudu)">
-          <span class="icon-wutudu-bw mini inline-block"></span>  {{wutudu.display_date}}
+          <span class="icon-wutudu-bw inline-block"></span>  {{wutudu.display_date}}
         </ion-item>
       </ion-list>
 

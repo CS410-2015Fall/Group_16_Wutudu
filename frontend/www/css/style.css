@@ -47,6 +47,14 @@ a {
   transform: rotate(180deg) translateX(1px);
 }
 
+.rotate-90 {
+  -moz-transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+
 .footer-title {
   text-align: center;
   width: 100%;
