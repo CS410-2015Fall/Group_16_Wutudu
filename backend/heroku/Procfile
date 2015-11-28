@@ -1,2 +1,2 @@
 web: bundle exec puma -C config/puma.rb
-scheduler: bundle exec rake event_reminders:send_reminders --trace
+worker: bundle exec rake event_reminders:send_reminders --trace
