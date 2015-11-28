@@ -3,12 +3,20 @@ angular.module('starter.controllers')
 .controller('GroupListCtrl', function($scope, $ionicPopup, $ionicModal,
   $ionicLoading, $state, Friend, Group, ErrorPopup) {
 
+  // 0 Active Groups
+  // 1 Group invitation
+  $scope.listsShow = [true, true]
+
   $scope.$on('$ionicView.enter', init);
 
   //Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
     $scope.modal.remove();
   });
+
+  $scope.toggleList = function(i) {
+    $scope.listsShow[i] = !$scope.listsShow[i];
+  };
 
   $scope.doRefresh = function () {
     init();

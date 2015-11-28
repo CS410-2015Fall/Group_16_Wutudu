@@ -7,7 +7,16 @@ angular.module('starter.controllers')
     friendToAdd: ''
   };
 
+  // 0 Friends List
+  // 1 Sent Requests List
+  // 2 Received Requests List
+  $scope.listsShow = [true, true, false];
+
   $scope.$on('$ionicView.enter', init);
+
+  $scope.toggleList = function(i) {
+    $scope.listsShow[i] = !$scope.listsShow[i];
+  };
 
   $scope.doRefresh = function () {
     init();

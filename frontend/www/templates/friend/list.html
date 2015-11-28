@@ -16,12 +16,16 @@
       </div>
     </div>
 
-    <div class="item item-divider">
-      Friends
-    </div>
+    <ion-item class="item item-divider"
+              ng-click="toggleList(0)"
+              ng-class="{active: listsShow[0]}">
+      <i class="icon" ng-class="listsShow[0] ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Friends ({{friends.length}})
+    </ion-item>
 
     <ion-list can-swipe="true">
-      <ion-item ng-repeat="friend in friends">
+      <ion-item ng-repeat="friend in friends", ng-show="listsShow[0]">
         <span class="ion-person"></span>
         <span class="padding-left padding-right">{{friend.name}}
           <span class="item-note">{{friend.email}}</span>
@@ -32,12 +36,16 @@
       </ion-item>
     </ion-list>
 
-    <div class="item item-divider">
-      Received Invitations
-    </div>
+    <ion-item class="item item-divider"
+              ng-click="toggleList(1)"
+              ng-class="{active: listsShow[1]}">
+      <i class="icon" ng-class="listsShow[1] ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Received Invitations ({{receivedRequests.length}})
+    </ion-item>
 
     <ion-list can-swipe="true">
-      <ion-item ng-repeat="receivedRequest in receivedRequests">
+      <ion-item ng-repeat="receivedRequest in receivedRequests", ng-show="listsShow[1]">
         <span class="ion-android-send rotate-180 inline-block"></span>
         <span class="padding-left padding-right">
           {{receivedRequest.name}}
@@ -52,12 +60,16 @@
       </ion-item>
     </ion-list>
 
-    <div class="item item-divider">
-      Sent Invitations
-    </div>
+    <ion-item class="item item-divider"
+              ng-click="toggleList(2)"
+              ng-class="{active: listsShow[2]}">
+      <i class="icon" ng-class="listsShow[2] ? 'ion-minus' : 'ion-plus'"></i>
+      &nbsp;
+      Sent Invitations ({{sentRequests.length}})
+    </ion-item>
 
     <ion-list can-swipe="true">
-      <ion-item ng-repeat="sentRequest in sentRequests">
+      <ion-item ng-repeat="sentRequest in sentRequests", ng-show="listsShow[2]">
         <span class="ion-android-send"></span>
         <span class="padding-left padding-right">
           {{sentRequest.name}}

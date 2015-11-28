@@ -13,12 +13,19 @@
 
     <div class="list">
 
-      <div class="item item-divider">
-        Active
-      </div>
+      <ion-item class="item item-divider"
+                ng-click="toggleList(0)"
+                ng-class="{active: listsShow[0]}">
+        <i class="icon" ng-class="listsShow[0] ? 'ion-minus' : 'ion-plus'"></i>
+        &nbsp;
+        Active ({{activeGroups.length}})
+      </ion-item>
 
       <ion-list can-swipe="true">
-        <ion-item ng-repeat="group in activeGroups" href="#/app/group/{{group.id}}/{{group.name}}">
+        <ion-item ng-repeat="group in activeGroups"
+                  href="#/app/group/{{group.id}}/{{group.name}}"
+                  ng-show="listsShow[0]">
+          <span class="ion-ios-people" style="font-size: 125%";></span>
           <span class="padding-left padding-right">
             {{group.name}}
           </span>
@@ -28,12 +35,19 @@
         </ion-item>
       </ion-list>
 
-      <div class="item item-divider">
-        Group Invitations
-      </div>
+      <ion-item class="item item-divider"
+                ng-click="toggleList(1)"
+                ng-class="{active: listsShow[1]}">
+        <i class="icon" ng-class="listsShow[1] ? 'ion-minus' : 'ion-plus'"></i>
+        &nbsp;
+        Group Invitations ({{pendingGroups.length}})
+      </ion-item>
 
       <ion-list can-swipe="true">
-        <ion-item ng-repeat="group in pendingGroups" href="#/app/group/{{group.id}}/{{group.name}}">
+        <ion-item ng-repeat="group in pendingGroups"
+                  href="#/app/group/{{group.id}}/{{group.name}}"
+                  ng-show="listsShow[1]">
+          <span class="ion-android-send rotate-180 inline-block"></span>
           <span class="padding-left padding-right">
             {{group.name}}
           </span>
