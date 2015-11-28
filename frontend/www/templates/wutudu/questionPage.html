@@ -25,9 +25,20 @@
           </div>
         </ion-slide>
       </ion-slide-box>
-      <button type="submit" class="button button-balanced" ng-click="submitAnswers()" ng-disabled="disabledSubmit">Submit Responses</button>
-      <button type="submit" class="button button-assertive" ng-click="cancelAnswers()">Cancel</button>
     </form>
+
   </ion-content>
+
+  <div class="bar bar-footer">
+    <button type="submit" class="button button-wutudu button-outline" ng-click="submitAnswers()" ng-disabled="disabledSubmit">
+      <i class="icon ion-checkmark"></i>
+      Submit Responses
+    </button>
+    <button type="submit" class="button button-wutudu button-outline" ng-click="cancelAnswers()">
+      <i class="icon ion-close"></i>
+      Cancel
+    </button>
+  </div>
+
 </ion-view>
 
