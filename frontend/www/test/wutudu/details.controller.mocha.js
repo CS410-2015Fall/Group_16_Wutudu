@@ -53,12 +53,14 @@ describe('WutuduDetailsController', function() {
     var $scope, controller;
 
     beforeEach(function() {
-      $scope = {};
+      $scope = $rootScope.$new();
       controller = $controller('WutuduDetailsCtrl', {
         $scope: $scope, 
         $stateParams: $stateParams,
         GoogleMap: GoogleMap
       });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
     });
 
     it('should format the date of the Wutudu', function() {
@@ -66,7 +68,32 @@ describe('WutuduDetailsController', function() {
       expect($scope.wutudu.display_date).to.exist;
     });
 
-     it('should init a Google Map', function() {
+    it('should not init a Google Map on load', function() {
+     expect(GoogleMap.initMap.callCount).to.equal(0);
+    });
+
+  });
+
+  describe('On Show map button click', function() {
+    var $scope, controller;
+
+    beforeEach(function() {
+      $scope = $rootScope.$new();
+      controller = $controller('WutuduDetailsCtrl', {
+        $scope: $scope, 
+        $stateParams: $stateParams,
+        GoogleMap: GoogleMap
+      });
+      $scope.$emit('$ionicView.enter');
+      $scope.$digest();
+
+      $scope.modal = {
+        show: function () { return true }
+      };
+    });
+
+    it('should init a Google Map on Show Map button click', function() {
+      $scope.expandMap();
       expect(GoogleMap.initMap.callCount).to.equal(1);
     });
   });

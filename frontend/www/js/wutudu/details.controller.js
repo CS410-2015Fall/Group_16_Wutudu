@@ -10,7 +10,10 @@ angular.module('starter.controllers')
         wutuduId: wutuduId
       };
 
-  (function init () {
+  $scope.$on('$ionicView.enter', init);
+  $scope.$on('$ionicView.leave', onExit);
+
+  function init () {
     if (!$stateParams.wutudu) {
       $state.go('app.group', config);
       return;
@@ -20,9 +23,8 @@ angular.module('starter.controllers')
     var wut = $scope.wutudu;
     $scope.lat = wut.event_details.location.lat || parseFloat(wut.latitude),
     $scope.lng = wut.event_details.location.long || parseFloat(wut.longitude);
-    GoogleMap.initMap(document.getElementById('wutuduDetailMap'), $scope.lat, $scope.lng);
     initModal();
-  })();
+  }
 
   function formatWutudu(wutudu) {
       var eventDate = new Date(wutudu.event_time),
@@ -79,7 +81,7 @@ angular.module('starter.controllers')
   function setStartLocationWithEvent (event) {
     var lat = event.latLng.lat();
     var lng = event.latLng.lng();
-    setStartLocation(lat, lng);
+    $scope.setStartLocation(lat, lng);
   }
 
   $scope.setStartLocation = function (lat, lng) {
@@ -110,7 +112,7 @@ angular.module('starter.controllers')
     $scope.modal.show();
     var dirMap = document.getElementById('directionsMap');
     var directionsMapSearch = document.getElementById('directionsAutoComplete');
-    if (GoogleMap.initMap(dirMap, $scope.lat, $scope.lng, {clickHandler: setStartLocationWithEvent})) {
+    if (GoogleMap.initMap(dirMap, $scope.lat, $scope.lng, {clickHandler: setStartLocationWithEvent, setAsStartMarker: true})) {
       $ionicPlatform.ready(function () {
         initLocation();
       });
@@ -122,9 +124,6 @@ angular.module('starter.controllers')
   };
 
   $scope.getDirectionsFromLocation = function () {
-    console.log($scope.startLocation)
-    $scope.modal.hide();
-    GoogleMap.initMap(document.getElementById('wutuduDetailMap'), $scope.lat, $scope.lng);
     GoogleMap.getDirections($scope.startLocation.lat, $scope.startLocation.lng, $scope.lat, $scope.lng); 
   };
 

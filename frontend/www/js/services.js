@@ -296,7 +296,7 @@ angular.module('starter.services', [])
 })
 
 .factory('GoogleMap', function() {
-  var map, marker;
+  var map, marker, startMarker;
 
   return {
     initMap: function(el, lat, lng, config) {
@@ -308,13 +308,23 @@ angular.module('starter.services', [])
           center: {lat: lat, lng: lng},
           zoom: 15
         });
-        marker = new google.maps.Marker({
-          position: {lat: lat, lng: lng},
-          map: map,
-          title: 'This location'
-        });
         if (config.clickHandler) {
           map.addListener('click', config.clickHandler);
+        }
+        if (config.setAsStartMarker) {
+          startMarker = new google.maps.Marker({
+            position: {lat: lat, lng: lng},
+            map: map
+          });
+          marker = new google.maps.Marker({
+            map: map
+          });
+          marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+        } else {
+          marker = new google.maps.Marker({
+            position: {lat: lat, lng: lng},
+            map: map
+          });
         }
         return true;
       }
