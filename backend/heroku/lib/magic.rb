@@ -16,6 +16,7 @@ module Magic
     def initialize(lat, long, cats, event_date)
       begin
         @event_date = event_date
+        p event_date
         @categories = cats
         @sums = {}
         @avgs = {}
@@ -39,9 +40,8 @@ module Magic
     # Call bl.location since it stores the result
     def find_best_location(*cat)
       @location = nil
+      @best_effort_location = nil
       if @api
-        @location = nil
-        debug = []
         cats = (cat.empty? ? @categories.dup : cat.dup)
         until @location || cats.length == 0 do
           c = cats.shift
@@ -55,6 +55,7 @@ module Magic
               result = @api.business_summary({
                 id: id, name: name, event_date: @event_date
               })
+              @best_effort_location = result if @best_effort_location.nil?
               if result[:will_be_open]
                 @location = result
               end
@@ -63,7 +64,7 @@ module Magic
           end
         end
       end
-      @location
+      @location.nil? ? @best_effort_location : @location
     end
 
     private

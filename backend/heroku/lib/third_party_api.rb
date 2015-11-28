@@ -108,25 +108,29 @@ module ThirdPartyAPI
     # search list of venue using name, lat, lon
     # and grab the top of result(most relevant)
     def business_summary(lat, lon, bname)
+      ret =  {
+        hours: nil,
+        formatted_hours: nil
+      }
+      return ret if @client.nil?
+
       radius = 100 # improve result to get the correct one
       latlng = lat.to_s + ',' + lon.to_s
       response = @client.search_venues(ll: latlng, radius: radius,  query: bname)
       if response.venues.length == 0
-        response = @client.search_venues(ll: latlng, radius: SEARCH_RADIUS,  query: bname)
-        p "in if"
+        response = @client.search_venues(ll: latlng,  query: bname)
       end
 
-      return {
-        hours: nil,
-        formatted_hours: nil
-      } if response.venues.length == 0
+      if response.venues.length > 0
+        hours = @client.venue_hours(response.venues[0].id)
+        sum = @client.venue(response.venues[0].id)
 
-      hours = @client.venue_hours(response.venues[0].id)
-      sum = @client.venue(response.venues[0].id)
-      {
-        hours: hours.hours,
-        formatted_hours: sum.hours
-      }
+        ret = {
+          hours: hours.hours,
+          formatted_hours: sum.hours
+        } unless hours.nil? || sum.nil?
+      end
+      ret
     end
   end
 
@@ -145,7 +149,7 @@ module ThirdPartyAPI
       four_square_sum = @four_square.business_summary(lat, lon, b[:name]).dup
 
       sum = {
-        event_date: event_date,
+        # event_date: event_date,
         name: yelp_sum.name,
         img_url: yelp_sum.image_url,
         distance: yelp_sum.distance,
@@ -184,7 +188,7 @@ module ThirdPartyAPI
 
     def isOpen(times, event_date)
       isOpen = false
-      event_day = event_date.cwday
+      event_day = event_date.wday
       event_time = event_date.strftime("%H:%M")
       unless times.nil?
         times.each do |time|

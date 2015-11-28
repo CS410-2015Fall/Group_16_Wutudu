@@ -50,6 +50,15 @@ class PreWutudu < ActiveRecord::Base
     top_category = Category.find_by_cat_id(weights.max_by{|k,v| v}[0])
   end
 
+  def all_sorted_categories
+    sorted_categories = []
+    sorted_weights = self.aggregate_category_weights.sort_by{|k,v| v}.reverse
+    sorted_weights.each do |k, v|
+      sorted_categories.push(Category.find_by_cat_id(k))
+    end
+    sorted_categories
+  end
+
   def completed_answers
     self.user_answers.where(declined: nil)
   end
@@ -67,8 +76,8 @@ class PreWutudu < ActiveRecord::Base
   end
 
   def generate_wutudu_event
-    bl = Magic::BestLocation.new(self.latitude, self.longitude, [self.top_category.yelp_id], self.event_date)
-    event_details = bl.find_best_location # use top category
+    bl = Magic::BestLocation.new(self.latitude, self.longitude, self.all_sorted_categories.collect{|c| c.yelp_id}[0..2], self.event_date)
+    event_details = bl.find_best_location # use top 3 categories
     return "Unable To Create Wutudu Event", 500 unless event_details
     self.wutudu_event = WutuduEvent.create(
                           pre_wutudu_id: self.id,
@@ -84,19 +93,17 @@ class PreWutudu < ActiveRecord::Base
     return "Wutudu Event Created", 200
   end
 
-  private
-
   def handle_answer_completion
     if self.total_possible_count == 0
       wid = self.id
       self.destroy
-      p "All users declined. pre_wutudu #{wid} destroyed" if self.destroyed?
+      logger.info "All users declined. pre_wutudu #{wid} destroyed" if self.destroyed?
     elsif self.completed_answers_count == self.total_possible_count
 
       # Thread.new do
         msg, status = self.generate_wutudu_event
         if status == 200
-          p "All possible users answered. wutudu event created"
+          logger.info "All possible users answered. wutudu event created"
           group = self.group
           tokens = group.active_users_device_tokens
           unless tokens.empty?
@@ -110,7 +117,7 @@ class PreWutudu < ActiveRecord::Base
                               payload)
           end
         else
-          p "There was a #{status} error with wutudu event creation"
+          logger.info "There was a #{status} error with wutudu event creation"
         end
         # exit
         # ActiveRecord::Base.connection.close

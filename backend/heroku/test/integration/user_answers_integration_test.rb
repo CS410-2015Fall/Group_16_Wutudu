@@ -12,6 +12,8 @@ class UserAnswersIntegrationTest < ActionController::TestCase
                         answers: []
                       }
                     }
+    PreWutudu.any_instance.stubs(:handle_answer_completion).returns(nil)
+    PreWutudu.any_instance.stubs(:generate_wutudu_event).returns(nil)
   end
 
   # helper functions

@@ -37,10 +37,21 @@ class PreWutuduTest < ActiveSupport::TestCase
   end
 
   test 'should correctly return top category' do
-    cat1 = Category.new(cat_id: 1, category_name: "cat1" )
+    cat1 = stub(cat_id: 1, category_name: "cat1")
     Category.stubs(:find_by_cat_id).with(1).returns(cat1)
     assert_equal(cat1, @pre_wutudu.top_category)
   end
+
+  test 'should correctly return all categories in sorted order' do
+    cat1 = stub(cat_id: 1, category_name: "cat3" )
+    Category.stubs(:find_by_cat_id).with(1).returns(cat1)
+    cat2 = stub(cat_id: 2, category_name: "cat2" )
+    Category.stubs(:find_by_cat_id).with(2).returns(cat2)
+    cat3 = stub(cat_id: 3, category_name: "cat3" )
+    Category.stubs(:find_by_cat_id).with(3).returns(cat3)
+    all_cats = [cat1, cat3, cat2]
+    assert_equal(all_cats, @pre_wutudu.all_sorted_categories)
+  end  
 
   test 'should correctly return answer counts' do
     assert_equal(3, @pre_wutudu.completed_answers_count, "Incorrectly calculated completed answer counts for stub data")
@@ -65,6 +76,11 @@ class PreWutuduTest < ActiveSupport::TestCase
 
   test 'should correctly return top category, in fixture' do
     assert_equal(categories(:category_3), @pre_wutudu_fixture.top_category)
+  end
+
+  test 'should correctly return all categories in sorted order, in fixture' do
+    all_cats = [categories(:category_3), categories(:category_2), categories(:category_1), categories(:category_4)]
+    assert_equal(all_cats, @pre_wutudu_fixture.all_sorted_categories)
   end
 
   test 'should correctly return answer counts, in fixture' do
