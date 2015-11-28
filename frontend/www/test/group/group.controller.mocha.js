@@ -102,8 +102,9 @@ describe('GroupController', function() {
       expect($scope.wutuduEvents).to.have.length(0);
     });
     it('should init modals', function() {
-      expect($ionicModal.fromTemplateUrl.callCount).to.equal(1);
-      expect($scope.modal).to.exist;
+      expect($ionicModal.fromTemplateUrl.callCount).to.equal(2);
+      expect($scope.wutuduModal).to.exist;
+      expect($scope.inviteFriendsModal).to.exist;
     });
   });
 

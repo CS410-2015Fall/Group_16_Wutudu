@@ -10,8 +10,18 @@ angular.module('starter.controllers')
         groupId: groupId
       };
 
+  // 0 Upcoming Wutudus
+  // 1 In progress Wutudus
+  // 2 Active Group Members
+  // 3 Pending Group Members
+  $scope.listsShow = [true, true, false, false]
+
   $scope.$on('$ionicView.enter', init);
   $scope.$on('$ionicView.leave', onExit);
+
+  $scope.toggleList = function(i) {
+    $scope.listsShow[i] = !$scope.listsShow[i];
+  };
 
   $scope.doRefresh = function () {
     init();
@@ -20,7 +30,6 @@ angular.module('starter.controllers')
   $scope.showAddFriend = function() {
     Friend.getFriends(config)
       .then(setupFriends, handleError);
-    displayFriendModal();
   };
 
   $scope.addFriendToGroup = function(e) {
@@ -29,12 +38,13 @@ angular.module('starter.controllers')
       "emails" : friendsToInvite
     });
     Group.inviteFriends(config)
-      .then(inviteSucess, handleError);
+      .then(inviteSuccess, handleError);
+    $scope.cancelInviteFriends();
   };
 
   $scope.showPreWutuduOptions = function (preWutudu) {
     $scope.activePreWutudu = preWutudu;
-    $scope.modal.show();
+    $scope.wutuduModal.show();
   };
 
   $scope.displayStatus = function (preWutudu) {
@@ -80,7 +90,7 @@ angular.module('starter.controllers')
                                  'Decline Wutudu Error',
                                  response.data.errors);
     });
-    $scope.modal.hide();
+    $scope.cancelPreWutuduOptions();
   };
 
   $scope.finishPreWutudu = function(preWutudu) {
@@ -104,19 +114,33 @@ angular.module('starter.controllers')
   };
 
   $scope.cancelPreWutuduOptions = function() {
-    $scope.modal.hide();
+    $scope.wutuduModal.hide();
+  };
+
+  $scope.cancelInviteFriends = function() {
+    $scope.inviteFriendsModal.hide();
   };
 
   function initModal() {
-    var optionsTplUrl = 'templates/wutudu/optionsPopup.html',
-        modelConfig = {
+    var wutuduOptionsUrl = 'templates/wutudu/optionsPopup.html',
+        wutuduModalConfig = {
+            scope: $scope,
+            animation: 'slide-in-up'
+        },
+        inviteFriendsUrl = 'templates/group/inviteFriendsModal.html',
+        inviteFriendsModalConfig = {
             scope: $scope,
             animation: 'slide-in-up'
         };
 
+
     $ionicModal
-      .fromTemplateUrl(optionsTplUrl, modelConfig)
-      .then(setupModal);
+      .fromTemplateUrl(wutuduOptionsUrl, wutuduModalConfig)
+      .then(setupWutuduModal);
+
+    $ionicModal
+      .fromTemplateUrl(inviteFriendsUrl, inviteFriendsModalConfig)
+      .then(setupInviteFriendsModal);
   }
 
   function initData() {
@@ -142,8 +166,12 @@ angular.module('starter.controllers')
     $scope.$broadcast('scroll.refreshComplete');
   }
 
-  function setupModal(modal) {
-    $scope.modal = modal;
+  function setupWutuduModal(modal) {
+    $scope.wutuduModal = modal;
+  }
+
+  function setupInviteFriendsModal(modal) {
+    $scope.inviteFriendsModal = modal;
   }
 
   function setupFriends(response) {
@@ -158,23 +186,17 @@ angular.module('starter.controllers')
           return memberIds.indexOf(friend.id) === -1;
         };
 
-    $scope.data.friends = friends.filter(potentialMembers);
-  }
-  function displayFriendModal() {
-    var tplConfig = {
-      templateUrl: 'templates/friend/addFriend.html',
-      title: 'Add Friend to Group',
-      subTitle: 'Please Choose Your Friend To Add',
-      scope: $scope,
-      buttons: [
-         { text: 'Add',
-           type: 'button-balanced',
-           onTap: $scope.handleAddFriend
-         },
-       { text: 'Cancel', type: 'button-assertive'}
-      ]
-    };
-    $ionicPopup.show(tplConfig);
+    var potMems = friends.filter(potentialMembers);
+    if (potMems.length <= 0) {
+      $ionicPopup.alert({
+        title: 'No Available Friends To Invite To This Group',
+        cssClass: 'alert-success'
+      });
+    } else {
+      $scope.data.friends = potMems;
+      $scope.inviteFriendsModal.show();
+    }
+
   }
 
   function getFriendsToInvite() {
@@ -247,13 +269,11 @@ angular.module('starter.controllers')
     });
   }
 
-  function inviteSucess(response) {
-      var data = response.data,
-          msg = {
-            title: 'Invite To Group',
-            template: '<span>' + JSON.stringify(data) + '</span>'
-          };
-      $msgBox.show($scope, msg);
+  function inviteSuccess(response) {
+      $ionicPopup.alert({
+        title: 'Invite Friends To Group Success',
+        cssClass: 'alert-success'
+      });
   }
 
   function preWutuduSuccess(response) {
@@ -265,7 +285,8 @@ angular.module('starter.controllers')
   }
 
   function onExit(e) {
-    $scope.modal.remove();
+    $scope.wutuduModal.remove();
+    $scope.inviteFriendsModal.remove();
   }
 
   function init(e) {

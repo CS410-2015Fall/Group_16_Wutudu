@@ -1,18 +1,14 @@
 <ion-modal-view >
   <ion-header-bar>
-    <h1 class="title">Create Group</h1>
-    <button class="button ion-close" ng-click="cancelCreateGroup()"></button>
+    <h1 class="title">Invite Friends To Group</h1>
+    <button class="button ion-close" ng-click="cancelInviteFriends()"></button>
   </ion-header-bar>
 
   <ion-content>
-    <div class="item item-input-inset">
-      <label class="item-input-wrapper">
-        <input type="text" placeholder="New Group Name" ng-model="data.createGroup.name">
-      </label>
-    </div>
     <div class="item item-divider">
       Select Friends To Invite
     </div>
+
     <ion-list>
       <ion-checkbox ng-repeat="friend in data.friends" ng-model="friend.invited">
         {{friend.name}} <span class="item-note">{{friend.email}}</span>
@@ -21,8 +17,8 @@
   </ion-content>
   <div class="bar bar-footer">
     <div class="footer-title">
-      <button class="button button-icon ion-android-add" ng-click="createGroup()">
-        <span class="padding-left">CREATE GROUP</span>
+      <button class="button button-icon ion-android-add" ng-click="addFriendToGroup()">
+        <span class="padding-left">INVITE FRIENDS</span>
       </button>
     </div>
   </div>

@@ -17,45 +17,74 @@
 
     <div class="list">
 
-      <div class="item item-divider">
-        Active Group Members
-      </div>
+      <ion-item class="item item-divider"
+                ng-click="toggleList(0)"
+                ng-class="{active: listsShow[0]}">
+        <i class="icon" ng-class="listsShow[0] ? 'ion-minus' : 'ion-plus'"></i>
+        &nbsp;
+        Upcoming Wutudus ({{wutuduEvents.length}})
+      </ion-item>
 
       <ion-list>
-        <ion-item ng-repeat="member in activeMembers">
-          <span class="ion-person padding-left-small"></span> {{member.name}}
+        <ion-item class="item" ng-repeat="wutudu in wutuduEvents"
+                               ng-click="showWutuduDetail(wutudu)"
+                               ng-show="listsShow[0]">
+          <span class="icon-wutudu-bw inline-block"></span>  {{wutudu.display_date}}
         </ion-item>
       </ion-list>
 
-      <div class="item item-divider">
-        Pending Group Members
-      </div>
+      <ion-item class="item item-divider"
+                ng-click="toggleList(1)"
+                ng-class="{active: listsShow[1]}">
+        <i class="icon" ng-class="listsShow[1] ? 'ion-minus' : 'ion-plus'"></i>
+        &nbsp;
+        In Progress Wutudus ({{inProgressWutudus.length}})
+      </ion-item>
 
       <ion-list>
-        <ion-item ng-repeat="member in pendingMembers">
-          <span class="ion-person padding-left-small"></span> {{member.name}}
-        </ion-item>
-      </ion-list>
-
-      <div class="item item-divider">
-        In progress Wutudus
-      </div>
-
-      <ion-list>
-        <ion-item class="item" ng-repeat="wutudu in inProgressWutudus" ng-click="showPreWutuduOptions(wutudu)">
+        <ion-item class="item" ng-repeat="wutudu in inProgressWutudus"
+                               ng-click="showPreWutuduOptions(wutudu)"
+                               ng-show="listsShow[1]">
           <span class="icon-wutudu-bw rotate-90 inline-block"></span> {{wutudu.display_date}} ({{answeredStateString(wutudu)}})
         </ion-item>
       </ion-list>
 
-      <div class="item item-divider">
-        Upcoming Wutudus
-      </div>
+      <ion-item class="item item-divider"
+                ng-click="toggleList(2)"
+                ng-class="{active: listsShow[2]}">
+        <i class="icon" ng-class="listsShow[2] ? 'ion-minus' : 'ion-plus'"></i>
+        &nbsp;
+        Group Members ({{activeMembers.length}})
+      </ion-item>
 
       <ion-list>
-        <ion-item class="item" ng-repeat="wutudu in wutuduEvents" ng-click="showWutuduDetail(wutudu)">
-          <span class="icon-wutudu-bw inline-block"></span>  {{wutudu.display_date}}
+        <ion-item ng-repeat="member in activeMembers" ng-show="listsShow[2]">
+          <span class="ion-person"></span>
+          <span class="padding-left padding-right">
+            {{member.name}}
+            <span class="item-note">{{member.email}}</span>
+          </span>
         </ion-item>
       </ion-list>
+
+      <ion-item class="item item-divider"
+                ng-click="toggleList(3)"
+                ng-class="{active: listsShow[3]}">
+        <i class="icon" ng-class="listsShow[3] ? 'ion-minus' : 'ion-plus'"></i>
+        &nbsp;
+        Invited Users ({{pendingMembers.length}})
+      </ion-item>
+
+      <ion-list>
+        <ion-item ng-repeat="member in pendingMembers" ng-show="listsShow[3]">
+          <span class="ion-person padding-left-small"></span>
+          <span class="padding-left padding-right">
+            {{member.name}}
+            <span class="item-note">{{member.email}}</span>
+          </span>
+        </ion-item>
+      </ion-list>
+
 
     </div>
   </ion-content>
