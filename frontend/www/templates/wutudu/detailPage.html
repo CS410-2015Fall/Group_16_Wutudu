@@ -3,27 +3,70 @@
     <h1 class="title">Wutudu Event Details</h1>
   </ion-header-bar>
   <ion-content>
-    <h4 class="inline">Place:&nbsp;</h4><span>{{wutudu.event_details.name}}</span>
-    <br>
-    <h4 class="inline">Type:&nbsp;</h4><span>{{wutudu.event_details.categories}}</span>
-    <br>
-    <h4 class="inline">Time:&nbsp;</h4><span>{{wutudu.display_time}}</span>
-    <br>
-    <h4 class="inline">Rating:&nbsp;</h4><span>{{displayRating()}}</span>
-    <br>
-    <h4 class="inline">Yelp URL:&nbsp;</h4><a ng-click="openLink(wutudu.event_details.yelp_url)">{{wutudu.event_details.yelp_url}}</a>
-    <br>
-    <h4 class="inline">Phone Number:&nbsp;</h4><span>{{wutudu.event_details.phone_number}}</span>
-    <br>
-    <h4 class="inline">Address:&nbsp;</h4><span>{{wutudu.event_details.location.address}}</span>
-    <div ng-click="expandMap()">
-      <div id="wutuduDetailMap" data-tap-disabled="true" style="height: 300px; width: 100%;"></div>
-    </div>
-    <h4>Invited Friends:</h4>
-    <div class="list list-inset">
-      <ion-item ng-repeat="user in wutudu.accepted_users">
-        {{user.name}} / {{user.email}}
-      </ion-item>
-    </div>
+
+      <div class="item row wutudu-item">
+        <div class="col">
+          <i class="icon ion-home"></i>
+          <h4 class="inline">Place</h4>
+        </div>
+        <div class="col col-67"><span>{{wutudu.event_details.name}}</span></div>
+      </div>
+      <div class="item row wutudu-item">
+        <div class="col">
+          <i class="icon ion-pie-graph"></i>
+          <h4 class="inline">Type</h4>
+        </div>
+        <div class="col col-67"><span>{{wutudu.event_details.categories}}</span></div>
+      </div>
+      <div class="item row wutudu-item">
+        <div class="col">
+          <i class="icon ion-ios-clock-outline"></i>
+          <h4 class="inline">Time</h4>
+        </div>
+        <div class="col col-67"><span>{{wutudu.display_time}}</span></div>
+      </div>
+      <div class="item row wutudu-item">
+        <div class="col">
+          <i class="icon ion-heart"></i>
+          <h4 class="inline">Rating</h4>
+        </div>
+        <div class="col col-67"><span>{{displayRating()}}</span></div>
+      </div>
+      <div class="item row wutudu-item">
+        <div class="col">
+          <i class="icon ion-link"></i>
+          <h4 class="inline">Yelp URL</h4>
+        </div>
+        <div class="col col-67"><a ng-click="openLink(wutudu.event_details.yelp_url)">{{wutudu.event_details.yelp_url}}</a></div>
+      </div>
+      <div class="item row wutudu-item">
+        <div class="col">
+          <i class="icon ion-iphone"></i>
+          <h4 class="inline">Phone Number</h4>
+        </div>
+        <div class="col col-67"><span>{{wutudu.event_details.phone_number}}</span></div>
+      </div>
+      <div class="item row wutudu-item">
+        <div class="col">
+          <i class="icon ion-location"></i>
+          <h4 class="inline">Address</h4>
+        </div>
+        <div class="col col-67"><span>{{wutudu.event_details.location.address}}</span></div>
+      </div>
+      <div class="item row wutudu-item">
+        <div class="col">
+          <i class="icon ion-person-stalker"></i>
+          <h4>Invited Friends</h4>
+        </div>
+        <div class="col col-67">
+            <span ng-repeat="user in wutudu.accepted_users">
+              {{user.name}} / {{user.email}} <br>
+            </span>
+        </div>
+      </div>
+      <div ng-click="expandMap()">
+        <div id="wutuduDetailMap" data-tap-disabled="true" style="height: 300px; width: 100%;"></div>
+      </div>
+
   </ion-content>
 </ion-view>

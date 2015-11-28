@@ -11,6 +11,10 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 ======================================================
 */
 
+a {
+  color: #009688;  // teal
+}
+
 .inline {
   display: inline;
 }
@@ -129,6 +133,11 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 
 .bar .button.back-button {
     margin-left: 6px;
+}
+
+.item {
+  overflow: visible;
+  white-space: normal;
 }
 
 /* Custom Button styles
