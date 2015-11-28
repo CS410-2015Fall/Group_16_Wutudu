@@ -43,6 +43,12 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
   transform: rotate(180deg) translateX(1px);
 }
 
+.footer-title {
+  text-align: center;
+  width: 100%;
+  color: #fff;
+}
+
 /* Ionic Overrides
 ======================================================
 */
@@ -66,6 +72,10 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
   color: #fff;
   height: 57px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.bar.bar-footer {
+  height: 44px; /* Overriding our override styles back to default ionic. Fun stuff :( */
 }
 
 .bar .back-text .previous-title, .bar .back-text .default-title {
@@ -126,9 +136,9 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
 */
 
 .button.button-wutudu {
-    border-color: #C62B53;
-    background-color: #C62B53;
-    color: #fff;
+  border-color: #C62B53;
+  background-color: #C62B53;
+  color: #fff;
 }
 
 .button.button-inline {
@@ -162,7 +172,6 @@ Badass Green: #BADA55; / rgb(186, 218, 85);
   top: 10px;
   margin: 0 auto;
 }
-
 
 .icon-wutudu.med {
   height: 40px;
