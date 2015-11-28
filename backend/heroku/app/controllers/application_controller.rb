@@ -8,4 +8,5 @@ class ApplicationController < ActionController::Base
   def show
     render nothing: true
   end
+
 end

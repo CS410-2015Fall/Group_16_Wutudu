@@ -40,7 +40,7 @@ class PreWutudu < ActiveRecord::Base
   def aggregate_category_weights
     aggregate_weights = {}
     self.completed_answers.each do |x|
-      aggregate_weights.merge!(x.category_weights) {|key, v0, v1| v0 + v1} 
+      aggregate_weights.merge!(x.category_weights) {|key, v0, v1| v0 + v1}
     end
     aggregate_weights
   end
@@ -67,12 +67,12 @@ class PreWutudu < ActiveRecord::Base
   end
 
   def generate_wutudu_event
-    bl = Magic::BestLocation.new(self.latitude, self.longitude, [self.top_category.yelp_id])
-    event_details = bl.find_best_location
+    bl = Magic::BestLocation.new(self.latitude, self.longitude, [self.top_category.yelp_id], self.event_date)
+    event_details = bl.find_best_location # use top category
     return "Unable To Create Wutudu Event", 500 unless event_details
     self.wutudu_event = WutuduEvent.create(
                           pre_wutudu_id: self.id,
-                          group_id: self.group_id, 
+                          group_id: self.group_id,
                           category_id: self.top_category.id,
                           latitude: self.latitude,
                           longitude: self.longitude,
