@@ -34,10 +34,6 @@ angular.module('starter.controllers')
     $scope.$apply();
   }
 
-  $scope.cancelClick = function () {
-    $state.go('app.group', config);
-  };
-
   $scope.createWutudu = function (wutudu) {
     // if (!validateCreate(wutudu)) {
     //   return;

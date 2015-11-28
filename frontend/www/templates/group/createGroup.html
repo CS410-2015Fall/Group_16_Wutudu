@@ -6,10 +6,9 @@
 
   <ion-content>
     <div class="item item-input-inset">
-        <label class="item-input-wrapper">
-          <input type="text" placeholder="New Group Name" ng-model="data.createGroup.name">
-        </label>
-        <button class="button button-small" ng-click="createGroup()">Create</button>
+      <label class="item-input-wrapper">
+        <input type="text" placeholder="New Group Name" ng-model="data.createGroup.name">
+      </label>
     </div>
     <div class="item item-divider">
       Select Friends To Invite
@@ -19,7 +18,13 @@
         {{friend.name}} <span class="item-note">{{friend.email}}</span>
       </ion-checkbox>
     </ion-list>
-
   </ion-content>
+  <div class="bar bar-footer">
+    <div class="footer-title">
+      <button class="button button-icon ion-android-checkmark-circle" ng-click="createGroup()">
+        <span class="padding-left">CREATE GROUP</span>
+      </button>
+    </div>
+  </div>
 </ion-modal-view>
 
