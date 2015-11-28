@@ -4,13 +4,13 @@
     <button class="button ion-close" ng-click="cancelPreWutuduOptions()"></button>
   </ion-header-bar>
   <ion-content>
-    <h3 class="text-center">
+    <h4 class="text-center">
       {{activePreWutudu.display_date}}
       <br>
       ({{displayStatus(activePreWutudu)}})
       <br>
       {{activePreWutudu.declined_answers}} declined
-    </h3>
+    </h4>
     <button class="button button-block button-outline button-positive" ng-hide="userAnswered(activePreWutudu)" ng-click="showWutuduQuestion(activePreWutudu)">Answer Questions</button>
     <button class="button button-block button-outline button-assertive" ng-hide="userAnswered(activePreWutudu)" ng-click="declineWutudu(activePreWutudu)">Decline Wutudu</button>
     <button class="button button-block button-outline button-balanced" ng-show="canEndPreWutudu(activePreWutudu)" ng-click="finishPreWutudu(activePreWutudu)">Decide Wutudu!</button>
