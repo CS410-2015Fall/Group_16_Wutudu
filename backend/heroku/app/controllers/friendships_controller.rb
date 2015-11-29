@@ -36,7 +36,7 @@ class FriendshipsController < ApiController
                           "You have received a friend request from #{@user.name}", \
                           payload)
       end
-      render success_msg({message: "Friend Request Sent"}) and return
+      render success_msg({message: "Friend Request Sent", user: @friend.basic_info}) and return
     end
   end
 

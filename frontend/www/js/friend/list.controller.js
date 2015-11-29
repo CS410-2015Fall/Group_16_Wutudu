@@ -47,7 +47,8 @@ angular.module('starter.controllers')
         template: 'Friend Request Sent To ' + data.friendToAdd,
         cssClass: 'alert-success'
       });
-      $scope.sentRequests.push({ 'email' : $scope.data.friendToAdd });
+      $scope.sentRequests.push({ 'name' : response.data.user.name,
+                                 'email' : response.data.user.email});
       $scope.data.friendToAdd = '';
     }, function errorCallback (response) {
       $scope.data.friendToAdd = '';
