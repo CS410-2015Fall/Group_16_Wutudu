@@ -25,8 +25,8 @@ angular.module('starter.services', [])
 
 .factory('$httpService', function($http, User, $localstorage,
   $q, $cordovaNetwork, $ionicPopup, $device) {
-  // var urlRoot = "http://localhost:5000",
-  var urlRoot = "https://stormy-hollows-9187.herokuapp.com",
+  var urlRoot = "http://localhost:5000",
+  // var urlRoot = "https://stormy-hollows-9187.herokuapp.com",
       deferred;
 
   function isNetworkOnline() {
@@ -54,7 +54,7 @@ angular.module('starter.services', [])
             url: urlRoot + config.url,
           };
         configUrl = config.url;
-        
+
       function successCache(response) {
         $localstorage.setObject('GET ' + config.url, response);
         deferred.resolve(response);
@@ -224,9 +224,13 @@ angular.module('starter.services', [])
     return $q.resolve(mockDeviceId);
   }
 
+  function offlineRegister() {
+    var mockDeviceId = 2;
+    return $q.resolve(mockDeviceId);
+  }
+
   function mobileRegister() {
     deferred = $q.defer();
-    $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
     $ionicPlatform.ready(function() {
       $cordovaPush.register(config).then(function(result) {
         console.debug(result);
@@ -247,16 +251,18 @@ angular.module('starter.services', [])
 
   return {
     register: function() {
+      $rootScope.$on('$cordovaPush:notificationReceived', onNotification);
       if ($device.isBrowser() || !$device.isAndroid()) {
         return webRegister();
       } else {
         if (isNetworkOnline()) {
           return mobileRegister();
         } else {
-          return $q.resolve(1);
+          return offlineRegister();
         }
       }
-    }
+    },
+    switchState: switchState
   };
 
 })
@@ -410,7 +416,7 @@ angular.module('starter.services', [])
   }
 
   function isAndroid() {
-    return (navigator.userAgent.match(/Android/i)) == "Android"
+    return (navigator.userAgent.match(/Android/i)) == "Android";
   }
 
   return {

@@ -112,4 +112,98 @@ describe('AppServices', function() {
     });
   });
 
+  describe('$wutuduNotification', function() {
+    var $rootScope, $wutuduNotification, $device, $state;
+    beforeEach(inject(function(_$rootScope_, _$wutuduNotification_,
+     $httpBackend, _$device_, _$state_) {
+      $wutuduNotification = _$wutuduNotification_;
+      $device = _$device_;
+      $rootScope = _$rootScope_;
+      $httpBackend.when('GET').respond({});
+      $state = _$state_;
+      sinon.stub(_$state_, 'go', function(arg) {});
+    }));
+    it('should mock browser register correctly', function() {
+      sinon.stub($device, 'isBrowser', function() { return true; });
+      sinon.stub($device, 'isAndroid', function() { return false; });
+      $wutuduNotification.register().then(function(deviceToken) {
+        expect(deviceToken).to.be.equal(1);
+      });
+      $rootScope.$apply();
+    });
+    it('should mock offline register correctly', function() {
+      sinon.stub($device, 'isBrowser', function() { return false; });
+      sinon.stub($device, 'isAndroid', function() { return true; });
+      $wutuduNotification.register().then(function(deviceToken) {
+        expect(deviceToken).to.be.equal(2);
+      });
+      $rootScope.$apply();
+    });
+    it('should handle register notifications', function() {
+      $wutuduNotification.register();
+      var mockEvent = {
+        event: 'registered',
+        regid: 1
+      };
+      $rootScope.$emit('$cordovaPush:notificationReceived', mockEvent);
+      $rootScope.$apply();
+      expect($state.go.callCount).to.be.equal(0);
+      expect($state.go.args[0]).to.not.exist;
+    });
+    it('should handle message notifications', function() {
+      $wutuduNotification.register();
+      var mockEvent = {
+        event: 'message',
+        message: 'msg',
+        payload: {}
+      };
+      $rootScope.$emit('$cordovaPush:notificationReceived', mockEvent);
+      $rootScope.$apply();
+
+    });
+    it('should switch friend state correctly', function() {
+      var mockPayload = {
+        state: 'friend'
+      };
+      $wutuduNotification.switchState(mockPayload);
+      expect($state.go.callCount).to.be.equal(1);
+      expect($state.go.args[0][0]).to.be.equal('app.friendList');
+    });
+    it('should switch group state correctly', function() {
+      var mockPayload = {
+        state: 'group'
+      };
+      $wutuduNotification.switchState(mockPayload);
+      expect($state.go.callCount).to.be.equal(1);
+      expect($state.go.args[0][0]).to.be.equal('app.groupList');
+    });
+    it('should switch pre_wutudu state correctly', function() {
+      var mockPayload = {
+        state: 'pre_wutudu',
+        group: {
+          id: 1
+        },
+        pre_wutudu: {
+          pre_wutudu_id: 1
+        }
+      };
+      $wutuduNotification.switchState(mockPayload);
+      expect($state.go.callCount).to.be.equal(1);
+      expect($state.go.args[0][0]).to.be.equal('app.answerWutudu');
+    });
+    it('should switch wutudu state correctly', function() {
+      var mockPayload = {
+        state: 'wutudu',
+        group: {
+          id: 1
+        },
+        wutudu_event: {
+          id: 1
+        }
+      };
+      $wutuduNotification.switchState(mockPayload);
+      expect($state.go.callCount).to.be.equal(1);
+      expect($state.go.args[0][0]).to.be.equal('app.wutuduDetails');
+    });
+  });
 });
