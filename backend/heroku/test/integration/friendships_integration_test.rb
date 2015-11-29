@@ -97,7 +97,7 @@ class FriendshipsIntegrationTest < ActionController::TestCase
     assert_difference('Friendship.count') do
       post :create, request_body
     end
-    validate_success_response({message: "Friend Request Sent"})
+    validate_success_response({message: "Friend Request Sent", user: {id: 323332591, email: "user4@email.com", name: "User Four"}})
   end
 
   # :update
