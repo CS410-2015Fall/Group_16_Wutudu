@@ -148,23 +148,23 @@ a {
   white-space: normal;
 }
 
-.popup-head {
+.notification .popup-head {
   border-color: #C62B53;
   background-color: #C62B53;
 }
 
-.popup-buttons {
+.notification .popup-buttons {
   border-color: #C62B53;
   background-color: #C62B53;
 }
 
-.popup-buttons .button {
+.notification .popup-buttons .button {
   color: white;
   background: none;
   border: none;
 }
 
-.popup-title {
+.notification .popup-title {
   color: #fff;
 }
 

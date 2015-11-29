@@ -179,6 +179,7 @@ angular.module('starter.services', [])
     var popup = $ionicPopup.show({
       title: 'Notification',
       template: notification.message,
+      cssClass: 'notification',
       buttons: [
         {
           text: 'Cancel',
