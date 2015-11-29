@@ -82,6 +82,21 @@ questions = [
   {id: 15, question_text: "On a bad day, you will?",
             a0_text: "See a movie", a1_text: "Eat",
             a2_text: "Play sports", a3_text: "Spend money"},
+  {id: 16, question_text: "Which best describes your personality?",
+            a0_text: "Outgoing", a1_text: "Active",
+            a2_text: "Creative", a3_text: "Shy"},
+  {id: 17, question_text: "Favourite time of day?",
+            a0_text: "Morning", a1_text: "Noon",
+            a2_text: "Afternoon", a3_text: "Midnight"},
+  {id: 18, question_text: "Which best describes your personality?",
+            a0_text: "Cook a proper meal", a1_text: "Wine Tasting",
+            a2_text: "Run 10 Miles", a3_text: "Party All Night"},
+  {id: 19, question_text: "Which best describes your personality?",
+            a0_text: "Watching movies", a1_text: "Playing games",
+            a2_text: "Playing sports", a3_text: "Going shopping"},
+  {id: 20, question_text: "Dream job?",
+            a0_text: "Chef", a1_text: "Athlete",
+            a2_text: "Designer", a3_text: "Programmer"},
 ]
 
 answer_weights = {
