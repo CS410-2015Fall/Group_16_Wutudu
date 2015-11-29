@@ -63,7 +63,7 @@ angular.module('starter.controllers')
     Friend.acceptFriendRequest({
       'email': friend.email
     }).then(function successCallback (response) {
-      $scope.friends.push({ 'email' : friend.email });
+      $scope.friends.push({ 'email' : friend.email, 'name': friend.name});
       $scope.receivedRequests = $scope.receivedRequests.filter(function (f) {
         return f.email !== friend.email;
       });
