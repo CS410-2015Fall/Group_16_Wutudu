@@ -188,8 +188,10 @@ module ThirdPartyAPI
 
     def isOpen(times, event_date)
       isOpen = false
-      event_day = event_date.wday
-      event_time = event_date.strftime("%H:%M")
+      # only support time in PST for foursquare lookup
+      Time.zone = "Pacific Time (US & Canada)"
+      event_day = event_date.in_time_zone.wday
+      event_time = event_date.in_time_zone.strftime("%H:%M")
       unless times.nil?
         times.each do |time|
           unless time.days.index(event_day).nil?

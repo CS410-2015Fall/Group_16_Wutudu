@@ -16,7 +16,6 @@ module Magic
     def initialize(lat, long, cats, event_date)
       begin
         @event_date = event_date
-        p event_date
         @categories = cats
         @sums = {}
         @avgs = {}
@@ -41,14 +40,15 @@ module Magic
     def find_best_location(*cat)
       @location = nil
       @best_effort_location = nil
+      attempts = 3
       if @api
         cats = (cat.empty? ? @categories.dup : cat.dup)
-        until @location || cats.length == 0 do
+        until @location || cats.length == 0 || attempts == 0 do
           c = cats.shift
           if @categories.include?(c)
             transform_data(c)
             scores = @scores.dup
-            until @location || scores.length == 0 do
+            until @location || scores.length == 0 || attempts == 0 do
               max_index = scores.index(scores.max)
               id = @data[:id][max_index]
               name = @data[:name][max_index]
@@ -60,6 +60,7 @@ module Magic
                 @location = result
               end
               scores.delete_at(max_index)
+              attempts -= 1
             end
           end
         end
