@@ -165,12 +165,11 @@ module ThirdPartyAPI
         },
         phone_number: yelp_sum.display_phone,
         yelp_url: yelp_sum.mobile_url,
-        hours_status_now: four_square_sum[:hours] && four_square_sum[:hours].status,
-        will_be_open: four_square_sum[:hours] && isOpen(four_square_sum[:hours].timeframes, event_date),
-        opening_hours: four_square_sum[:formatted_hours] &&
-        four_square_sum[:formatted_hours].timeframes.map{|time|
-            "#{time.days} : #{time.open[0].renderedTime}"
-        }
+        opening_hours: four_square_sum[:hours] &&
+            four_square_sum[:formatted_hours] &&
+          show_opening_hours(four_square_sum[:hours].timeframes,
+            four_square_sum[:formatted_hours].timeframes,
+             event_date)
       }
       sum.compact
     end
@@ -186,33 +185,24 @@ module ThirdPartyAPI
       @summary = @yelp.summary
     end
 
-    def isOpen(times, event_date)
-      isOpen = false
-      # only support time in PST for foursquare lookup
-      Time.zone = "Pacific Time (US & Canada)"
-      event_day = event_date.in_time_zone.wday
-      event_time = event_date.in_time_zone.strftime("%H:%M")
-      unless times.nil?
-        times.each do |time|
-          unless time.days.index(event_day).nil?
-            time.open.each do |open|
-              isOpen |= betweenTime(open, event_time)
-              if isOpen
-                break
-              end
-            end
-          end
+    # render the opening hours for event date
+    def show_opening_hours(times, formatted_times, event_date)
+      result = 'Not Open Today'
+      event_day =  transformToFourSquareDay(event_date.in_time_zone.wday)
+      times.each_with_index do |time, index|
+        unless time.days.index(event_day).nil?
+          result = formatted_times[index].open[0].renderedTime
         end
       end
-      isOpen
+      result
     end
 
-    def betweenTime(open, event_time)
-      start_hour = open.start[0..1]
-      end_hour = open.end[0..1]
-      event_hour = event_time[0..1]
-
-      event_hour >= start_hour && event_hour < end_hour
+    def transformToFourSquareDay(day)
+      if day == 0
+        7
+      else
+        day
+      end
     end
 
   end
