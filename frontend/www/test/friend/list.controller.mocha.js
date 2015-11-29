@@ -42,7 +42,12 @@ describe('FriendListController', function() {
       });
       sinon.stub(Friend, 'sendFriendRequest', function () {
         var response = {
-          'data' : 'Friend Request Sent'
+          'data' : {
+            'user' : {
+              'email' : 'f1@gmail.com',
+              'name' : 'Friend 1'
+            }
+          }
         };
         return returnPromise(response);
       });
