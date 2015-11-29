@@ -71,7 +71,7 @@ angular.module('starter.controllers')
         var lng = position.coords.longitude;
         $scope.startLocation.lat = lat;
         $scope.startLocation.lng = lng;
-        GoogleMap.setMarkerPosition(lat, lng, {pan: true});
+        GoogleMap.setMarkerPosition(lat, lng);
     }, function (err) {
       console.log(err);
       ErrorPopup.display('Map Location Error', err.message);
