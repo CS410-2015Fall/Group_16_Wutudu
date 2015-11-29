@@ -88,7 +88,7 @@ questions = [
   {id: 17, question_text: "Favourite time of day?",
             a0_text: "Morning", a1_text: "Noon",
             a2_text: "Afternoon", a3_text: "Midnight"},
-  {id: 18, question_text: "Which best describes your personality?",
+  {id: 18, question_text: "What life skills would you like to learn?",
             a0_text: "Cook a proper meal", a1_text: "Wine Tasting",
             a2_text: "Run 10 Miles", a3_text: "Party All Night"},
   {id: 19, question_text: "Which best describes your personality?",
