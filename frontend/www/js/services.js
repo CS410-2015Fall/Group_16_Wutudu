@@ -178,22 +178,18 @@ angular.module('starter.services', [])
 
     var popup = $ionicPopup.show({
       title: 'Notification',
-      template: '<div class="card">' +
-                  '<div class="item item-text-wrap">' +
-                    notification.message +
-                  '</div>' +
-                '</div>',
+      template: notification.message,
       buttons: [
         {
           text: 'Cancel',
-          type: 'button-default',
+          type: 'button-small',
           onTap: function(e) {
             popup.close();
           }
         },
         {
           text: 'OK',
-          type: 'button-positive',
+          type: 'button-small',
           onTap: function(e) {
             switchState(notification.payload);
           }

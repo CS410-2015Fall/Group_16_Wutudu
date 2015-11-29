@@ -148,6 +148,26 @@ a {
   white-space: normal;
 }
 
+.popup-head {
+  border-color: #C62B53;
+  background-color: #C62B53;
+}
+
+.popup-buttons {
+  border-color: #C62B53;
+  background-color: #C62B53;
+}
+
+.popup-buttons .button {
+  color: white;
+  background: none;
+  border: none;
+}
+
+.popup-title {
+  color: #fff;
+}
+
 /* Custom Button styles
 ======================================================
 */
