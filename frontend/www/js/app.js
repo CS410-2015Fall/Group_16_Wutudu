@@ -120,7 +120,8 @@ angular.module('starter', ['ionic', 'ngCordova',
         templateUrl: 'templates/wutudu/createWutudu.html',
         controller: 'WutuduCreateCtrl'
       }
-    }
+    },
+    params: { groupName: '' }
   })
 
   .state('app.answerWutudu', {
@@ -131,7 +132,10 @@ angular.module('starter', ['ionic', 'ngCordova',
         controller: 'WutuduQuestionCtrl'
       }
     },
-    params: { preWutudu: null }
+    params: { 
+      preWutudu: null,
+      groupName:''
+    }
   })
 
   .state('app.wutuduDetails', {

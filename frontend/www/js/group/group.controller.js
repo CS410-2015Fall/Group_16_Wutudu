@@ -4,11 +4,9 @@ angular.module('starter.controllers')
     $ionicPopup, $ionicModal, $ionicLoading, $msgBox, Friend,
     Group, Wutudu, ErrorPopup) {
 
-  var groupId = $stateParams.groupId,
-      groupName = $stateParams.groupName,
-      config = {
-        groupId: groupId
-      };
+  var groupId,
+      groupName,
+      config;
 
   // 0 Upcoming Wutudus
   // 1 In progress Wutudus
@@ -68,6 +66,7 @@ angular.module('starter.controllers')
   $scope.showWutuduQuestion = function(preWutudu) {
     config.preWutudu = preWutudu;
     config.wutuduId = preWutudu.pre_wutudu_id.toString();
+    config.groupName = groupName;
     $state.go('app.answerWutudu', config);
   };
 
@@ -144,6 +143,12 @@ angular.module('starter.controllers')
   }
 
   function initData() {
+    groupId = $stateParams.groupId;
+    groupName = $stateParams.groupName;
+    config = {
+      groupId: groupId,
+      groupName: groupName
+    };
     $scope.data = {
       name: groupName
     };

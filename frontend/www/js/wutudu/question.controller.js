@@ -3,9 +3,11 @@ angular.module('starter.controllers')
 .controller('WutuduQuestionCtrl', function ($scope, $stateParams, $ionicPopup, $timeout, $state, Wutudu, ErrorPopup) {
   var groupId = $stateParams.groupId,
       wutuduId = $stateParams.wutuduId,
+      groupName = $stateParams.groupName,
       config = {
         groupId: groupId,
-        wutuduId: wutuduId
+        wutuduId: wutuduId,
+        groupName: groupName
       };
 
   $scope.preWutudu = $stateParams.preWutudu;

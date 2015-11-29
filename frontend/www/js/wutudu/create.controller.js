@@ -3,8 +3,10 @@ angular.module('starter.controllers')
 .controller('WutuduCreateCtrl', function($scope, $stateParams, $state, $ionicPopup,
         $ionicModal, $ionicPlatform, $cordovaGeolocation, Friend, Group, Wutudu, GoogleMap, ErrorPopup) {
   var groupId = $stateParams.groupId,
+      groupName = $stateParams.groupName,
       config = {
-        groupId: groupId
+        groupId: groupId,
+        groupName: groupName
       };
 
   var DEFAULT_LAT = 49.2827,
