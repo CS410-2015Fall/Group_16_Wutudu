@@ -20,9 +20,8 @@
       <ion-item class="item item-divider"
                 ng-click="toggleList(0)"
                 ng-class="{active: listsShow[0]}">
-        <i class="icon" ng-class="listsShow[0] ? 'ion-minus' : 'ion-plus'"></i>
-        &nbsp;
         Upcoming Wutudus ({{wutuduEvents.length}})
+        <i class="icon float-right" ng-class="listsShow[0] ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
       </ion-item>
 
       <ion-list>
@@ -36,9 +35,8 @@
       <ion-item class="item item-divider"
                 ng-click="toggleList(1)"
                 ng-class="{active: listsShow[1]}">
-        <i class="icon" ng-class="listsShow[1] ? 'ion-minus' : 'ion-plus'"></i>
-        &nbsp;
         In Progress Wutudus ({{inProgressWutudus.length}})
+        <i class="icon float-right" ng-class="listsShow[1] ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
       </ion-item>
 
       <ion-list>
@@ -52,9 +50,8 @@
       <ion-item class="item item-divider"
                 ng-click="toggleList(2)"
                 ng-class="{active: listsShow[2]}">
-        <i class="icon" ng-class="listsShow[2] ? 'ion-minus' : 'ion-plus'"></i>
-        &nbsp;
         Group Members ({{activeMembers.length}})
+        <i class="icon float-right" ng-class="listsShow[2] ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
       </ion-item>
 
       <ion-list>
@@ -70,9 +67,8 @@
       <ion-item class="item item-divider"
                 ng-click="toggleList(3)"
                 ng-class="{active: listsShow[3]}">
-        <i class="icon" ng-class="listsShow[3] ? 'ion-minus' : 'ion-plus'"></i>
-        &nbsp;
         Invited Users ({{pendingMembers.length}})
+        <i class="icon float-right" ng-class="listsShow[3] ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
       </ion-item>
 
       <ion-list>

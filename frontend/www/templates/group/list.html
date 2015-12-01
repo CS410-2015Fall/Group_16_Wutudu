@@ -16,9 +16,8 @@
       <ion-item class="item item-divider"
                 ng-click="toggleList(0)"
                 ng-class="{active: listsShow[0]}">
-        <i class="icon" ng-class="listsShow[0] ? 'ion-minus' : 'ion-plus'"></i>
-        &nbsp;
         Active ({{activeGroups.length}})
+        <i class="icon float-right" ng-class="listsShow[0] ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
       </ion-item>
 
       <ion-list can-swipe="true">
@@ -38,9 +37,8 @@
       <ion-item class="item item-divider"
                 ng-click="toggleList(1)"
                 ng-class="{active: listsShow[1]}">
-        <i class="icon" ng-class="listsShow[1] ? 'ion-minus' : 'ion-plus'"></i>
-        &nbsp;
         Group Invitations ({{pendingGroups.length}})
+        <i class="icon float-right" ng-class="listsShow[1] ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
       </ion-item>
 
       <ion-list can-swipe="true">

@@ -23,6 +23,10 @@ a {
   display: inline-block;
 }
 
+.float-right {
+  float: right;
+}
+
 .has-header {
   top: 57px;
 }
